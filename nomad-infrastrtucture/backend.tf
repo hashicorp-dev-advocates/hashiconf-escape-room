@@ -1,10 +1,10 @@
 terraform {
   backend "remote" {
     hostname = "app.terraform.io"
-    organization = "iam-devopsrob"
+    organization = "hashicorp-team-da-beta"
 
     workspaces {
-      name = "1-nomad-infrastructure"
+      name = "nomad-infrastructure"
     }
   }
 }
