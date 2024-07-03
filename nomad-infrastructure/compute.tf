@@ -108,7 +108,7 @@ resource "aws_instance" "nomad_servers" {
     NOMAD_SERVER_TAG     = "true"
     NOMAD_SERVER_TAG_KEY = "nomad_server"
     NOMAD_SERVER_COUNT   = 3
-    NOMAD_SERVERS_ADDR   = formatlist("\"%s\"", aws_instance.nomad_servers.*.private_ip)
+    NOMAD_SERVERS_ADDR   = formatlist("\"%s\"", aws_eip.nomad_server.*.private_ip)
   })
 
   vpc_security_group_ids = [
