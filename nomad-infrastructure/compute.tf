@@ -83,14 +83,17 @@ resource "aws_security_group" "egress" {
 }
 
 resource "aws_eip" "nomad_server" {
+  count = 3
+
   tags = {
     Name = "Nomad Server"
   }
 }
 
 resource "aws_eip_association" "nomad_server" {
-  instance_id   = aws_instance.nomad_servers.id
-  allocation_id = aws_eip.nomad_server.id
+  count         = 3
+  instance_id   = aws_instance.nomad_servers.*.id
+  allocation_id = aws_eip.nomad_server.*.id
 }
 
 resource "aws_instance" "nomad_servers" {
@@ -104,8 +107,8 @@ resource "aws_instance" "nomad_servers" {
   user_data = templatefile("./servers.sh", {
     NOMAD_SERVER_TAG     = "true"
     NOMAD_SERVER_TAG_KEY = "nomad_server"
-    NOMAD_SERVER_COUNT   = 1
-    NOMAD_ADDR           = aws_eip.nomad_server.public_ip
+    NOMAD_SERVER_COUNT   = 3
+    NOMAD_SERVERS_ADDR   = aws_instance.nomad_servers.*.private_ip
   })
 
   vpc_security_group_ids = [
