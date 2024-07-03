@@ -25,9 +25,6 @@ server {
   server_join {
     retry_join = [${NOMAD_SERVERS_ADDR}]
   }
-
-  oidc_issuer      = "http://${NOMAD_SERVERS_ADDR}:4646"
-
 }
 
 
