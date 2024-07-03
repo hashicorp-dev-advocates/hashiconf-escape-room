@@ -108,7 +108,7 @@ resource "aws_instance" "nomad_servers" {
     NOMAD_SERVER_TAG     = "true"
     NOMAD_SERVER_TAG_KEY = "nomad_server"
     NOMAD_SERVER_COUNT   = 3
-    NOMAD_SERVERS_ADDR   = join(",", aws_eip.nomad_server.*.public_ip)
+    NOMAD_SERVERS_ADDR   = formatlist("\"%s\"", aws_instance.nomad_servers.*.private_ip)
   })
 
   vpc_security_group_ids = [
@@ -144,7 +144,7 @@ resource "aws_instance" "nomad_clients" {
   associate_public_ip_address = true
 
   user_data = templatefile("./clients.sh", {
-    NOMAD_SERVERS_ADDR = join(",", aws_instance.nomad_servers.*.private_ip)
+    NOMAD_SERVERS_ADDR = formatlist("\"%s\"", aws_instance.nomad_servers.*.private_ip)
   })
 
   vpc_security_group_ids = [
@@ -181,7 +181,7 @@ resource "aws_instance" "boundary_target" {
   associate_public_ip_address = true
 
   user_data = templatefile("./nomad-client-boundary-target.sh", {
-    NOMAD_SERVERS_ADDR = join(",", aws_instance.nomad_servers.*.private_ip)
+    NOMAD_SERVERS_ADDR = formatlist("\"%s\"", aws_instance.nomad_servers.*.private_ip)
   })
 
   vpc_security_group_ids = [
