@@ -16,7 +16,7 @@ resource "terracurl_request" "bootstrap_acl" {
   method         = "POST"
   name           = "bootstrap"
   response_codes = [200, 201]
-  url            = "http://${aws_eip.nomad_server.public_ip}:4646/v1/acl/bootstrap"
+  url            = "http://${aws_eip.nomad_server.0.public_ip}:4646/v1/acl/bootstrap"
 
   lifecycle {
     ignore_changes = all

@@ -144,7 +144,7 @@ resource "aws_instance" "nomad_clients" {
   associate_public_ip_address = true
 
   user_data = templatefile("./clients.sh", {
-    NOMAD_SERVERS_ADDR = "${aws_instance.nomad_servers.private_ip}"
+    NOMAD_SERVERS_ADDR = "${aws_instance.nomad_servers.*.private_ip}"
   })
 
   vpc_security_group_ids = [
