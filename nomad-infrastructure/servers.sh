@@ -11,6 +11,7 @@ sudo apt-get update && sudo apt-get install nomad -y
 # Create Nomad directory.
 mkdir -p /etc/nomad.d
 
+NOMAD_SERVERS="${NOMAD_SERVERS_ADDR}"
 
 # Nomad configuration files
 cat <<EOF > /etc/nomad.d/nomad.hcl
@@ -22,7 +23,7 @@ server {
   bootstrap_expect = ${NOMAD_SERVER_COUNT}
 
   server_join {
-    retry_join = ["${NOMAD_SERVERS_ADDR}"]
+    retry_join = [${NOMAD_SERVERS_ADDR}]
   }
 
   oidc_issuer      = "http://${NOMAD_SERVERS_ADDR}:4646"
