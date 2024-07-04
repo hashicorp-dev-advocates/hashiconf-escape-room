@@ -21,5 +21,5 @@ output "nomad_management_token" {
 }
 
 output "nomad_ui" {
-  value = "http://${aws_eip.nomad_server.0.public_ip}:4646"
+  value = "http://${aws_lb.nomad.dns_name}:4646"
 }
