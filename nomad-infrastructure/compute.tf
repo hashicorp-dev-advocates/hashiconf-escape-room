@@ -82,28 +82,13 @@ resource "aws_security_group" "egress" {
   }
 }
 
-resource "aws_eip" "nomad_server" {
-  count = var.server_count
-
-  tags = {
-    Name = "Nomad Server"
-  }
-  associate_with_private_ip = "10.0.101.${count.index + 10}"
-}
-
-resource "aws_eip_association" "nomad_server" {
-  count         = length(aws_instance.nomad_servers.*.id)
-  instance_id   = aws_instance.nomad_servers[count.index].id
-  allocation_id = aws_eip.nomad_server[count.index].id
-}
-
 resource "aws_instance" "nomad_servers" {
   count         = var.server_count
   ami           = data.aws_ami.ubuntu.id
   instance_type = "t3.micro"
 
-  subnet_id     = module.vpc.public_subnets.0
-  private_ip = "10.0.101.${count.index + 10}"
+  subnet_id     = module.vpc.private_subnets.0
+  private_ip = "10.0.1.${count.index + 10}"
   key_name      = aws_key_pair.deployer.key_name
 
 
@@ -111,7 +96,7 @@ resource "aws_instance" "nomad_servers" {
     NOMAD_SERVER_TAG     = "true"
     NOMAD_SERVER_TAG_KEY = "nomad_server"
     NOMAD_SERVER_COUNT   = var.server_count
-    NOMAD_SERVERS_ADDR   = join(",", [for i in range(var.server_count) : format("\"10.0.101.%d\"", i + 10)])
+    NOMAD_SERVERS_ADDR   = join(",", [for i in range(var.server_count) : format("\"10.0.1.%d\"", i + 10)])
   })
 
   vpc_security_group_ids = [
@@ -142,12 +127,12 @@ resource "aws_instance" "nomad_clients" {
   count                       = var.client_count
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = "t3.medium"
-  subnet_id                   = module.vpc.public_subnets.0
+  subnet_id                   = module.vpc.private_subnets.0
   key_name                    = aws_key_pair.deployer.key_name
-  associate_public_ip_address = true
+  associate_public_ip_address = false
 
   user_data = templatefile("./clients.sh", {
-    NOMAD_SERVERS_ADDR = join(",", formatlist("\"%s\"", aws_instance.nomad_servers.*.private_ip))
+    NOMAD_SERVERS_ADDR = join(",", [for i in range(var.server_count) : format("\"10.0.1.%d\"", i + 10)])
   })
 
   vpc_security_group_ids = [
@@ -176,15 +161,15 @@ resource "aws_instance" "nomad_clients" {
 
 
 resource "aws_instance" "boundary_target" {
-  count                       = 1
+  count                       = var.target_count
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = "t3.medium"
-  subnet_id                   = module.vpc.public_subnets.0
+  subnet_id                   = module.vpc.private_subnets.0
   key_name                    = aws_key_pair.deployer.key_name
   associate_public_ip_address = true
 
   user_data = templatefile("./nomad-client-boundary-target.sh", {
-    NOMAD_SERVERS_ADDR = join(",", formatlist("\"%s\"", aws_instance.nomad_servers.*.private_ip))
+    NOMAD_SERVERS_ADDR = join(",", [for i in range(var.server_count) : format("\"10.0.1.%d\"", i + 10)])
   })
 
   vpc_security_group_ids = [
