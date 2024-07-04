@@ -4,7 +4,7 @@ module "vpc" {
   name = "hashiconf-escape-rooms"
   cidr = "10.0.0.0/16"
 
-  azs             = ["eu-west-1a"]
+  azs             = ["us-east-2a", "us-east-2b", "us-east-2c"]
   private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
   public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
 
@@ -23,7 +23,7 @@ resource "aws_lb" "nomad" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.nomad.id]
-  subnets            = module.vpc.private_subnets
+  subnets            = [element(module.vpc.private_subnets, 0), element(module.vpc.private_subnets, 1), element(module.vpc.private_subnets, 2)]
 
   enable_deletion_protection = false
 
