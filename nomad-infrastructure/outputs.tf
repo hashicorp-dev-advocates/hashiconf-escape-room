@@ -1,7 +1,3 @@
-output "nomad_server_public_ip" {
-  value = aws_eip.nomad_server.*.public_ip
-}
-
 output "nomad_server_private_ip" {
   value = aws_instance.nomad_servers.*.private_ip
 }
