@@ -83,7 +83,7 @@ resource "aws_security_group" "egress" {
 }
 
 resource "aws_eip" "nomad_server" {
-  count = 3
+  count = var.server_count
 
   tags = {
     Name = "Nomad Server"
@@ -98,7 +98,7 @@ resource "aws_eip_association" "nomad_server" {
 }
 
 resource "aws_instance" "nomad_servers" {
-  count         = 3
+  count         = var.server_count
   ami           = data.aws_ami.ubuntu.id
   instance_type = "t3.micro"
 
@@ -110,8 +110,8 @@ resource "aws_instance" "nomad_servers" {
   user_data = templatefile("./servers.sh", {
     NOMAD_SERVER_TAG     = "true"
     NOMAD_SERVER_TAG_KEY = "nomad_server"
-    NOMAD_SERVER_COUNT   = 3
-    NOMAD_SERVERS_ADDR   = join(",", formatlist("\"%s\"",aws_eip.nomad_server.*.private_ip))
+    NOMAD_SERVER_COUNT   = var.server_count
+    NOMAD_SERVERS_ADDR   = join(",", [for i in range(var.server_count) : format("\"10.0.101.%d\"", i + 10)])
   })
 
   vpc_security_group_ids = [
@@ -139,7 +139,7 @@ resource "aws_key_pair" "deployer" {
 }
 
 resource "aws_instance" "nomad_clients" {
-  count                       = 3
+  count                       = var.client_count
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = "t3.medium"
   subnet_id                   = module.vpc.public_subnets.0
