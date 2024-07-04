@@ -88,6 +88,7 @@ resource "aws_eip" "nomad_server" {
   tags = {
     Name = "Nomad Server"
   }
+  associate_with_private_ip = "10.0.101.${count.index + 10}"
 }
 
 resource "aws_eip_association" "nomad_server" {
@@ -100,7 +101,9 @@ resource "aws_instance" "nomad_servers" {
   count         = 3
   ami           = data.aws_ami.ubuntu.id
   instance_type = "t3.micro"
+
   subnet_id     = module.vpc.public_subnets.0
+  private_ip = "10.0.101.${count.index + 10}"
   key_name      = aws_key_pair.deployer.key_name
 
 
