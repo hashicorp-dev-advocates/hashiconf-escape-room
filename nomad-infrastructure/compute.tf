@@ -51,9 +51,14 @@ resource "aws_security_group" "nomad" {
     from_port = 4646
     protocol  = "tcp"
     to_port   = 4648
-    security_groups = [
-      aws_security_group.nomad.id
-    ]
+    self = true
+  }
+
+  ingress {
+    from_port   = -1
+    protocol    = "icmp"
+    to_port     = -1
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   tags = {
