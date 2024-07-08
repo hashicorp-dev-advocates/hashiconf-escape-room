@@ -21,9 +21,9 @@ variable "availability_zones" {
   type        = list(string)
   description = "List of AWS availability zones"
   default = [
-    "us-east-1a",
-    "us-east-1b",
-    "us-east-1c"
+    "us-east-2a",
+    "us-east-2b",
+    "us-east-2c"
   ]
 }
 
@@ -36,5 +36,5 @@ variable "subnet_ip_prefix" {
 variable "region" {
   description = "AWS Region"
   type        = string
-  default     = "us-east-1"
+  default     = "us-east-2"
 }

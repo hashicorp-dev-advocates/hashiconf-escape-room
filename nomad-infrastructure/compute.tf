@@ -203,9 +203,9 @@ resource "aws_instance" "nomad_clients" {
     ]
   }
 
-  depends_on = [
-    terracurl_request.nomad_status
-  ]
+#  depends_on = [
+#    terracurl_request.nomad_status
+#  ]
 
 }
 
@@ -240,8 +240,8 @@ resource "aws_instance" "boundary_target" {
     ]
   }
 
-  depends_on = [
-    terracurl_request.nomad_status
-  ]
+#  depends_on = [
+#    terracurl_request.nomad_status
+#  ]
 }
 
