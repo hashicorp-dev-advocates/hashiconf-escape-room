@@ -222,7 +222,7 @@ resource "aws_instance" "boundary_target" {
   instance_type               = "t3.medium"
   subnet_id                   = module.vpc.private_subnets.0
   key_name                    = aws_key_pair.deployer.key_name
-  associate_public_ip_address = true
+  associate_public_ip_address = false
 
   user_data = templatefile("./nomad-client-boundary-target.sh", {
     NOMAD_SERVERS_ADDR = join(",", [for i in range(var.server_count) : format("\"${var.subnet_ip_prefix}.%d\"", i + 10)])
