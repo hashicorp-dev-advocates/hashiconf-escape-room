@@ -11,10 +11,10 @@ output "nomad_clients_public_ips" {
 }
 
 
-output "nomad_management_token" {
-  value     = jsondecode(terracurl_request.bootstrap_acl.response).SecretID
-  sensitive = true
-}
+#output "nomad_management_token" {
+#  value     = jsondecode(terracurl_request.bootstrap_acl.response).SecretID
+#  sensitive = true
+#}
 
 output "nomad_ui" {
   value = "http://${aws_lb.nomad.dns_name}:4646"
