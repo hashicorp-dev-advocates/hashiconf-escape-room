@@ -23,7 +23,7 @@ server {
   bootstrap_expect = ${NOMAD_SERVER_COUNT}
 
   server_join {
-    retry_join = [${NOMAD_SERVERS_ADDR}]
+    retry_join = ["provider=aws region=${AWS_REGION} tag_key=${NOMAD_SERVER_TAG_KEY} tag_value=${NOMAD_SERVER_TAG}"]
   }
 }
 

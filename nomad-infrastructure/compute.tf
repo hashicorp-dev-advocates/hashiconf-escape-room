@@ -86,21 +86,66 @@ resource "aws_eip" "nomad_server" {
   instance = aws_instance.nomad_servers.0.id
 }
 
+resource "aws_iam_role" "nomad" {
+  name = "nomad-server-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        },
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_policy" "nomad" {
+  name        = "nomad-server-policy"
+  description = "IAM policy for Nomad server instances"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "ec2:DescribeInstances",
+          "ec2:DescribeTags"
+        ],
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "nomad" {
+  role       = aws_iam_role.nomad.name
+  policy_arn = aws_iam_policy.nomad.arn
+}
+
+resource "aws_iam_instance_profile" "nomad" {
+  name = "nomad-server-profile"
+  role = aws_iam_role.nomad.name
+}
+
 resource "aws_instance" "nomad_servers" {
-  count         = var.server_count
-  ami           = data.aws_ami.ubuntu.id
-  instance_type = "t3.micro"
+  count                = var.server_count
+  ami                  = data.aws_ami.ubuntu.id
+  instance_type        = "t3.micro"
+  iam_instance_profile = aws_iam_instance_profile.nomad.name
 
   subnet_id  = module.vpc.public_subnets.0
   private_ip = "${var.subnet_ip_prefix}.${count.index + 10}"
   key_name   = aws_key_pair.deployer.key_name
 
-
   user_data = templatefile("./servers.sh", {
     NOMAD_SERVER_TAG     = "true"
     NOMAD_SERVER_TAG_KEY = "nomad_server"
     NOMAD_SERVER_COUNT   = var.server_count
-    NOMAD_SERVERS_ADDR   = join(",", [for i in range(var.server_count) : format("\"${var.subnet_ip_prefix}.%d\"", i + 10)])
   })
 
   vpc_security_group_ids = [
