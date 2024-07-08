@@ -26,3 +26,9 @@ variable "availability_zones" {
     "us-east-1c"
   ]
 }
+
+variable "subnet_ip_prefix" {
+  description = "subnet address space prefix"
+  type        = string
+  default     = "10.0.101"
+}
