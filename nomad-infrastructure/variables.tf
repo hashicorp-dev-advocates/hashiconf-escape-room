@@ -16,3 +16,13 @@ variable "target_count" {
   description = "Number of boundary target vms"
   default     = 1
 }
+
+variable "availability_zones" {
+  type        = list(string)
+  description = "List of AWS availability zones"
+  default = [
+    "us-east-1a",
+    "us-east-1b",
+    "us-east-1c"
+  ]
+}

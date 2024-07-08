@@ -82,6 +82,10 @@ resource "aws_security_group" "egress" {
   }
 }
 
+resource "aws_eip" "nomad_server" {
+  instance = aws_instance.nomad_servers.0.id
+}
+
 resource "aws_instance" "nomad_servers" {
   count         = var.server_count
   ami           = data.aws_ami.ubuntu.id

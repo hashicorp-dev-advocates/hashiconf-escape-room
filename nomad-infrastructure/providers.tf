@@ -14,7 +14,7 @@ terraform {
 
 provider "aws" {
   # AWS credentials set up using environment variables
-  region = "us-east-2"
+  region = "us-east-1"
 }
 
 provider "terracurl" {}
