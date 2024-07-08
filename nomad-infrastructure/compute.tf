@@ -146,6 +146,7 @@ resource "aws_instance" "nomad_servers" {
     NOMAD_SERVER_TAG     = "true"
     NOMAD_SERVER_TAG_KEY = "nomad_server"
     NOMAD_SERVER_COUNT   = var.server_count
+    AWS_REGION           = var.region
   })
 
   vpc_security_group_ids = [
