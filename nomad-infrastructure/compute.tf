@@ -47,8 +47,17 @@ resource "aws_security_group" "nomad" {
     ]
   }
 
+  ingress {
+    from_port = 4646
+    protocol  = "tcp"
+    to_port   = 4648
+    security_groups = [
+      aws_security_group.nomad.id
+    ]
+  }
+
   tags = {
-    Name = "allow_ssh"
+    Name = "nomad_port"
   }
 }
 
