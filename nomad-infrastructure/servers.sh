@@ -11,8 +11,6 @@ sudo apt-get update && sudo apt-get install nomad -y
 # Create Nomad directory.
 mkdir -p /etc/nomad.d
 
-NOMAD_SERVERS="${NOMAD_SERVERS_ADDR}"
-
 # Nomad configuration files
 cat <<EOF > /etc/nomad.d/nomad.hcl
 log_level = "DEBUG"
