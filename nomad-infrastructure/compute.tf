@@ -88,7 +88,8 @@ resource "aws_security_group" "egress" {
 }
 
 resource "aws_eip" "nomad_server" {
-  instance = aws_instance.nomad_servers.0.id
+  count = var.server_count
+  instance = aws_instance.nomad_servers.*.id
 }
 
 resource "aws_iam_role" "nomad" {
