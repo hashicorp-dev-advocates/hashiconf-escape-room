@@ -43,7 +43,7 @@ resource "aws_security_group" "subnet_allow" {
     to_port   = 0
 
     cidr_blocks = [
-      "10.0.101.0/24"
+      "10.0.0.0/16"
     ]
     self = true
   }
@@ -54,7 +54,7 @@ resource "aws_security_group" "subnet_allow" {
     protocol  = "-1"
 
     cidr_blocks = [
-      "10.0.101.0/24"
+      "10.0.0.0/16"
     ]
   }
 
@@ -62,7 +62,7 @@ resource "aws_security_group" "subnet_allow" {
     from_port   = -1
     protocol    = "icmp"
     to_port     = -1
-    cidr_blocks = ["10.0.101.0/24"]
+    cidr_blocks = ["10.0.0.0/16"]
   }
 
 
