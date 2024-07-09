@@ -129,6 +129,14 @@ resource "aws_eip" "nomad_server_2" {
 
 }
 
+resource "aws_eip" "nomad_server_3" {
+  instance = aws_instance.nomad_servers.2.id
+  tags = {
+    Name = "nomad_server_3"
+  }
+
+}
+
 
 resource "aws_iam_role" "nomad" {
   name = "nomad-server-role"
