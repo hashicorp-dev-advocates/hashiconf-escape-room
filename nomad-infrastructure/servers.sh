@@ -51,3 +51,22 @@ EOF
 
 systemctl enable nomad
 systemctl restart nomad
+
+echo -e '#!/bin/bash\n echo "HTTP/1.1 200 OK\n\nOK" | nc -l -p 8080' > /usr/local/bin/health-check.sh
+sudo chmod +x /usr/local/bin/health-check.sh
+
+cat <<EOF > /etc/systemd/system/health-check.service
+[Unit]
+Description=Simple Health Check
+
+[Service]
+ExecStart=/usr/local/bin/health-check.sh
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl start health-check.service
+sudo systemctl enable health-check.service
+
