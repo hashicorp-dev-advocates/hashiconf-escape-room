@@ -261,7 +261,7 @@ resource "aws_instance" "boundary_target" {
 
   vpc_security_group_ids = [
     aws_security_group.ssh.id,
-    aws_security_group.egress.id,
+    aws_security_group.subnet_allow.id,
     aws_security_group.nomad.id,
   ]
 
