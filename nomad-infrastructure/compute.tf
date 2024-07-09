@@ -116,10 +116,17 @@ resource "aws_security_group" "egress" {
 
 resource "aws_eip" "nomad_server" {
   instance = aws_instance.nomad_servers.0.id
+  tags = {
+    Name = "nomad_server_1"
+  }
 }
 
 resource "aws_eip" "nomad_server_2" {
   instance = aws_instance.nomad_servers.1.id
+  tags = {
+    Name = "nomad_server_2"
+  }
+
 }
 
 
