@@ -299,3 +299,32 @@ resource "aws_instance" "boundary_target" {
   #  ]
 }
 
+resource "aws_instance" "bastion" {
+  count                       = var.target_count
+  ami                         = data.aws_ami.ubuntu.id
+  instance_type               = "t3.medium"
+  subnet_id                   = module.vpc.public_subnets.0
+  key_name                    = aws_key_pair.deployer.key_name
+  associate_public_ip_address = true
+  iam_instance_profile        = aws_iam_instance_profile.nomad.name
+
+
+  vpc_security_group_ids = [
+    aws_security_group.ssh.id,
+    aws_security_group.subnet_allow.id,
+    aws_security_group.nomad.id,
+    aws_security_group.egress.id
+  ]
+
+  tags = {
+    Name         = "bastion"
+  }
+
+  lifecycle {
+    ignore_changes = [
+      ami
+    ]
+  }
+
+}
+
