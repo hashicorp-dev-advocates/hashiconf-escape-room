@@ -22,8 +22,6 @@ variable "availability_zones" {
   description = "List of AWS availability zones"
   default = [
     "us-east-2a",
-    "us-east-2b",
-    "us-east-2c"
   ]
 }
 
