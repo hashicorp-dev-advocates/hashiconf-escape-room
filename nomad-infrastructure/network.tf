@@ -39,14 +39,14 @@ resource "aws_lb_target_group" "nomad" {
   vpc_id      = module.vpc.vpc_id
   target_type = "instance"
 
-  health_check {
-    path                = "/v1/status/leader"
-    interval            = 30
-    timeout             = 5
-    healthy_threshold   = 2
-    unhealthy_threshold = 2
-    matcher             = "200"
-  }
+#  health_check {
+#    path                = "/v1/status/leader"
+#    interval            = 30
+#    timeout             = 5
+#    healthy_threshold   = 2
+#    unhealthy_threshold = 2
+#    matcher             = "200"
+#  }
 
   tags = {
     Name = "nomad-tg"
