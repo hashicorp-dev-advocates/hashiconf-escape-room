@@ -33,6 +33,45 @@ resource "aws_security_group" "ssh" {
   }
 }
 
+resource "aws_security_group" "subnet_allow" {
+  vpc_id = module.vpc.vpc_id
+  name   = "subnet_allow"
+
+  ingress {
+    from_port = 0
+    protocol  = "-1"
+    to_port   = 0
+
+    cidr_blocks = [
+      "10.0.101.0/24"
+    ]
+    self = true
+  }
+
+  egress {
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1"
+
+    cidr_blocks = [
+      "10.0.101.0/24"
+    ]
+  }
+
+  ingress {
+    from_port   = -1
+    protocol    = "icmp"
+    to_port     = -1
+    cidr_blocks = ["10.0.101.0/24"]
+  }
+
+
+  tags = {
+
+    Name = "private_subnet_allow"
+  }
+}
+
 resource "aws_security_group" "nomad" {
   vpc_id = module.vpc.vpc_id
   name   = "nomad_port"
@@ -45,20 +84,8 @@ resource "aws_security_group" "nomad" {
     cidr_blocks = [
       "0.0.0.0/0"
     ]
-  }
-
-  ingress {
-    from_port = 4646
-    protocol  = "tcp"
-    to_port   = 4648
     self = true
-  }
 
-  ingress {
-    from_port   = -1
-    protocol    = "icmp"
-    to_port     = -1
-    cidr_blocks = ["0.0.0.0/0"]
   }
 
   tags = {
@@ -67,33 +94,33 @@ resource "aws_security_group" "nomad" {
 }
 
 
-resource "aws_security_group" "egress" {
-  vpc_id = module.vpc.vpc_id
-  name   = "egress"
-
-  egress {
-    from_port = 0
-    protocol  = "-1"
-    to_port   = 0
-
-    cidr_blocks = [
-      "0.0.0.0/0"
-    ]
-    self = true
-  }
-
-  tags = {
-    Name = "egress"
-  }
-}
+#resource "aws_security_group" "egress" {
+#  vpc_id = module.vpc.vpc_id
+#  name   = "egress"
+#
+#  egress {
+#    from_port = 0
+#    protocol  = "-1"
+#    to_port   = 0
+#
+#    cidr_blocks = [
+#      "0.0.0.0/0"
+#    ]
+#    self = true
+#  }
+#
+#  tags = {
+#    Name = "egress"
+#  }
+#}
 
 resource "aws_eip" "nomad_server" {
   instance = aws_instance.nomad_servers.0.id
 }
 
-resource "aws_eip" "nomad_server_2" {
-  instance = aws_instance.nomad_servers.1.id
-}
+#resource "aws_eip" "nomad_server_2" {
+#  instance = aws_instance.nomad_servers.1.id
+#}
 
 
 resource "aws_iam_role" "nomad" {
@@ -148,9 +175,9 @@ resource "aws_instance" "nomad_servers" {
   instance_type        = "t3.micro"
   iam_instance_profile = aws_iam_instance_profile.nomad.name
 
-  subnet_id  = module.vpc.public_subnets.0
-  private_ip = "${var.subnet_ip_prefix}.${count.index + 10}"
-  key_name   = aws_key_pair.deployer.key_name
+  subnet_id = module.vpc.public_subnets.0
+  #  private_ip = "${var.subnet_ip_prefix}.${count.index + 10}"
+  key_name = aws_key_pair.deployer.key_name
 
   user_data = templatefile("./servers.sh", {
     NOMAD_SERVER_TAG     = "true"
@@ -161,7 +188,7 @@ resource "aws_instance" "nomad_servers" {
 
   vpc_security_group_ids = [
     aws_security_group.ssh.id,
-    aws_security_group.egress.id,
+    aws_security_group.subnet_allow.id,
     aws_security_group.nomad.id
   ]
 
@@ -197,7 +224,7 @@ resource "aws_instance" "nomad_clients" {
 
   vpc_security_group_ids = [
     aws_security_group.ssh.id,
-    aws_security_group.egress.id,
+    aws_security_group.subnet_allow.id,
     aws_security_group.nomad.id,
   ]
 
@@ -213,9 +240,9 @@ resource "aws_instance" "nomad_clients" {
     ]
   }
 
-#  depends_on = [
-#    terracurl_request.nomad_status
-#  ]
+  #  depends_on = [
+  #    terracurl_request.nomad_status
+  #  ]
 
 }
 
@@ -250,8 +277,8 @@ resource "aws_instance" "boundary_target" {
     ]
   }
 
-#  depends_on = [
-#    terracurl_request.nomad_status
-#  ]
+  #  depends_on = [
+  #    terracurl_request.nomad_status
+  #  ]
 }
 

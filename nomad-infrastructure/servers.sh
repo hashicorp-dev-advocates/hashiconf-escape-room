@@ -25,6 +25,10 @@ server {
   }
 }
 
+consul {
+    server_auto_join = false
+    client_auto_join = false
+}
 
 autopilot {
     cleanup_dead_servers      = true
