@@ -94,25 +94,25 @@ resource "aws_security_group" "nomad" {
 }
 
 
-#resource "aws_security_group" "egress" {
-#  vpc_id = module.vpc.vpc_id
-#  name   = "egress"
-#
-#  egress {
-#    from_port = 0
-#    protocol  = "-1"
-#    to_port   = 0
-#
-#    cidr_blocks = [
-#      "0.0.0.0/0"
-#    ]
-#    self = true
-#  }
-#
-#  tags = {
-#    Name = "egress"
-#  }
-#}
+resource "aws_security_group" "egress" {
+  vpc_id = module.vpc.vpc_id
+  name   = "egress"
+
+  egress {
+    from_port = 0
+    protocol  = "-1"
+    to_port   = 0
+
+    cidr_blocks = [
+      "0.0.0.0/0"
+    ]
+    self = true
+  }
+
+  tags = {
+    Name = "egress"
+  }
+}
 
 resource "aws_eip" "nomad_server" {
   instance = aws_instance.nomad_servers.0.id
@@ -189,7 +189,8 @@ resource "aws_instance" "nomad_servers" {
   vpc_security_group_ids = [
     aws_security_group.ssh.id,
     aws_security_group.subnet_allow.id,
-    aws_security_group.nomad.id
+    aws_security_group.nomad.id,
+    aws_security_group.egress.id
   ]
 
   lifecycle {
@@ -226,6 +227,7 @@ resource "aws_instance" "nomad_clients" {
     aws_security_group.ssh.id,
     aws_security_group.subnet_allow.id,
     aws_security_group.nomad.id,
+    aws_security_group.egress.id
   ]
 
   tags = {
@@ -263,6 +265,7 @@ resource "aws_instance" "boundary_target" {
     aws_security_group.ssh.id,
     aws_security_group.subnet_allow.id,
     aws_security_group.nomad.id,
+    aws_security_group.egress.id
   ]
 
   tags = {
