@@ -114,28 +114,28 @@ resource "aws_security_group" "egress" {
   }
 }
 
-resource "aws_eip" "nomad_server" {
-  instance = aws_instance.nomad_servers.0.id
-  tags = {
-    Name = "nomad_server_1"
-  }
-}
-
-resource "aws_eip" "nomad_server_2" {
-  instance = aws_instance.nomad_servers.1.id
-  tags = {
-    Name = "nomad_server_2"
-  }
-
-}
-
-resource "aws_eip" "nomad_server_3" {
-  instance = aws_instance.nomad_servers.2.id
-  tags = {
-    Name = "nomad_server_3"
-  }
-
-}
+#resource "aws_eip" "nomad_server" {
+#  instance = aws_instance.nomad_servers.0.id
+#  tags = {
+#    Name = "nomad_server_1"
+#  }
+#}
+#
+#resource "aws_eip" "nomad_server_2" {
+#  instance = aws_instance.nomad_servers.1.id
+#  tags = {
+#    Name = "nomad_server_2"
+#  }
+#
+#}
+#
+#resource "aws_eip" "nomad_server_3" {
+#  instance = aws_instance.nomad_servers.2.id
+#  tags = {
+#    Name = "nomad_server_3"
+#  }
+#
+#}
 
 
 resource "aws_iam_role" "nomad" {
@@ -190,7 +190,7 @@ resource "aws_instance" "nomad_servers" {
   instance_type        = "t3.micro"
   iam_instance_profile = aws_iam_instance_profile.nomad.name
 
-  subnet_id = module.vpc.public_subnets.0
+  subnet_id = module.vpc.private_subnets.0
   #  private_ip = "${var.subnet_ip_prefix}.${count.index + 10}"
   key_name = aws_key_pair.deployer.key_name
 
@@ -233,10 +233,10 @@ resource "aws_instance" "nomad_clients" {
   subnet_id                   = module.vpc.private_subnets.0
   key_name                    = aws_key_pair.deployer.key_name
   associate_public_ip_address = false
+  iam_instance_profile        = aws_iam_instance_profile.nomad.name
 
-  user_data = templatefile("./clients.sh", {
-    NOMAD_SERVERS_ADDR = join(",", [for i in range(var.server_count) : format("\"${var.subnet_ip_prefix}.%d\"", i + 10)])
-  })
+
+  user_data = file("./nomad-client-boundary-target.sh")
 
   vpc_security_group_ids = [
     aws_security_group.ssh.id,
@@ -271,10 +271,9 @@ resource "aws_instance" "boundary_target" {
   subnet_id                   = module.vpc.private_subnets.0
   key_name                    = aws_key_pair.deployer.key_name
   associate_public_ip_address = false
+  iam_instance_profile        = aws_iam_instance_profile.nomad.name
 
-  user_data = templatefile("./nomad-client-boundary-target.sh", {
-    NOMAD_SERVERS_ADDR = join(",", [for i in range(var.server_count) : format("\"${var.subnet_ip_prefix}.%d\"", i + 10)])
-  })
+  user_data = file("./nomad-client-boundary-target.sh")
 
   vpc_security_group_ids = [
     aws_security_group.ssh.id,
