@@ -16,9 +16,9 @@ output "nomad_clients_public_ips" {
 #  sensitive = true
 #}
 
-output "nomad_ui" {
-  value = "http://${aws_lb.nomad.dns_name}:4646"
-}
+#output "nomad_ui" {
+#  value = "http://${aws_lb.nomad.dns_name}:4646"
+#}
 
 output "config" {
   value = aws_instance.nomad_servers.*.user_data
