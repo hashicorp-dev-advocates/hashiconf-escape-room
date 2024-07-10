@@ -40,12 +40,12 @@ resource "aws_lb_target_group" "nomad" {
   target_type = "instance"
 
   health_check {
-    path                = "/ui/"
+    path                = "/"
     interval            = 10
     timeout             = 5
     healthy_threshold   = 2
     unhealthy_threshold = 10
-    matcher             = "200"
+    matcher             = "307"
   }
 
   tags = {
