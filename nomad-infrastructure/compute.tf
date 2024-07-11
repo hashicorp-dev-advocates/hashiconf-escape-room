@@ -11,7 +11,7 @@ data "aws_ami" "ubuntu" {
     values = ["hvm"]
   }
 
-  owners = ["099720109477"] # Canonical
+  owners = ["099720109477"]
 }
 
 resource "aws_security_group" "ssh" {
@@ -133,30 +133,6 @@ resource "aws_security_group" "egress" {
   }
 }
 
-#resource "aws_eip" "nomad_server" {
-#  instance = aws_instance.nomad_servers.0.id
-#  tags = {
-#    Name = "nomad_server_1"
-#  }
-#}
-#
-#resource "aws_eip" "nomad_server_2" {
-#  instance = aws_instance.nomad_servers.1.id
-#  tags = {
-#    Name = "nomad_server_2"
-#  }
-#
-#}
-#
-#resource "aws_eip" "nomad_server_3" {
-#  instance = aws_instance.nomad_servers.2.id
-#  tags = {
-#    Name = "nomad_server_3"
-#  }
-#
-#}
-
-
 resource "aws_iam_role" "nomad" {
   name = "nomad-server-role"
 
@@ -210,14 +186,13 @@ resource "aws_instance" "nomad_servers" {
   iam_instance_profile = aws_iam_instance_profile.nomad.name
 
   subnet_id = module.vpc.private_subnets.0
-  #  private_ip = "${var.subnet_ip_prefix}.${count.index + 10}"
   key_name = aws_key_pair.deployer.key_name
 
   user_data = templatefile("./servers.sh", {
     NOMAD_SERVER_TAG     = "true"
     NOMAD_SERVER_TAG_KEY = "nomad_server"
     NOMAD_SERVER_COUNT   = var.server_count
-    AWS_REGION           = var.region
+    AWS_REGION           = var.aws_region
   })
 
   vpc_security_group_ids = [
@@ -255,7 +230,12 @@ resource "aws_instance" "nomad_clients" {
   iam_instance_profile        = aws_iam_instance_profile.nomad.name
 
 
-  user_data = file("./nomad-client-boundary-target.sh")
+  user_data = templatefile("./clients.sh", {
+    NOMAD_SERVER_TAG     = "true"
+    NOMAD_SERVER_TAG_KEY = "nomad_server"
+    NOMAD_SERVER_COUNT   = var.server_count
+    AWS_REGION           = var.aws_region
+  })
 
   vpc_security_group_ids = [
     aws_security_group.ssh.id,
@@ -271,15 +251,10 @@ resource "aws_instance" "nomad_clients" {
 
   lifecycle {
     ignore_changes = [
-      user_data,
+#      user_data,
       ami
     ]
   }
-
-  #  depends_on = [
-  #    terracurl_request.nomad_status
-  #  ]
-
 }
 
 
@@ -292,7 +267,12 @@ resource "aws_instance" "boundary_target" {
   associate_public_ip_address = false
   iam_instance_profile        = aws_iam_instance_profile.nomad.name
 
-  user_data = file("./nomad-client-boundary-target.sh")
+  user_data = templatefile("./nomad-client-boundary-target.sh", {
+    NOMAD_SERVER_TAG     = "true"
+    NOMAD_SERVER_TAG_KEY = "nomad_server"
+    NOMAD_SERVER_COUNT   = var.server_count
+    AWS_REGION           = var.aws_region
+  })
 
   vpc_security_group_ids = [
     aws_security_group.ssh.id,
@@ -308,42 +288,8 @@ resource "aws_instance" "boundary_target" {
 
   lifecycle {
     ignore_changes = [
-      user_data,
+#      user_data,
       ami
     ]
   }
-
-  #  depends_on = [
-  #    terracurl_request.nomad_status
-  #  ]
 }
-
-resource "aws_instance" "bastion" {
-  count                       = var.target_count
-  ami                         = data.aws_ami.ubuntu.id
-  instance_type               = "t3.medium"
-  subnet_id                   = module.vpc.public_subnets.0
-  key_name                    = aws_key_pair.deployer.key_name
-  associate_public_ip_address = true
-  iam_instance_profile        = aws_iam_instance_profile.nomad.name
-
-
-  vpc_security_group_ids = [
-    aws_security_group.ssh.id,
-    aws_security_group.subnet_allow.id,
-    aws_security_group.nomad.id,
-    aws_security_group.egress.id
-  ]
-
-  tags = {
-    Name         = "bastion"
-  }
-
-  lifecycle {
-    ignore_changes = [
-      ami
-    ]
-  }
-
-}
-

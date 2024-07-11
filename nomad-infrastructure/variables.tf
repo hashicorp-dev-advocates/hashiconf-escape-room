@@ -32,7 +32,7 @@ variable "subnet_ip_prefix" {
   default     = "10.0.101"
 }
 
-variable "region" {
+variable "aws_region" {
   description = "AWS Region"
   type        = string
   default     = "us-east-2"
