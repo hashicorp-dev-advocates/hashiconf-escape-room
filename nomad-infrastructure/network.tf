@@ -40,13 +40,13 @@ resource "aws_lb_target_group" "nomad" {
   target_type = "instance"
 
   health_check {
-    enabled = false
-#    path                = "/"
-#    interval            = 10
-#    timeout             = 5
-#    healthy_threshold   = 2
-#    unhealthy_threshold = 10
-#    matcher             = "307"
+    enabled = true
+    path                = "/v1/agent/health"
+    interval            = 10
+    timeout             = 5
+    healthy_threshold   = 2
+    unhealthy_threshold = 10
+    matcher             = "200"
   }
 
 
