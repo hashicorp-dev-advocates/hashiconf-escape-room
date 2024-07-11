@@ -22,7 +22,7 @@ resource "aws_lb" "nomad" {
   name               = "nomad-lb"
   internal           = false
   load_balancer_type = "application"
-  security_groups    = [aws_security_group.web.id]
+  security_groups    = [aws_security_group.web.id, aws_security_group.nomad.id, aws_security_group.egress.id]
   subnets            = module.vpc.public_subnets
 
   enable_deletion_protection = false
