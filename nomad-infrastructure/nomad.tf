@@ -8,6 +8,10 @@ resource "terracurl_request" "nomad_status" {
 
   depends_on = [
     aws_instance.nomad_servers,
+    aws_lb.nomad,
+    aws_lb_listener.web,
+    aws_lb_target_group.nomad,
+    aws_lb_target_group_attachment.nomad
   ]
 }
 

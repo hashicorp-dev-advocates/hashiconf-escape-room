@@ -251,10 +251,14 @@ resource "aws_instance" "nomad_clients" {
 
   lifecycle {
     ignore_changes = [
-#      user_data,
+      user_data,
       ami
     ]
   }
+
+  depends_on = [
+    terracurl_request.nomad_status
+  ]
 }
 
 
@@ -288,8 +292,12 @@ resource "aws_instance" "boundary_target" {
 
   lifecycle {
     ignore_changes = [
-#      user_data,
+      user_data,
       ami
     ]
   }
+
+  depends_on = [
+    terracurl_request.nomad_status
+  ]
 }
