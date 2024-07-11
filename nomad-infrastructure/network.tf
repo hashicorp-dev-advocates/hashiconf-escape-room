@@ -23,7 +23,7 @@ resource "aws_lb" "nomad" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.web.id]
-  subnets            = [element(module.vpc.private_subnets, 0), element(module.vpc.private_subnets, 1)]
+  subnets            = module.vpc.public_subnets
 
   enable_deletion_protection = false
 
