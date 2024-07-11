@@ -33,6 +33,25 @@ resource "aws_security_group" "ssh" {
   }
 }
 
+resource "aws_security_group" "web" {
+  vpc_id = module.vpc.vpc_id
+  name   = "port_80"
+
+  ingress {
+    from_port = 80
+    protocol  = "tcp"
+    to_port   = 80
+
+    cidr_blocks = [
+      "0.0.0.0/0"
+    ]
+  }
+
+  tags = {
+    Name = "port_80"
+  }
+}
+
 resource "aws_security_group" "subnet_allow" {
   vpc_id = module.vpc.vpc_id
   name   = "subnet_allow"

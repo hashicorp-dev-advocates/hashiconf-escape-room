@@ -22,8 +22,8 @@ resource "aws_lb" "nomad" {
   name               = "nomad-lb"
   internal           = false
   load_balancer_type = "application"
-  security_groups    = [aws_security_group.nomad.id]
-  subnets            = [element(module.vpc.private_subnets, 0), element(module.vpc.private_subnets, 1), element(module.vpc.private_subnets, 2)]
+  security_groups    = [aws_security_group.web.id]
+  subnets            = [element(module.vpc.private_subnets, 0), element(module.vpc.private_subnets, 1)]
 
   enable_deletion_protection = false
 
@@ -40,33 +40,31 @@ resource "aws_lb_target_group" "nomad" {
   target_type = "instance"
 
   health_check {
-    path                = "/"
-    interval            = 10
-    timeout             = 5
-    healthy_threshold   = 2
-    unhealthy_threshold = 10
-    matcher             = "307"
+    enabled = false
+#    path                = "/"
+#    interval            = 10
+#    timeout             = 5
+#    healthy_threshold   = 2
+#    unhealthy_threshold = 10
+#    matcher             = "307"
   }
 
-  tags = {
-    Name = "nomad-tg"
-  }
+
 }
-
-resource "aws_lb_listener" "nomad" {
-  load_balancer_arn = aws_lb.nomad.arn
-  port              = 80
-  protocol          = "HTTP"
-
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.nomad.arn
-  }
-}
-
 resource "aws_lb_target_group_attachment" "nomad" {
   count            = var.server_count
   target_group_arn = aws_lb_target_group.nomad.arn
   target_id        = aws_instance.nomad_servers[count.index].id
   port             = 4646
 }
+
+  resource "aws_lb_listener" "web" {
+    load_balancer_arn = aws_lb.nomad.arn
+    port              = 80
+    protocol          = "HTTP"
+
+    default_action {
+      type             = "forward"
+      target_group_arn = aws_lb_target_group.nomad.arn
+    }
+  }
