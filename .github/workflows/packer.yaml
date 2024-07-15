@@ -7,6 +7,10 @@ on:
     paths:
       - packer/**
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   hcp-packer:
     runs-on: ubuntu-latest
@@ -20,7 +24,7 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_ROLE }}
           role-session-name: github-to-aws-packer-build
-          aws-region: "us-east-2"
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Setup `packer`
         uses: hashicorp/setup-packer@v3
@@ -45,4 +49,5 @@ jobs:
           HCP_CLIENT_ID: ${{ secrets.HCP_CLIENT_ID }}
           HCP_CLIENT_SECRET: ${{ secrets.HCP_CLIENT_SECRET }}
           HCP_PROJECT_ID: ${{ secrets.HCP_PROJECT_ID }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
           HCP_PACKER_BUILD_FINGERPRINT: "run.id.${{ github.run_id }}.run.attempt.${{ github.run_attempt }}"
