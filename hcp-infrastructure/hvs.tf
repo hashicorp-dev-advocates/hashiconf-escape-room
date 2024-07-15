@@ -2,6 +2,12 @@ resource "hcp_service_principal" "github_actions" {
   name = "github-actions"
 }
 
+resource "hcp_project_iam_binding" "github_actions" {
+  project_id   = var.hcp_project_id
+  principal_id = hcp_service_principal.github_actions.resource_id
+  role         = "roles/contributor"
+}
+
 resource "hcp_service_principal_key" "github_actions" {
   service_principal = hcp_service_principal.github_actions.resource_name
 }
