@@ -32,5 +32,5 @@ resource "hcp_vault_secrets_secret" "hcp_project_id" {
 resource "hcp_vault_secrets_secret" "aws_role" {
   app_name     = hcp_vault_secrets_app.github_actions.app_name
   secret_name  = "AWS_ROLE"
-  secret_value = aws_iam_role.packer.arn
+  secret_value = aws_iam_role.github_actions.arn
 }

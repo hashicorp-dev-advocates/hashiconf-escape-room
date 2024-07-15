@@ -26,6 +26,17 @@ variable "aws_region" {
   description = "AWS region"
 }
 
+variable "hcp_terraform_aws_audience" {
+  type        = string
+  default     = "aws.workload.identity"
+  description = "The audience value to use in run identity tokens"
+}
+
+variable "hcp_terraform_organization" {
+  type    = string
+  default = "hashicorp-team-da-beta"
+}
+
 variable "hcp_vault" {
   type = object({
     public_endpoint = bool

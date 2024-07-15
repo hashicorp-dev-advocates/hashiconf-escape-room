@@ -1,15 +1,20 @@
-resource "aws_iam_openid_connect_provider" "github_actions" {
-  url = "https://token.actions.githubusercontent.com"
-
-  client_id_list = [
-    "sts.amazonaws.com",
-  ]
-
-  thumbprint_list = ["D89E3BD43D5D909B47A18977AA9D5CE36CEE184C"]
+locals {
+  hcp_terraform_url  = "https://app.terraform.io"
+  github_actions_url = "https://token.actions.githubusercontent.com"
 }
 
-resource "aws_iam_role" "packer" {
-  name = "${var.name}-packer"
+data "tls_certificate" "hcp_terraform" {
+  url = local.hcp_terraform_url
+}
+
+resource "aws_iam_openid_connect_provider" "hcp_terraform" {
+  url             = data.tls_certificate.hcp_terraform.url
+  client_id_list  = [var.hcp_terraform_aws_audience]
+  thumbprint_list = [data.tls_certificate.hcp_terraform.certificates[0].sha1_fingerprint]
+}
+
+resource "aws_iam_role" "hcp_terraform" {
+  name = "${var.name}-hcp-terraform"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -19,7 +24,65 @@ resource "aws_iam_role" "packer" {
         Effect = "Allow"
         Sid    = ""
         Principal = {
-          "Federated" : "${aws_iam_openid_connect_provider.github_actions.arn}"
+          Federated = "${aws_iam_openid_connect_provider.hcp_terraform.arn}"
+        }
+        Condition = {
+          StringEquals = {
+            "${local.hcp_terraform_url}:aud" = "${one(aws_iam_openid_connect_provider.hcp_terraform.client_id_list)}"
+          }
+          StringLike = {
+            "${local.hcp_terraform_url}:sub" = "organization:${var.hcp_terraform_organization}:project:${var.name}:workspace:nomad-infrastructure:run_phase:*"
+          }
+        }
+      },
+    ]
+  })
+}
+
+resource "aws_iam_policy" "hcp_terraform" {
+  name        = "${var.name}-hcp-terraform"
+  description = "HCP Terraform policies"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Action = [
+        "ec2:*",
+        "elasticloadbalancing:*"
+      ]
+      Effect   = "Allow"
+      Resource = "*"
+    }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "hcp_terraform" {
+  role       = aws_iam_role.hcp_terraform.name
+  policy_arn = aws_iam_policy.hcp_terraform.arn
+}
+
+data "tls_certificate" "github_actions" {
+  url = local.github_actions_url
+}
+
+resource "aws_iam_openid_connect_provider" "github_actions" {
+  url             = data.tls_certificate.github_actions.url
+  client_id_list  = ["sts.amazonaws.com"]
+  thumbprint_list = [data.tls_certificate.github_actions.certificates[0].sha1_fingerprint]
+}
+
+resource "aws_iam_role" "github_actions" {
+  name = "${var.name}-github-actions"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRoleWithWebIdentity"
+        Effect = "Allow"
+        Sid    = ""
+        Principal = {
+          Federated = "${aws_iam_openid_connect_provider.github_actions.arn}"
         }
         Condition = {
           StringEquals = {
@@ -32,9 +95,8 @@ resource "aws_iam_role" "packer" {
   })
 }
 
-resource "aws_iam_role_policy" "packer" {
-  name = "${var.name}-packer"
-  role = aws_iam_role.packer.id
+resource "aws_iam_policy" "github_actions" {
+  name = "${var.name}-github-actions"
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -80,4 +142,9 @@ resource "aws_iam_role_policy" "packer" {
       },
     ]
   })
+}
+
+resource "aws_iam_role_policy_attachment" "github_actions" {
+  role       = aws_iam_role.github_actions.name
+  policy_arn = aws_iam_policy.github_actions.arn
 }
