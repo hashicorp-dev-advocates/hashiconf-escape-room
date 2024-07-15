@@ -34,3 +34,9 @@ resource "hcp_vault_secrets_secret" "aws_role" {
   secret_name  = "AWS_ROLE"
   secret_value = aws_iam_role.github_actions.arn
 }
+
+resource "hcp_vault_secrets_secret" "aws_region" {
+  app_name     = hcp_vault_secrets_app.github_actions.app_name
+  secret_name  = "AWS_REGION"
+  secret_value = var.aws_region
+}
