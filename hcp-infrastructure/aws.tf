@@ -48,7 +48,8 @@ resource "aws_iam_policy" "hcp_terraform" {
     Statement = [{
       Action = [
         "ec2:*",
-        "elasticloadbalancing:*"
+        "elasticloadbalancing:*",
+        "iam:GetRole"
       ]
       Effect   = "Allow"
       Resource = "*"
