@@ -3,6 +3,12 @@ variable "hcp_project_id" {
   description = "HCP project ID"
 }
 
+variable "repository" {
+  type        = string
+  description = "Repository with resources"
+  default     = "hashicorp-dev-advocates/hashiconf-escape-room"
+}
+
 variable "name" {
   type        = string
   description = "Name of HCP resources"
