@@ -1,10 +1,10 @@
 locals {
-  hcp_terraform_url  = "https://app.terraform.io"
-  github_actions_url = "https://token.actions.githubusercontent.com"
+  hcp_terraform_url  = "app.terraform.io"
+  github_actions_url = "token.actions.githubusercontent.com"
 }
 
 data "tls_certificate" "hcp_terraform" {
-  url = local.hcp_terraform_url
+  url = "https://${local.hcp_terraform_url}"
 }
 
 resource "aws_iam_openid_connect_provider" "hcp_terraform" {
@@ -62,7 +62,7 @@ resource "aws_iam_role_policy_attachment" "hcp_terraform" {
 }
 
 data "tls_certificate" "github_actions" {
-  url = local.github_actions_url
+  url = "https://${local.github_actions_url}"
 }
 
 resource "aws_iam_openid_connect_provider" "github_actions" {
@@ -86,8 +86,8 @@ resource "aws_iam_role" "github_actions" {
         }
         Condition = {
           StringEquals = {
-            "token.actions.githubusercontent.com:sub" = "repo:${var.repository}:ref:refs/heads/main",
-            "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
+            "${local.github_actions_url}:sub" = "repo:${var.repository}:ref:refs/heads/main",
+            "${local.github_actions_url}:aud" = "sts.amazonaws.com"
           }
         }
       },
