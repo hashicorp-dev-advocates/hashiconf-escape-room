@@ -29,6 +29,11 @@ resource "aws_launch_template" "app_node_pool" {
     }, var.tags)
   }
 
+  metadata_options {
+    http_endpoint          = "enabled"
+    instance_metadata_tags = "enabled"
+  }
+
   network_interfaces {
     associate_public_ip_address = true
     security_groups = [
