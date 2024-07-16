@@ -31,7 +31,8 @@ resource "aws_launch_template" "app_node_pool" {
     resource_type = "instance"
 
     tags = merge({
-      NodePool = var.hcp_packer_bucket_name
+      NodePool = var.hcp_packer_bucket_name,
+      Name     = var.name
     }, var.tags)
   }
 
