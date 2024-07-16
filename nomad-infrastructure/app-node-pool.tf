@@ -40,42 +40,42 @@ resource "aws_launch_template" "app_node_pool" {
   }
 }
 
-# resource "aws_autoscaling_group" "app_node_pool" {
-#   name_prefix = var.name
+resource "aws_autoscaling_group" "app_node_pool" {
+  name_prefix = var.name
 
-#   launch_template {
-#     id      = aws_launch_template.app_node_pool.id
-#     version = aws_launch_template.app_node_pool.latest_version
-#   }
+  launch_template {
+    id      = aws_launch_template.app_node_pool.id
+    version = aws_launch_template.app_node_pool.latest_version
+  }
 
-#   desired_capacity = 1
-#   min_size         = 1
-#   max_size         = 3
+  desired_capacity = 1
+  min_size         = 1
+  max_size         = 3
 
-#   vpc_zone_identifier = module.vpc.public_subnets
+  vpc_zone_identifier = module.vpc.public_subnets
 
-#   health_check_grace_period = 300
-#   health_check_type         = "EC2"
-#   termination_policies      = ["OldestLaunchTemplate"]
-#   wait_for_capacity_timeout = 0
+  health_check_grace_period = 300
+  health_check_type         = "EC2"
+  termination_policies      = ["OldestLaunchTemplate"]
+  wait_for_capacity_timeout = 0
 
-#   enabled_metrics = [
-#     "GroupDesiredCapacity",
-#     "GroupInServiceCapacity",
-#     "GroupPendingCapacity",
-#     "GroupMinSize",
-#     "GroupMaxSize",
-#     "GroupInServiceInstances",
-#     "GroupPendingInstances",
-#     "GroupStandbyInstances",
-#     "GroupStandbyCapacity",
-#     "GroupTerminatingCapacity",
-#     "GroupTerminatingInstances",
-#     "GroupTotalCapacity",
-#     "GroupTotalInstances"
-#   ]
+  enabled_metrics = [
+    "GroupDesiredCapacity",
+    "GroupInServiceCapacity",
+    "GroupPendingCapacity",
+    "GroupMinSize",
+    "GroupMaxSize",
+    "GroupInServiceInstances",
+    "GroupPendingInstances",
+    "GroupStandbyInstances",
+    "GroupStandbyCapacity",
+    "GroupTerminatingCapacity",
+    "GroupTerminatingInstances",
+    "GroupTotalCapacity",
+    "GroupTotalInstances"
+  ]
 
-#   depends_on = [
-#     terracurl_request.nomad_status
-#   ]
-# }
+  depends_on = [
+    terracurl_request.nomad_status
+  ]
+}
