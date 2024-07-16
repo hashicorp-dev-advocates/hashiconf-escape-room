@@ -37,3 +37,29 @@ variable "aws_region" {
   type        = string
   default     = "us-east-2"
 }
+
+variable "name" {
+  type        = string
+  description = "Name of HCP resources"
+  default     = "hashiconf-escape-room"
+}
+
+variable "hcp_project_id" {
+  type        = string
+  description = "HCP project ID"
+}
+
+variable "tags" {
+  type        = map(string)
+  description = "AWS tags to add to resources"
+  default = {
+    repository = "hashiconf-escape-room"
+    purpose    = "nomad-infrastructure"
+  }
+}
+
+variable "hcp_packer_bucket_name" {
+  type        = string
+  description = "HCP Packer bucket name, also used for node pool"
+  default     = "app-ubuntu"
+}

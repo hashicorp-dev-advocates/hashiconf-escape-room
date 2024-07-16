@@ -3,7 +3,7 @@ resource "terracurl_request" "nomad_status" {
   name           = "nomad_status"
   response_codes = [200]
   url            = "http://${aws_lb.nomad.dns_name}/v1/status/leader"
-  max_retry = 4
+  max_retry      = 4
   retry_interval = 10
 
   depends_on = [

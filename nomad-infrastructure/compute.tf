@@ -186,7 +186,7 @@ resource "aws_instance" "nomad_servers" {
   iam_instance_profile = aws_iam_instance_profile.nomad.name
 
   subnet_id = module.vpc.private_subnets.0
-  key_name = aws_key_pair.deployer.key_name
+  key_name  = aws_key_pair.deployer.key_name
 
   user_data = templatefile("./servers.sh", {
     NOMAD_SERVER_TAG     = "true"
