@@ -72,6 +72,6 @@ build {
 
   provisioner "file" {
     source      = "./scripts/user-data.sh"
-    destination = "/tmp/user-data.sh"
+    destination = "/opt/user-data.sh"
   }
 }
