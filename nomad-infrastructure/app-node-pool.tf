@@ -35,10 +35,6 @@ resource "aws_launch_template" "app_node_pool" {
       Name     = var.name
     }, var.tags)
   }
-
-  network_interfaces {
-    associate_public_ip_address = true
-  }
 }
 
 resource "aws_autoscaling_group" "app_node_pool" {
