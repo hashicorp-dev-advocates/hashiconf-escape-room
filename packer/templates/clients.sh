@@ -42,6 +42,8 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
 # Install Java
 sudo apt install default-jre -y
 
+NODE_POOL=$(curl http://169.254.169.254/latest/meta-data/tags/instance/NodePool)
+
 # Nomad configuration files
 cat <<EOF > /etc/nomad.d/nomad.hcl
 log_level = "DEBUG"
@@ -53,6 +55,8 @@ client {
   server_join {
     retry_join = ["provider=aws region=${AWS_REGION} tag_key=${NOMAD_SERVER_TAG_KEY} tag_value=${NOMAD_SERVER_TAG}"]
   }
+
+  node_pool = "$NODE_POOL"
 }
 
 plugin "docker" {
