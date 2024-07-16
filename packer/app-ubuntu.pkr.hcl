@@ -42,11 +42,6 @@ source "amazon-ebs" "app-ubuntu" {
   region        = var.aws_region
   source_ami    = data.amazon-ami.ubuntu-focal.id
   ssh_username  = "ubuntu"
-  user_data = templatefile("templates/clients.sh", {
-    AWS_REGION           = var.aws_region,
-    NOMAD_SERVER_TAG_KEY = "nomad_server",
-    NOMAD_SERVER_TAG     = "true"
-  })
 }
 
 build {
@@ -70,4 +65,13 @@ build {
   sources = [
     "source.amazon-ebs.app-ubuntu"
   ]
+
+  provisioner "shell" {
+    script = "./scripts/clients.sh"
+  }
+
+  provisioner "file" {
+    source      = "./scripts/user-data.sh"
+    destination = "/tmp/user-data.sh"
+  }
 }
