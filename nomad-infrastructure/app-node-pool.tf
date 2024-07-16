@@ -39,7 +39,7 @@ resource "aws_launch_template" "app_node_pool" {
     ]
   }
 
-  user_data = file("./app-node-pool.sh")
+  user_data = base64encode(file("./app-node-pool.sh"))
 }
 
 resource "aws_autoscaling_group" "app_node_pool" {
