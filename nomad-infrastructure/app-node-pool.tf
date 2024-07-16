@@ -48,6 +48,13 @@ resource "aws_autoscaling_group" "app_node_pool" {
     version = aws_launch_template.app_node_pool.latest_version
   }
 
+  instance_refresh {
+    strategy = "Rolling"
+    preferences {
+      min_healthy_percentage = 0
+    }
+  }
+
   desired_capacity = 1
   min_size         = 1
   max_size         = 3
