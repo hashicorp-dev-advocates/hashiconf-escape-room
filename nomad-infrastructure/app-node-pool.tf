@@ -34,6 +34,10 @@ resource "aws_launch_template" "app_node_pool" {
       NodePool = var.hcp_packer_bucket_name
     }, var.tags)
   }
+
+  network_interfaces {
+    associate_public_ip_address = true
+  }
 }
 
 resource "aws_autoscaling_group" "app_node_pool" {
@@ -44,11 +48,11 @@ resource "aws_autoscaling_group" "app_node_pool" {
     version = aws_launch_template.app_node_pool.latest_version
   }
 
-  desired_capacity = 3
+  desired_capacity = 1
   min_size         = 1
   max_size         = 3
 
-  vpc_zone_identifier = module.vpc.private_subnets
+  vpc_zone_identifier = module.vpc.public_subnets
 
   health_check_grace_period = 300
   health_check_type         = "EC2"

@@ -301,23 +301,3 @@ resource "aws_instance" "boundary_target" {
     terracurl_request.nomad_status
   ]
 }
-
-resource "aws_instance" "boundary_worker" {
-  ami                         = data.aws_ami.ubuntu.id
-  instance_type               = "t3.micro"
-  subnet_id                   = module.vpc.public_subnets.0
-  key_name                    = aws_key_pair.deployer.key_name
-  associate_public_ip_address = true
-
-  vpc_security_group_ids = [
-    aws_security_group.ssh.id,
-    aws_security_group.subnet_allow.id,
-    aws_security_group.nomad.id,
-    aws_security_group.egress.id
-  ]
-
-  tags = {
-    Name         = "boundary-worker"
-    nomad_server = false
-  }
-}
