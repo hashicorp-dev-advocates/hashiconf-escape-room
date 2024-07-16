@@ -66,12 +66,12 @@ build {
     "source.amazon-ebs.app-ubuntu"
   ]
 
-  provisioner "shell" {
-    script = "./scripts/clients.sh"
-  }
-
   provisioner "file" {
     source      = "./scripts/user-data.sh"
-    destination = "/opt/user-data.sh"
+    destination = "/tmp/user-data.sh"
+  }
+
+  provisioner "shell" {
+    script = "./scripts/clients.sh"
   }
 }

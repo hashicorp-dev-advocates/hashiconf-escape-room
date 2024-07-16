@@ -38,6 +38,8 @@ resource "aws_launch_template" "app_node_pool" {
       aws_security_group.egress.id
     ]
   }
+
+  user_data = file("./app-node-pool.sh")
 }
 
 resource "aws_autoscaling_group" "app_node_pool" {
