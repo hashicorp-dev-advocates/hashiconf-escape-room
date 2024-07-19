@@ -75,9 +75,3 @@ variable "github_user" {
   type        = string
   description = "GitHub user or organization for HCP Terraform GitHub app. Used to create no-code Terraform module for Waypoint"
 }
-
-variable "tf_module_repositories" {
-  type        = set(string)
-  description = "List of GitHub repositories with Terraform modules"
-  default     = ["terraform-nomad-app"]
-}

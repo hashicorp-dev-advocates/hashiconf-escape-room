@@ -64,8 +64,7 @@ provider "registry.terraform.io/hashicorp/random" {
 }
 
 provider "registry.terraform.io/hashicorp/tfe" {
-  version     = "0.57.0"
-  constraints = "~> 0.57.0"
+  version = "0.57.0"
   hashes = [
     "h1:48HXOgb4AlXvdHEYAu7KUcJzF55etZrs1Hv8JzNcfC8=",
     "zh:0771b145e274b5e3adfd3dfebff5c59b99477a7456ccc5b14c37a80f1941d24a",
