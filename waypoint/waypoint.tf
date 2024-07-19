@@ -78,12 +78,10 @@ resource "hcp_waypoint_template" "nomad_app" {
       variable_type = "string"
     },
     {
-      name = "node_pool"
-      options = [
-        "app-ubuntu",
-      ]
-      user_editable = false
-      variable_type  = "string"
+      name          = "node_pool"
+      options       = data.nomad_node_pools.all.node_pools.*.name
+      user_editable = true
+      variable_type = "string"
     },
     {
       name = "service_provider"
