@@ -14,3 +14,9 @@ variable "hcp_terraform_organization" {
   description = "Name of HCP Terraform organization"
   default     = "hashicorp-team-da-beta"
 }
+
+variable "github_user" {
+  type        = string
+  description = "GitHub user or organization for repository. Used for TF no-code module"
+  default     = "hashicorp-dev-advocates"
+}
