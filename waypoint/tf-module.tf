@@ -4,7 +4,6 @@ data "tfe_oauth_client" "client" {
 }
 
 resource "tfe_registry_module" "nomad_app" {
-  no_code      = true
   organization = var.hcp_terraform_organization
 
   test_config {
@@ -24,55 +23,7 @@ data "nomad_node_pools" "all" {}
 
 resource "tfe_no_code_module" "nomad_app" {
   enabled         = true
-  organization    = var.hcp_terraform_organization
-  registry_module = tfe_registry_module.nomad_app.id
+  organization    = "hashicorp-team-da-beta"
+  registry_module = "mod-wWQ9jhqYLoBCJM6T"
   version_pin     = "0.0.2"
-
-  variable_options {
-    name    = "application_count"
-    options = [1]
-    type    = "number"
-  }
-
-  variable_options {
-    name    = "application_name"
-    options = [""]
-    type    = "string"
-  }
-
-  variable_options {
-    name    = "application_port"
-    options = [9090]
-    type    = "number"
-  }
-
-  variable_options {
-    name    = "environment_variables"
-    options = ["{}"]
-    type    = "map(string)"
-  }
-
-  variable_options {
-    name    = "image"
-    options = [""]
-    type    = "string"
-  }
-
-  variable_options {
-    name    = "metadata"
-    options = ["{}"]
-    type    = "map(string)"
-  }
-
-  variable_options {
-    name    = "node_pool"
-    options = data.nomad_node_pools.all.node_pools.*.name
-    type    = "string"
-  }
-
-  variable_options {
-    name    = "service_provider"
-    options = ["nomad"]
-    type    = "string"
-  }
 }
