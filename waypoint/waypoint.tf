@@ -52,14 +52,46 @@ resource "hcp_waypoint_template" "nomad_app" {
 
   variable_options = [
     {
-      name          = "application_count"
+      name = "application_count"
+      options = [
+        "1",
+      ]
+      user_editable = false
       variable_type = "number"
-      user_editable = true
     },
     {
       name          = "application_name"
-      variable_type = "string"
+      options       = []
       user_editable = true
-    }
+      variable_type = "string"
+    },
+    {
+      name          = "application_port"
+      options       = []
+      user_editable = true
+      variable_type = "number"
+    },
+    {
+      name          = "image"
+      options       = []
+      user_editable = true
+      variable_type = "string"
+    },
+    {
+      name = "node_pool"
+      options = [
+        "app-ubuntu",
+      ]
+      user_editable = false
+      variable_type  = "string"
+    },
+    {
+      name = "service_provider"
+      options = [
+        "nomad",
+      ]
+      user_editable = false
+      variable_type = "string"
+    },
   ]
 }
