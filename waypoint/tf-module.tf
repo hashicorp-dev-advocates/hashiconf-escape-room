@@ -1,10 +1,10 @@
 data "tfe_oauth_client" "client" {
-  organization = var.hcp_terraform_organization
+  organization = data.tfe_organization.org.name
   name         = var.github_user
 }
 
 resource "tfe_registry_module" "nomad_app" {
-  organization = var.hcp_terraform_organization
+  organization = data.tfe_organization.org.name
 
   test_config {
     tests_enabled = false
@@ -23,7 +23,7 @@ data "nomad_node_pools" "all" {}
 
 resource "tfe_no_code_module" "nomad_app" {
   enabled         = true
-  organization    = "hashicorp-team-da-beta"
-  registry_module = "mod-wWQ9jhqYLoBCJM6T"
+  organization    = data.tfe_organization.org.name
+  registry_module = tfe_registry_module.nomad_app.id
   version_pin     = "0.0.2"
 }
