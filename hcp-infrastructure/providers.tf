@@ -8,8 +8,14 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 5.58.0"
     }
+    tfe = {
+      source  = "hashicorp/tfe"
+      version = "~> 0.57.0"
+    }
   }
 }
+
+provider "tfe" {}
 
 provider "hcp" {
   project_id = var.hcp_project_id

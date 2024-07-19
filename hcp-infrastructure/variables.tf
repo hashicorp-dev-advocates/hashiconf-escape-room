@@ -6,7 +6,7 @@ variable "hcp_project_id" {
 variable "repository" {
   type        = string
   description = "Repository with resources"
-  default     = "hashicorp-dev-advocates/hashiconf-escape-room"
+  default     = "hashiconf-escape-room"
 }
 
 variable "name" {
@@ -69,4 +69,20 @@ variable "hcp_boundary" {
   default = {
     tier = "Standard"
   }
+}
+
+variable "github_user" {
+  type        = string
+  description = "GitHub user or organization for HCP Terraform GitHub app. Used to create no-code Terraform module for Waypoint"
+}
+
+variable "tf_github_app_installation_id" {
+  type        = string
+  description = "App installation ID for HCP Terraform GitHub app. Used to create no-code Terraform module for Waypoint. Get ID from https://app.terraform.io/app/settings/tokens"
+}
+
+variable "tf_module_repositories" {
+  type        = set(string)
+  description = "List of GitHub repositories with Terraform modules"
+  default     = ["terraform-nomad-app"]
 }

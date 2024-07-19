@@ -90,7 +90,7 @@ resource "aws_iam_role" "github_actions" {
         }
         Condition = {
           StringEquals = {
-            "${local.github_actions_url}:sub" = "repo:${var.repository}:ref:refs/heads/main",
+            "${local.github_actions_url}:sub" = "repo:${var.github_user}/${var.repository}:ref:refs/heads/main",
             "${local.github_actions_url}:aud" = "sts.amazonaws.com"
           }
         }
