@@ -49,4 +49,17 @@ resource "hcp_waypoint_template" "nomad_app" {
   }
 
   readme_markdown_template = base64encode(file("templates/nomad-container-app.md"))
+
+  variable_options = [
+    {
+      name          = "application_count"
+      variable_type = "number"
+      user_editable = true
+    },
+    {
+      name          = "application_name"
+      variable_type = "string"
+      user_editable = true
+    }
+  ]
 }
