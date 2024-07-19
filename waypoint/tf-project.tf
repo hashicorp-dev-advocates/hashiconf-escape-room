@@ -47,7 +47,7 @@ resource "tfe_project" "waypoint" {
 }
 
 resource "tfe_variable_set" "nomad" {
-  name         = "${var.hcp_project_id}-nomad"
+  name         = "${tfe_project.waypoint.name}-nomad"
   description  = "Nomad connection details"
   organization = data.tfe_organization.org.name
 }
