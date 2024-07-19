@@ -9,7 +9,6 @@ data "tfe_oauth_client" "client" {
 
 resource "tfe_registry_module" "nomad_app" {
   organization = data.tfe_organization.org.name
-  no_code      = true
 
   test_config {
     tests_enabled = false
@@ -23,3 +22,8 @@ resource "tfe_registry_module" "nomad_app" {
     tags               = false
   }
 }
+
+# resource "tfe_no_code_module" "foobar" {
+#     organization = data.tfe_organization.org.id
+#     registry_module = tfe_registry_module.foobar.id
+# }
