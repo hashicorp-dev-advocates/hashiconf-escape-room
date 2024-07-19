@@ -2,6 +2,11 @@ data "tfe_organization" "org" {
   name = var.hcp_terraform_organization
 }
 
+data "tfe_oauth_client" "client" {
+  organization = var.hcp_terraform_organization
+  name         = var.github_user
+}
+
 resource "tfe_registry_module" "nomad_app" {
   for_each     = var.tf_module_repositories
   organization = data.tfe_organization.org.id
@@ -11,11 +16,11 @@ resource "tfe_registry_module" "nomad_app" {
   }
 
   vcs_repo {
-    display_identifier         = "${var.github_user}/${each.value}"
-    identifier                 = "${var.github_user}/${each.value}"
-    github_app_installation_id = var.tf_github_app_installation_id
-    branch                     = "main"
-    tags                       = false
+    display_identifier = "${var.github_user}/${each.value}"
+    identifier         = "https://github.com/${var.github_user}/${each.value}"
+    oauth_token_id     = data.tfe_oauth_client.client.oauth_token_id
+    branch             = "main"
+    tags               = false
   }
 }
 

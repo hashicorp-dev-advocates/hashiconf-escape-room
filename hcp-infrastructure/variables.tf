@@ -76,11 +76,6 @@ variable "github_user" {
   description = "GitHub user or organization for HCP Terraform GitHub app. Used to create no-code Terraform module for Waypoint"
 }
 
-variable "tf_github_app_installation_id" {
-  type        = string
-  description = "App installation ID for HCP Terraform GitHub app. Used to create no-code Terraform module for Waypoint. Get ID from https://app.terraform.io/app/settings/tokens"
-}
-
 variable "tf_module_repositories" {
   type        = set(string)
   description = "List of GitHub repositories with Terraform modules"
