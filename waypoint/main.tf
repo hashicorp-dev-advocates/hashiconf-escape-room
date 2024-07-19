@@ -5,6 +5,7 @@ data "tfe_organization" "org" {
 resource "tfe_team" "waypoint" {
   name         = "hashiconf-escape-room-waypoint"
   organization = data.tfe_organization.org.name
+  visibility   = "organization"
 }
 
 resource "time_rotating" "waypoint_token" {
@@ -16,10 +17,10 @@ resource "tfe_team_token" "waypoint" {
   expired_at = time_rotating.waypoint_token.rotation_rfc3339
 }
 
-# resource "hcp_waypoint_tfc_config" "org" {
-#   token        = tfe_team_token.waypoint.token
-#   tfc_org_name = tfe_team.waypoint.organization
-# }
+resource "hcp_waypoint_tfc_config" "org" {
+  token        = tfe_team_token.waypoint.token
+  tfc_org_name = tfe_team.waypoint.organization
+}
 
 resource "tfe_project" "waypoint" {
   organization = data.tfe_organization.org.name
