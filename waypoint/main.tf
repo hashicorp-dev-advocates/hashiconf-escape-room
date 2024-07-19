@@ -6,6 +6,11 @@ resource "tfe_team" "waypoint" {
   name         = "hashiconf-escape-room-waypoint"
   organization = data.tfe_organization.org.name
   visibility   = "organization"
+  organization_access {
+    read_workspaces   = false
+    read_projects     = false
+    manage_workspaces = false
+  }
 }
 
 resource "time_rotating" "waypoint_token" {
@@ -48,42 +53,4 @@ resource "hcp_waypoint_template" "nomad_app" {
     source  = "app.terraform.io/hashicorp-team-da-beta/app/nomad"
     version = "0.0.0"
   }
-
-  variable_options = [
-    {
-      name          = "application_name"
-      variable_type = "string"
-    },
-    {
-      name          = "application_port"
-      variable_type = "number"
-    },
-    {
-      name          = "image"
-      variable_type = "string"
-    },
-    {
-      name          = "metadata"
-      variable_type = "map(string)"
-    },
-    {
-      name          = "node_pool"
-      variable_type = "string"
-      options       = [for pool in data.nomad_node_pools.all.node_pools : pool.name]
-      user_editable = false
-    }
-    ,
-    {
-      name          = "driver"
-      variable_type = "string"
-      options       = ["docker"]
-      user_editable = false
-    },
-    {
-      name          = "service_provider"
-      variable_type = "string"
-      options       = ["nomad"]
-      user_editable = false
-    }
-  ]
 }
