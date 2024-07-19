@@ -23,5 +23,3 @@ resource "tfe_registry_module" "nomad_app" {
     tags               = false
   }
 }
-
-data "nomad_node_pools" "all" {}
