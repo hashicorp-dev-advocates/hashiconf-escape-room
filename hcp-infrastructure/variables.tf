@@ -73,5 +73,6 @@ variable "hcp_boundary" {
 
 variable "github_user" {
   type        = string
-  description = "GitHub user or organization for HCP Terraform GitHub app. Used to create no-code Terraform module for Waypoint"
+  description = "GitHub user or organization for repository"
+  default     = "hashicorp-dev-advocates"
 }
