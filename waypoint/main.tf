@@ -60,34 +60,22 @@ resource "hcp_waypoint_template" "nomad_app" {
     {
       name          = "application_name"
       variable_type = "string"
+      user_editable = true
     },
     {
       name          = "application_port"
       variable_type = "number"
+      user_editable = true
     },
     {
       name          = "image"
       variable_type = "string"
+      user_editable = true
     },
-    {
-      name          = "metadata"
-      variable_type = "map(string)"
-    },
-    {
-      name          = "node_pool"
-      variable_type = "string"
-      options       = [for pool in data.nomad_node_pools.all.node_pools : pool.name]
-    }
-    ,
     {
       name          = "driver"
       variable_type = "string"
       options       = ["docker"]
-    },
-    {
-      name          = "service_provider"
-      variable_type = "string"
-      options       = ["nomad"]
     }
   ]
 }
