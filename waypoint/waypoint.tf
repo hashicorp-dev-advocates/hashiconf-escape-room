@@ -1,38 +1,4 @@
-resource "tfe_team" "waypoint" {
-  name         = "hashiconf-escape-room-waypoint"
-  organization = data.tfe_organization.org.name
-  visibility   = "organization"
-  organization_access {
-    read_workspaces   = false
-    read_projects     = false
-    manage_workspaces = false
-  }
-}
 
-resource "time_rotating" "waypoint_token" {
-  rotation_days = 120
-}
-
-resource "tfe_team_token" "waypoint" {
-  team_id    = tfe_team.waypoint.id
-  expired_at = time_rotating.waypoint_token.rotation_rfc3339
-}
-
-resource "hcp_waypoint_tfc_config" "org" {
-  token        = tfe_team_token.waypoint.token
-  tfc_org_name = tfe_team.waypoint.organization
-}
-
-resource "tfe_project" "waypoint" {
-  organization = data.tfe_organization.org.name
-  name         = "${var.hcp_terraform_project}-apps"
-}
-
-resource "tfe_team_project_access" "waypoint" {
-  access     = "admin"
-  team_id    = tfe_team.waypoint.id
-  project_id = tfe_project.waypoint.id
-}
 
 resource "hcp_waypoint_template" "nomad_app" {
   name    = "nomad-container-application"
