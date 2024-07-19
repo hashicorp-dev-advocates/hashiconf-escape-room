@@ -56,24 +56,6 @@ resource "hcp_waypoint_template" "nomad_app" {
       ]
       user_editable = false
       variable_type = "string"
-    },
-    {
-      name = "environment_variables"
-      options = [
-        jsonencode({}),
-      ]
-      user_editable = false
-      variable_type = "map(string)"
-    },
-    {
-      name = "metadata"
-      options = [
-        jsonencode({
-          "waypoint.template" = "nomad-container-application"
-        }),
-      ]
-      user_editable = false
-      variable_type = "map(string)"
-    },
+    }
   ]
 }
