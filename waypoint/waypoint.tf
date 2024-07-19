@@ -34,8 +34,6 @@ resource "tfe_team_project_access" "waypoint" {
   project_id = tfe_project.waypoint.id
 }
 
-data "nomad_node_pools" "all" {}
-
 # resource "hcp_waypoint_template" "nomad_app" {
 #   name    = "nomad-container-application"
 #   summary = "Deploy a container application to Nomad"

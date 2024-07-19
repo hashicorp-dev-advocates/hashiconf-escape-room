@@ -23,7 +23,21 @@ resource "tfe_registry_module" "nomad_app" {
   }
 }
 
-# resource "tfe_no_code_module" "foobar" {
-#     organization = data.tfe_organization.org.id
-#     registry_module = tfe_registry_module.foobar.id
-# }
+data "nomad_node_pools" "all" {}
+
+resource "tfe_no_code_module" "nomad_app" {
+  organization    = data.tfe_organization.org.name
+  registry_module = tfe_registry_module.nomad_app.id
+
+  variable_options {
+    name    = "node_pool"
+    type    = "string"
+    options = data.nomad_node_pools.all.node_pools.*.name
+  }
+
+  variable_options {
+    name    = "service_provider"
+    type    = "string"
+    options = ["nomad"]
+  }
+}
