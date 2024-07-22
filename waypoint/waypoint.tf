@@ -26,12 +26,6 @@ resource "hcp_waypoint_template" "nomad_app" {
       variable_type = "number"
     },
     {
-      name          = "waypoint_application"
-      options       = []
-      user_editable = true
-      variable_type = "string"
-    },
-    {
       name          = "application_port"
       options       = []
       user_editable = true
