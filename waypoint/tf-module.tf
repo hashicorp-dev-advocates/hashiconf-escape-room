@@ -40,18 +40,4 @@ resource "tfe_no_code_module" "nomad_app" {
     type    = "string"
     options = ["nomad"]
   }
-
-  variable_options {
-    name    = "environment_variables"
-    type    = "map(string)"
-    options = [jsonencode({})]
-  }
-
-  variable_options {
-    name = "metadata"
-    type = "map(string)"
-    options = [jsonencode({
-      "waypoint.template" = "nomad-container-application"
-    })]
-  }
 }
