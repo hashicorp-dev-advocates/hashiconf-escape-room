@@ -5,6 +5,12 @@ resource "nomad_acl_policy" "waypoint" {
   rules_hcl = <<EOT
 namespace "default" {
   policy       = "write"
+
+  variables {
+    path "*" {
+      capabilities = ["write", "read", "destroy"]
+    }
+  }
 }
 EOT
 }
