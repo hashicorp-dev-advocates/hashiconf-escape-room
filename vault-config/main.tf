@@ -15,7 +15,7 @@ module "transit-secrets-engine" {
       convergent_encryption  = true
       exportable             = false
       derived                = true
-      type                   = "rsa-2048"
+      type                   = "aes256-gcm96"
       min_decryption_version = 1
       min_encryption_version = 1
     }
