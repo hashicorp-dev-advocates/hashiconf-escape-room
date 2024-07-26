@@ -36,3 +36,11 @@ resource "vault_policy" "approle_policies" {
   name     = each.key
   policy   = file("${local.path}/${each.key}")
 }
+
+resource "vault_auth_backend" "example" {
+  type = "userpass"
+
+  tune {
+    listing_visibility = "unauth"
+  }
+}
