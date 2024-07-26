@@ -52,14 +52,14 @@ resource "random_password" "attendee" {
 
 }
 
-resource "vault_generic_endpoint" "attendee" {
-  depends_on           = [vault_auth_backend.userpass]
-  path                 = "auth/userpass/users/attendee"
-  ignore_absent_fields = true
-
-  data_json = jsonencode({
-    policies = local.policy_names,
-    password = random_password.attendee.result
-  })
-}
+#resource "vault_generic_endpoint" "attendee" {
+#  depends_on           = [vault_auth_backend.userpass]
+#  path                 = "auth/userpass/users/attendee"
+#  ignore_absent_fields = true
+#
+#  data_json = jsonencode({
+#    policies = local.policy_names,
+#    password = random_password.attendee.result
+#  })
+#}
 
