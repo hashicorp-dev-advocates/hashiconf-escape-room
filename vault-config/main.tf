@@ -9,8 +9,8 @@ module "transit-secrets-engine" {
   path = "transit"
   transit_keys = [
     {
-      name = "escape-rooms"
-      deletion_allowed = true
+      name                   = "escape-rooms"
+      deletion_allowed       = true
       allow_plaintext_backup = false
       convergent_encryption  = true
       exportable             = false
@@ -28,6 +28,7 @@ locals {
     for pol in fileset(local.path, "*.{hcl,json}") :
     pol if pol != ".terraform.lock.hcl"
   ])
+  policy_names = [for policy in vault_policy.approle_policies : policy.name]
 
 }
 
@@ -44,3 +45,21 @@ resource "vault_auth_backend" "userpass" {
     listing_visibility = "unauth"
   }
 }
+
+resource "random_password" "attendee" {
+  length  = 10
+  special = false
+
+}
+
+resource "vault_generic_endpoint" "attendee" {
+  depends_on           = [vault_auth_backend.userpass]
+  path                 = "auth/userpass/users/attendee"
+  ignore_absent_fields = true
+
+  data_json = jsonencode({
+    policies = local.policy_names,
+    password = random_password.attendee.result
+  })
+}
+
