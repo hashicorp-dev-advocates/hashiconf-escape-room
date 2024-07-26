@@ -28,15 +28,15 @@ locals {
     for pol in fileset(local.path, "*.{hcl,json}") :
     pol if pol != ".terraform.lock.hcl"
   ])
-  policy_names = [for policy in vault_policy.approle_policies : policy.name]
+#  policy_names = [for policy in vault_policy.policies : policy.name]
 
 }
 
-resource "vault_policy" "approle_policies" {
-  for_each = local.policies
-  name     = each.key
-  policy   = file("${local.path}/${each.key}")
-}
+#resource "vault_policy" "policies" {
+#  for_each = local.policies
+#  name     = each.key
+#  policy   = file("${local.path}/${each.key}")
+#}
 
 resource "vault_auth_backend" "userpass" {
   type = "userpass"
