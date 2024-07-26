@@ -37,7 +37,7 @@ resource "vault_policy" "approle_policies" {
   policy   = file("${local.path}/${each.key}")
 }
 
-resource "vault_auth_backend" "example" {
+resource "vault_auth_backend" "userpass" {
   type = "userpass"
 
   tune {
