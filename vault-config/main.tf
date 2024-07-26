@@ -21,3 +21,18 @@ module "transit-secrets-engine" {
     }
   ]
 }
+
+locals {
+  path = var.policies_path == "" ? path.cwd : var.policies_path
+  policies = toset([
+    for pol in fileset(local.path, "*.{hcl,json}") :
+    pol if pol != ".terraform.lock.hcl"
+  ])
+
+}
+
+resource "vault_policy" "approle_policies" {
+  for_each = local.policies
+  name     = each.key
+  policy   = file("${local.path}/${each.key}")
+}
