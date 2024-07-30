@@ -27,10 +27,10 @@ variable "version" {
   default = env("HCP_PACKER_BUILD_FINGERPRINT")
 }
 
-data "amazon-ami" "ubuntu-focal" {
+data "amazon-ami" "ubuntu" {
   region = var.aws_region
   filters = {
-    name = "ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"
+    name = "ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"
   }
   most_recent = true
   owners      = ["099720109477"]
@@ -40,7 +40,7 @@ source "amazon-ebs" "app-ubuntu" {
   ami_name      = "${var.name}-${var.version}"
   instance_type = "t2.micro"
   region        = var.aws_region
-  source_ami    = data.amazon-ami.ubuntu-focal.id
+  source_ami    = data.amazon-ami.ubuntu.id
   ssh_username  = "ubuntu"
 }
 
@@ -52,8 +52,8 @@ build {
     bucket_labels = {
       "owner"          = var.owner
       "os"             = "Ubuntu",
-      "ubuntu-version" = "Focal 20.04",
-      "includes"       = "nomad,docker,fake-service"
+      "base-ami-name" = "{{ .SourceAMIName }}",
+      "includes"       = "nomad,vault,docker,fake-service"
     }
 
     build_labels = {

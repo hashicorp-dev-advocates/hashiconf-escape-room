@@ -1,0 +1,93 @@
+name: HCP Packer
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - packer/app-ubuntu/**
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  app-ubuntu:
+    runs-on: ubuntu-latest
+    name: app-ubuntu
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE }}
+          role-session-name: github-to-aws-packer-build
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Setup `packer`
+        uses: hashicorp/setup-packer@v3
+        id: setup
+        with:
+          version: "latest"
+
+      - name: Run `packer init`
+        id: init
+        run: "packer init ."
+        working-directory: ./packer/app-ubuntu
+
+      - name: Run `packer validate`
+        id: validate
+        run: "packer validate ."
+        working-directory: ./packer/app-ubuntu
+
+      - name: Build Artifact
+        run: packer build -color=false -on-error=abort .
+        working-directory: ./packer/app-ubuntu
+        env:
+          HCP_CLIENT_ID: ${{ secrets.HCP_CLIENT_ID }}
+          HCP_CLIENT_SECRET: ${{ secrets.HCP_CLIENT_SECRET }}
+          HCP_PROJECT_ID: ${{ secrets.HCP_PROJECT_ID }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          HCP_PACKER_BUILD_FINGERPRINT: "run.id.${{ github.run_id }}.run.attempt.${{ github.run_attempt }}"
+
+  # hashistack-ubuntu:
+  #   runs-on: ubuntu-latest
+  #   name: hashistack-ubuntu
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+
+  #     - name: configure aws credentials
+  #       uses: aws-actions/configure-aws-credentials@v4
+  #       with:
+  #         role-to-assume: ${{ secrets.AWS_ROLE }}
+  #         role-session-name: github-to-aws-packer-build
+  #         aws-region: ${{ secrets.AWS_REGION }}
+
+  #     - name: Setup `packer`
+  #       uses: hashicorp/setup-packer@v3
+  #       id: setup
+  #       with:
+  #         version: "latest"
+
+  #     - name: Run `packer init`
+  #       id: init
+  #       run: "packer init ."
+  #       working-directory: ./packer/hashistack-ubuntu
+
+  #     - name: Run `packer validate`
+  #       id: validate
+  #       run: "packer validate ."
+  #       working-directory: ./packer/hashistack-ubuntu
+
+  #     - name: Build Artifact
+  #       run: packer build -color=false -on-error=abort .
+  #       working-directory: ./packer/hashistack-ubuntu
+  #       env:
+  #         HCP_CLIENT_ID: ${{ secrets.HCP_CLIENT_ID }}
+  #         HCP_CLIENT_SECRET: ${{ secrets.HCP_CLIENT_SECRET }}
+  #         HCP_PROJECT_ID: ${{ secrets.HCP_PROJECT_ID }}
+  #         AWS_REGION: ${{ secrets.AWS_REGION }}
+  #         HCP_PACKER_BUILD_FINGERPRINT: "run.id.${{ github.run_id }}.run.attempt.${{ github.run_attempt }}"
