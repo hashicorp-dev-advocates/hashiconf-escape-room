@@ -11,7 +11,9 @@ provider "hcp" {
   project_id = var.hcp_project_id
 }
 
-provider "vault" {
-  address = data.terraform_remote_state.hcp.outputs.vault.public_endpoint
-  token   = hcp_vault_cluster_admin_token.vault.token
+provider "consul" {
+  address = data.terraform_remote_state.hcp.outputs.consul.public_endpoint
+  token   = hcp_consul_cluster_root_token.root.secret_id
 }
+
+
