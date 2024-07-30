@@ -31,7 +31,8 @@ resource "aws_iam_role" "hcp_terraform" {
             "${local.hcp_terraform_url}:aud" = "${one(aws_iam_openid_connect_provider.hcp_terraform.client_id_list)}"
           }
           StringLike = {
-            "${local.hcp_terraform_url}:sub" = "organization:${var.hcp_terraform_organization}:project:${var.name}:workspace:nomad-infrastructure:run_phase:*"
+            "${local.hcp_terraform_url}:sub" = "organization:${var.hcp_terraform_organization}:project:${var.name}:workspace:nomad-infrastructure:run_phase:*",
+            "${local.hcp_terraform_url}:sub" = "organization:${var.hcp_terraform_organization}:project:${var.name}:workspace:nomad-node-pool:run_phase:*",
           }
         }
       },
