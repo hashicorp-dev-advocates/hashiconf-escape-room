@@ -68,3 +68,27 @@ resource "aws_lb_listener" "web" {
     target_group_arn = aws_lb_target_group.nomad.arn
   }
 }
+
+data "hcp_hvn" "main" {
+  hvn_id = data.terraform_remote_state.hcp.outputs.hvn.id
+}
+
+resource "hcp_aws_network_peering" "nomad" {
+  hvn_id          = data.hcp_hvn.main.hvn_id
+  peering_id      = "${var.name}-nomad"
+  peer_vpc_id     = module.vpc.vpc_id
+  peer_account_id = module.vpc.vpc_owner_id
+  peer_vpc_region = var.aws_region
+}
+
+resource "hcp_hvn_route" "main-to-nomad" {
+  hvn_link         = data.hcp_hvn.main.self_link
+  hvn_route_id     = "main-to-dev"
+  destination_cidr = module.vpc.vpc_cidr_block
+  target_link      = hcp_aws_network_peering.nomad.self_link
+}
+
+resource "aws_vpc_peering_connection_accepter" "peer" {
+  vpc_peering_connection_id = hcp_aws_network_peering.nomad.provider_peering_id
+  auto_accept               = true
+}
