@@ -47,7 +47,7 @@ source "amazon-ebs" "hashistack" {
 build {
   hcp_packer_registry {
     bucket_name = var.name
-    description = "Application VM image. Includes Nomad, Boundary, Consul, Vault, and Docker."
+    description = "Application VM image. Includes Nomad, Boundary, Consul, Envoy, Vault, and Docker."
 
     bucket_labels = {
       "owner"         = var.owner
