@@ -27,6 +27,16 @@ variable "version" {
   default = env("HCP_PACKER_BUILD_FINGERPRINT")
 }
 
+variable "build_details" {
+  type    = string
+  default = env("HCP_PACKER_BUILD_DETAILS")
+}
+
+variable "bucket_details" {
+  type    = string
+  default = ""
+}
+
 data "amazon-ami" "ubuntu" {
   region = var.aws_region
   filters = {
@@ -50,15 +60,16 @@ build {
     description = "Application VM image. Includes Nomad and Docker."
 
     bucket_labels = {
-      "owner"          = var.owner
-      "os"             = "Ubuntu",
-      "base-ami-name" = "{{ .SourceAMIName }}",
-      "includes"       = "nomad,vault,docker,fake-service"
+      "owner"    = var.owner
+      "os"       = "Ubuntu",
+      "details"  = var.bucket_details,
+      "includes" = "nomad,vault,docker,fake-service"
     }
 
     build_labels = {
-      "build-time"   = timestamp()
-      "build-source" = basename(path.cwd)
+      "build-time"    = timestamp()
+      "build-source"  = basename(path.cwd)
+      "build-details" = var.build_details
     }
   }
 

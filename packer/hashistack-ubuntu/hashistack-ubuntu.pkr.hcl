@@ -27,6 +27,16 @@ variable "version" {
   default = env("HCP_PACKER_BUILD_FINGERPRINT")
 }
 
+variable "bucket_details" {
+  type    = string
+  default = ""
+}
+
+variable "build_details" {
+  type    = string
+  default = env("HCP_PACKER_BUILD_DETAILS")
+}
+
 data "amazon-ami" "ubuntu" {
   region = var.aws_region
   filters = {
@@ -52,13 +62,14 @@ build {
     bucket_labels = {
       "owner"         = var.owner
       "os"            = "Ubuntu",
-      "base-ami-name" = "{{ .SourceAMIName }}",
+      "details" = var.bucket_details,
       "includes"      = "nomad,consul,boundary,vault,docker,fake-service"
     }
 
     build_labels = {
-      "build-time"   = timestamp()
-      "build-source" = basename(path.cwd)
+      "build-time"    = timestamp()
+      "build-source"  = basename(path.cwd)
+      "build-details" = var.build_details
     }
   }
 
