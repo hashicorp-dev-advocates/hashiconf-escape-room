@@ -26,3 +26,16 @@ output "private_subnets" {
 output "public_subnets" {
   value = module.vpc.public_subnets
 }
+
+output "keypair" {
+  value = aws_key_pair.deployer.key_name
+}
+
+output "security_groups" {
+  value = [
+    aws_security_group.ssh.id,
+    aws_security_group.subnet_allow.id,
+    aws_security_group.nomad.id,
+    aws_security_group.egress.id
+  ]
+}
