@@ -67,8 +67,8 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
 sudo apt install default-jre -y
 
 # Pull down and install Fake Service
-curl -LO https://github.com/nicholasjackson/fake-service/releases/download/v0.26.2/fake_service_linux_amd64.zip
-unzip fake_service_linux_amd64.zip
+sudo curl -LO https://github.com/nicholasjackson/fake-service/releases/download/v0.26.2/fake_service_linux_amd64.zip
+sudo unzip fake_service_linux_amd64.zip
 sudo mv fake-service /usr/local/bin
 sudo chmod +x /usr/local/bin/fake-service
 
