@@ -9,7 +9,7 @@ variable "server_count" {
 
 variable "client_count" {
   description = "Number of nomad clients"
-  default     = 1
+  default     = 3
 }
 
 variable "target_count" {

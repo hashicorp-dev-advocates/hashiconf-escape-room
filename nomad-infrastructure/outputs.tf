@@ -14,3 +14,15 @@ output "nomad_management_token" {
 output "nomad_ui" {
   value = "http://${aws_lb.nomad.dns_name}"
 }
+
+output "vpc_id" {
+  value = module.vpc.vpc_id
+}
+
+output "private_subnets" {
+  value = module.vpc.private_subnets
+}
+
+output "public_subnets" {
+  value = module.vpc.public_subnets
+}
