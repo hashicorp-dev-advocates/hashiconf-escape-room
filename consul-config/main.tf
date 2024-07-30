@@ -24,4 +24,8 @@ resource "consul_service" "services" {
   meta =each.value["meta"]
   port = each.value["port"]
   tags = each.value["tags"]
+
+  depends_on = [
+    consul_node.nodes
+  ]
 }
