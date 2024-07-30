@@ -35,26 +35,16 @@ sudo apt-get install consul -y
 
 # Create Consul directory.
 sudo mkdir -p /etc/consul.d
-
-# Create Consul directories and configuration files
-sudo cat > /etc/consul.d/0-consul.hcl <<- EOF
-data_dir = "/opt/consul"
-
-client_addr = "0.0.0.0"
-
-bind_addr = "0.0.0.0"
-
-advertise_addr = "{{ GetPrivateIP }}"
-EOF
+sudo mv /tmp/0-consul.hcl /etc/consul.d/0-consul.hcl
 
 # Install Envoy
 sudo apt update
-sudo apt install apt-transport-https gnupg2 curl lsb-release
+sudo apt install apt-transport-https gnupg2 curl lsb-release -y
 curl -sL 'https://deb.dl.getenvoy.io/public/gpg.8115BA8E629CC074.key' | sudo gpg --dearmor -o /usr/share/keyrings/getenvoy-keyring.gpg
 echo a077cb587a1b622e03aa4bf2f3689de14658a9497a9af2c427bba5f4cc3c4723 /usr/share/keyrings/getenvoy-keyring.gpg | sha256sum --check
 echo "deb [arch=amd64 signed-by=/usr/share/keyrings/getenvoy-keyring.gpg] https://deb.dl.getenvoy.io/public/deb/ubuntu $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/getenvoy.list
 sudo apt update
-sudo apt install -y getenvoy-envoy
+sudo apt install getenvoy-envoy -y
 
 # Add Docker's official GPG key:
 sudo apt-get update
@@ -82,16 +72,4 @@ unzip fake_service_linux_amd64.zip
 sudo mv fake-service /usr/local/bin
 sudo chmod +x /usr/local/bin/fake-service
 
-cat > /etc/systemd/system/fake.service <<- EOF
-[Unit]
-Description=Fake service systemd file
-After=syslog.target network.target
-
-[Service]
-ExecStart=/usr/local/bin/fake-service
-ExecStop=/bin/sleep 5
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
-EOF
+sudo mv /tmp/fake.service /etc/systemd/system/fake.service

@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - packer/app-ubuntu/**
+      - packer/hashistack-ubuntu/**
 
 permissions:
   id-token: write
