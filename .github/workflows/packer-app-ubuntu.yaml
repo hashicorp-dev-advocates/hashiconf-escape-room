@@ -1,11 +1,11 @@
-name: hcp-packer
+name: HCP Packer (app-ubuntu)
 
 on:
   push:
     branches:
       - main
     paths:
-      - packer/**
+      - packer/app-ubuntu/**
 
 permissions:
   id-token: write
@@ -34,17 +34,17 @@ jobs:
 
       - name: Run `packer init`
         id: init
-        run: "packer init app-ubuntu.pkr.hcl"
-        working-directory: ./packer
+        run: "packer init ."
+        working-directory: ./packer/app-ubuntu
 
       - name: Run `packer validate`
         id: validate
-        run: "packer validate app-ubuntu.pkr.hcl"
-        working-directory: ./packer
+        run: "packer validate ."
+        working-directory: ./packer/app-ubuntu
 
       - name: Build Artifact
-        run: packer build -color=false -on-error=abort app-ubuntu.pkr.hcl
-        working-directory: ./packer
+        run: packer build -color=false -on-error=abort .
+        working-directory: ./packer/app-ubuntu
         env:
           HCP_CLIENT_ID: ${{ secrets.HCP_CLIENT_ID }}
           HCP_CLIENT_SECRET: ${{ secrets.HCP_CLIENT_SECRET }}
