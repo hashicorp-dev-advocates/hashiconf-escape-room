@@ -37,7 +37,6 @@ resource "hcp_waypoint_template" "nomad_app" {
     },
     {
       name          = "node_pool"
-      options       = data.nomad_node_pools.all.node_pools.*.name
       user_editable = true
       variable_type = "string"
     },
