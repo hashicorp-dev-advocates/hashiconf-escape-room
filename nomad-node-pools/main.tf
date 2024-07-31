@@ -83,12 +83,12 @@ resource "aws_launch_template" "node_pool" {
     instance_metadata_tags = "enabled"
   }
 
-  # vpc_security_group_ids = data.terraform_remote_state.nomad.outputs.security_groups
+  vpc_security_group_ids = data.terraform_remote_state.nomad.outputs.security_groups
 
-  network_interfaces {
-    associate_public_ip_address = true
-    security_groups             = data.terraform_remote_state.nomad.outputs.security_groups
-  }
+  # network_interfaces {
+  #   associate_public_ip_address = true
+  #   security_groups             = data.terraform_remote_state.nomad.outputs.security_groups
+  # }
 
   user_data = base64encode(file("./setup.sh"))
 }
@@ -113,8 +113,8 @@ resource "aws_autoscaling_group" "node_pool" {
   min_size         = 1
   max_size         = var.node_pool_desired_size * 2
 
-  # vpc_zone_identifier = data.terraform_remote_state.nomad.outputs.private_subnetsc
-  vpc_zone_identifier = data.terraform_remote_state.nomad.outputs.public_subnets
+  vpc_zone_identifier = data.terraform_remote_state.nomad.outputs.private_subnets
+  # vpc_zone_identifier = data.terraform_remote_state.nomad.outputs.public_subnets
 
   health_check_grace_period = 300
   health_check_type         = "EC2"
