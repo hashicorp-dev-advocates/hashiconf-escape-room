@@ -113,7 +113,8 @@ resource "aws_autoscaling_group" "node_pool" {
   min_size         = 1
   max_size         = var.node_pool_desired_size * 2
 
-  vpc_zone_identifier = data.terraform_remote_state.nomad.outputs.private_subnets
+  # vpc_zone_identifier = data.terraform_remote_state.nomad.outputs.private_subnetsc
+  vpc_zone_identifier = data.terraform_remote_state.nomad.outputs.public_subnets
 
   health_check_grace_period = 300
   health_check_type         = "EC2"
