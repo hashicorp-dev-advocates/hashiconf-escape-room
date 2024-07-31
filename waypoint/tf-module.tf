@@ -43,10 +43,8 @@ resource "tfe_no_code_module" "nomad_app" {
 }
 
 check "nomad_node_pools" {
-  data "nomad_node_pools" "check" {}
-
   assert {
-    condition     = data.nomad_node_pools.check == tfe_no_code_module.nomad_app.variable_options.0.options
-    error_message = "Nomad node pools have changed, update no-code module"
+    condition     = data.nomad_node_pools.all.node_pools.*.name == tfe_no_code_module.nomad_app.variable_options.0.options
+    error_message = "Nomad node pools have changed, update no-code module inputs"
   }
 }
