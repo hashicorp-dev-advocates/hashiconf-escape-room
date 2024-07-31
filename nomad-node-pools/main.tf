@@ -131,3 +131,10 @@ resource "aws_autoscaling_group" "node_pool" {
     "GroupTotalInstances"
   ]
 }
+
+check "ami_version_check" {
+  assert {
+    condition     = alltrue([for p, _ in var.node_pools : data.hcp_packer_artifact.packer[p].external_identifier == aws_launch_template.node_pool[p].image_id])
+    error_message = "Launch templates must use the latest available AMIs"
+  }
+}
