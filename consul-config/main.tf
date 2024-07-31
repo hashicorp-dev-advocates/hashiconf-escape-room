@@ -25,6 +25,13 @@ resource "consul_service" "services" {
   port = each.value["port"]
   tags = each.value["tags"]
 
+#  check {
+#    check_id = "test"
+#    interval = "10"
+#    name     = "test"
+#    timeout  = "10"
+#  }
+
   depends_on = [
     consul_node.nodes
   ]

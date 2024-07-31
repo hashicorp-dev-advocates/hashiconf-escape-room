@@ -3,3 +3,5 @@ doormat.sh
 /nomad-infrastructure/.terraform.lock.hcl
 /vault-config/.terraform/
 /vault-config/.terraform.lock.hcl
+/consul-config/.terraform/
+/consul-config/.terraform.lock.hcl
