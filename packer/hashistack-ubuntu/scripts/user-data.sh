@@ -26,8 +26,9 @@ acl = {
 }
 EOF
 
-NODE_POOL=$(curl http://169.254.169.254/latest/meta-data/tags/instance/NodePool)
-AWS_REGION=$(curl http://169.254.169.254/latest/meta-data/placement/region)
+TOKEN=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 600")
+NODE_POOL=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/tags/instance/NodePool)
+AWS_REGION=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/placement/region)
 
 # Nomad configuration files
 cat <<EOF > /etc/nomad.d/nomad.hcl

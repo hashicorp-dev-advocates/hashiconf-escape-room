@@ -1,5 +1,6 @@
 #! /bin/bash -e
 
+TOKEN=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 600")
 NODE_POOL=$(curl http://169.254.169.254/latest/meta-data/tags/instance/NodePool)
 AWS_REGION=$(curl http://169.254.169.254/latest/meta-data/placement/region)
 
