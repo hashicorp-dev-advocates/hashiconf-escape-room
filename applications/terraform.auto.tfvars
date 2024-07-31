@@ -1,5 +1,5 @@
 applications = {
-  "search" = {
+  "search-engine" = {
     additional_details = "TODO: clue"
     node_pool          = "containers"
     port               = 9090
