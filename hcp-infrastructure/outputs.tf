@@ -20,6 +20,8 @@ output "consul" {
     public_endpoint  = hcp_consul_cluster.main.consul_public_endpoint_url
     private_endpoint = hcp_consul_cluster.main.consul_private_endpoint_url
     datacenter       = hcp_consul_cluster.main.datacenter
+    ca_public_key    = hcp_consul_cluster.main.consul_ca_file
+    config_file      = hcp_consul_cluster.main.consul_config_file
   }
 }
 
