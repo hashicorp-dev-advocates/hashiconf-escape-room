@@ -34,3 +34,9 @@ variable "node_pools" {
   type        = map(string)
   description = "A list of node pools to create by name and HCP Packer bucket"
 }
+
+variable "node_pool_desired_size" {
+  type        = number
+  description = "Desired size of node pools"
+  default     = 1
+}

@@ -104,9 +104,9 @@ resource "aws_autoscaling_group" "node_pool" {
     }
   }
 
-  desired_capacity = 1
+  desired_capacity = var.node_pool_desired_size
   min_size         = 1
-  max_size         = 3
+  max_size         = var.node_pool_desired_size * 2
 
   vpc_zone_identifier = data.terraform_remote_state.nomad.outputs.private_subnets
 
