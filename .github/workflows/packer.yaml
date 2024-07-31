@@ -44,7 +44,7 @@ jobs:
         working-directory: ./packer/app-ubuntu
 
       - name: Build Artifact
-        run: packer build -color=false -on-error=abort .
+        run: packer build -color=false .
         working-directory: ./packer/app-ubuntu
         env:
           HCP_CLIENT_ID: ${{ secrets.HCP_CLIENT_ID }}
@@ -85,7 +85,7 @@ jobs:
         working-directory: ./packer/hashistack-ubuntu
 
       - name: Build Artifact
-        run: packer build -color=false -on-error=abort .
+        run: packer build -color=false .
         working-directory: ./packer/hashistack-ubuntu
         env:
           HCP_CLIENT_ID: ${{ secrets.HCP_CLIENT_ID }}
