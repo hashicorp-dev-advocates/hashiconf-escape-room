@@ -63,7 +63,7 @@ mv fake-service /usr/local/bin
 chmod +x /usr/local/bin/fake-service
 
 # Fake Service Systemd Unit File
-cat > /etc/systemd/system/api.service <<- EOF
+cat > /etc/systemd/system/${SERVICE_NAME}.service <<- EOF
 [Unit]
 Description=API
 After=syslog.target network.target
@@ -83,7 +83,7 @@ EOF
 systemctl daemon-reload
 
 # Consul Config file for our fake API service
-cat > /etc/consul.d/api.hcl <<- EOF
+cat > /etc/consul.d/${SERVICE_NAME}.hcl <<- EOF
 service {
   id = "${SERVICE_NAME}-v1"
   name = "${SERVICE_NAME}"
@@ -146,3 +146,7 @@ iptables --table nat --append OUTPUT --destination localhost --protocol tcp --ma
 
 # Restart systemd-resolved so that the above DNS changes take effect
 systemctl restart systemd-resolved
+systemctl enable consul
+systemctl restart consul
+systemctl enable ${SERVICE_NAME}
+systemctl restart ${SERVICE_NAME}

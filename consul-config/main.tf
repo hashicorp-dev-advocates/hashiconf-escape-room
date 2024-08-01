@@ -2,40 +2,6 @@ resource "hcp_consul_cluster_root_token" "root" {
   cluster_id = data.terraform_remote_state.hcp.outputs.consul.cluster_id
 }
 
-#resource "consul_node" "nodes" {
-#  for_each = {
-#    for svc in var.services :
-#    svc.service_name => svc
-#  }
-#
-#  address = each.value["node_address"]
-#  name    = each.value["node_name"]
-#}
-#
-#resource "consul_service" "services" {
-#
-#  for_each = {
-#    for svc in var.services :
-#    svc.service_name => svc
-#  }
-#
-#  name = each.value["service_name"]
-#  node = each.value["node_name"]
-#  meta = each.value["meta"]
-#  port = each.value["port"]
-#  tags = each.value["tags"]
-#
-#  #  check {
-#  #    check_id = "test"
-#  #    interval = "10"
-#  #    name     = "test"
-#  #    timeout  = "10"
-#  #  }
-#
-#  depends_on = [
-#    consul_node.nodes
-#  ]
-#}
 
 resource "aws_security_group" "consul" {
   vpc_id = data.terraform_remote_state.nomad.outputs.vpc_id
@@ -96,10 +62,47 @@ resource "aws_security_group" "consul" {
 
 }
 
+resource "aws_security_group" "service" {
+  vpc_id = data.terraform_remote_state.nomad.outputs.vpc_id
+  name   = "fake_service_port"
+
+  ingress {
+    from_port = 9090
+    protocol  = "tcp"
+    to_port   = 9090
+
+    cidr_blocks = [
+      "0.0.0.0/0"
+    ]
+    self = true
+
+  }
+
+
+  egress {
+    from_port = 9090
+    protocol  = "tcp"
+    to_port   = "9090"
+
+    cidr_blocks = [
+      "0.0.0.0/0"
+    ]
+
+    self = true
+  }
+
+
+  tags = {
+    Name = "fake_service_port"
+  }
+
+}
+
+
 locals {
   combined_security_group_ids = concat(
     data.terraform_remote_state.nomad.outputs.security_groups,
-    [aws_security_group.consul.id]
+    [aws_security_group.consul.id, aws_security_group.service.id]
   )
 }
 
@@ -118,6 +121,12 @@ service "${each.value["service_name"]}" {
   policy = "write"
 }
 
+# Allow write access to the specific service sidecar proxy
+service "${each.value["service_name"]}-v1-sidecar-proxy" {
+  policy = "write"
+}
+
+
 # Allow the agent to register and update itself
 node "" {
   policy = "write"
@@ -127,6 +136,12 @@ node "" {
 service "${each.value["service_name"]}" {
   policy = "read"
 }
+
+# Allow read access to the specific service
+service "${each.value["service_name"]}-v1-sidecar-proxy" {
+  policy = "read"
+}
+
 
 # Allow read access to the agent node
 node "" {
