@@ -136,8 +136,8 @@ resource "aws_instance" "consul_client" {
   associate_public_ip_address = false
 
   user_data = templatefile("./scripts/consul.sh", {
-    CA_PUBLIC_KEY     = base64encode(data.terraform_remote_state.hcp.outputs.consul.ca_public_key)
-    HCP_CONFIG_FILE   = base64encode(data.terraform_remote_state.hcp.outputs.consul.config_file)
+    CA_PUBLIC_KEY     = base64decode(data.terraform_remote_state.hcp.outputs.consul.ca_public_key)
+    HCP_CONFIG_FILE   = base64decode(data.terraform_remote_state.hcp.outputs.consul.config_file)
     CONSUL_ROOT_TOKEN = hcp_consul_cluster_root_token.root.secret_id
     SERVICE_NAME      = each.value["service_name"]
     SERVICE_TOKEN     = local.service_tokens[each.key]
