@@ -157,3 +157,25 @@ resource "aws_instance" "consul_client" {
     ]
   }
 }
+
+resource "aws_instance" "bastion" {
+
+  ami                         = data.aws_ami.ubuntu.id
+  instance_type               = "t3.micro"
+  subnet_id                   = data.aws_subnet.public.id
+  key_name                    = data.aws_key_pair.deployer.key_name
+  associate_public_ip_address = true
+
+
+  vpc_security_group_ids = local.combined_security_group_ids
+
+  tags = {
+    Name          ="bastion"
+  }
+
+  lifecycle {
+    ignore_changes = [
+      ami
+    ]
+  }
+}
