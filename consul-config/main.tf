@@ -8,21 +8,9 @@ resource "aws_security_group" "consul" {
   name   = "consul_port"
 
   ingress {
-    from_port = 8500
-    protocol  = "tcp"
-    to_port   = 8503
-
-    cidr_blocks = [
-      "0.0.0.0/0"
-    ]
-    self = true
-
-  }
-
-  ingress {
     from_port = 8300
     protocol  = "tcp"
-    to_port   = 8301
+    to_port   = 8601
 
     cidr_blocks = [
       "0.0.0.0/0"
@@ -31,17 +19,6 @@ resource "aws_security_group" "consul" {
 
   }
 
-  ingress {
-    from_port = 8600
-    protocol  = "tcp"
-    to_port   = 8600
-
-    cidr_blocks = [
-      "0.0.0.0/0"
-    ]
-    self = true
-
-  }
 
   egress {
     from_port = 0
