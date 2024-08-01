@@ -10,17 +10,17 @@ data "terraform_remote_state" "hcp" {
   }
 }
 
-data "terraform_remote_state" "nomad" {
-  backend = "remote"
-
-  config = {
-    organization = "hashicorp-team-da-beta"
-
-    workspaces = {
-      name = "nomad-infrastructure"
-    }
-  }
-}
+#data "terraform_remote_state" "nomad" {
+#  backend = "remote"
+#
+#  config = {
+#    organization = "hashicorp-team-da-beta"
+#
+#    workspaces = {
+#      name = "nomad-infrastructure"
+#    }
+#  }
+#}
 
 data "aws_subnet" "private" {
   cidr_block = "10.0.1.0/24"
