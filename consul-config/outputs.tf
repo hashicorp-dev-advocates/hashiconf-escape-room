@@ -12,5 +12,5 @@ output "hcp_file" {
 }
 
 output "client_ip_addresses" {
-  value = aws_instance.consul_client.*.private_ip
+  value = aws_instance.consul_client.*.private_dns
 }
