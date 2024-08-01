@@ -43,19 +43,6 @@ resource "aws_security_group" "consul" {
 
   }
 
-  ingress {
-    from_port = 20000
-    protocol  = "tcp"
-    to_port   = 20000
-
-    cidr_blocks = [
-      "0.0.0.0/0"
-    ]
-    self = true
-
-  }
-
-
   egress {
     from_port = 8301
     protocol  = "tcp"
@@ -67,20 +54,6 @@ resource "aws_security_group" "consul" {
 
     self = true
   }
-
-  egress {
-    from_port = 20000
-    protocol  = "tcp"
-    to_port   = "20000"
-
-    cidr_blocks = [
-      "0.0.0.0/0"
-    ]
-
-    self = true
-  }
-
-
 
   tags = {
     Name = "consul_ports"
@@ -104,6 +77,19 @@ resource "aws_security_group" "service" {
 
   }
 
+  ingress {
+    from_port = 20000
+    protocol  = "tcp"
+    to_port   = 20000
+
+    cidr_blocks = [
+      "0.0.0.0/0"
+    ]
+    self = true
+
+  }
+
+
 
   egress {
     from_port = 9090
@@ -117,6 +103,19 @@ resource "aws_security_group" "service" {
     self = true
   }
 
+  egress {
+    from_port = 20000
+    protocol  = "tcp"
+    to_port   = "20000"
+
+    cidr_blocks = [
+      "0.0.0.0/0"
+    ]
+
+    self = true
+  }
+
+
 
   tags = {
     Name = "fake_service_port"
@@ -128,7 +127,7 @@ resource "aws_security_group" "service" {
 locals {
   combined_security_group_ids = concat(
     data.terraform_remote_state.nomad.outputs.security_groups,
-    [aws_security_group.consul.id]
+    [aws_security_group.consul.id, aws_security_group.service.id]
   )
 }
 
