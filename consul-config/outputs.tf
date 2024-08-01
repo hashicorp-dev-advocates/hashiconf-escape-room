@@ -10,3 +10,4 @@ output "consul_addr" {
 output "hcp_file" {
   value = data.terraform_remote_state.hcp.outputs.consul.config_file
 }
+

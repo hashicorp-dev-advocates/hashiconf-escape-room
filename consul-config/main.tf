@@ -44,7 +44,7 @@ resource "aws_security_group" "consul" {
   ingress {
     from_port = 8500
     protocol  = "tcp"
-    to_port   = 8502
+    to_port   = 8503
 
     cidr_blocks = [
       "0.0.0.0/0"
@@ -56,13 +56,37 @@ resource "aws_security_group" "consul" {
   ingress {
     from_port = 8300
     protocol  = "tcp"
-    to_port   = 8300
+    to_port   = 8301
 
     cidr_blocks = [
       "0.0.0.0/0"
     ]
     self = true
 
+  }
+
+  ingress {
+    from_port = 8600
+    protocol  = "tcp"
+    to_port   = 8600
+
+    cidr_blocks = [
+      "0.0.0.0/0"
+    ]
+    self = true
+
+  }
+
+  egress {
+    from_port = 8301
+    protocol  = "tcp"
+    to_port   = "8301"
+
+    cidr_blocks = [
+      "0.0.0.0/0"
+    ]
+
+    self = true
   }
 
 
@@ -183,7 +207,7 @@ resource "aws_instance" "bastion" {
   vpc_security_group_ids = local.combined_security_group_ids
 
   tags = {
-    Name          ="bastion"
+    Name = "bastion"
   }
 
   lifecycle {
