@@ -85,14 +85,14 @@ systemctl daemon-reload
 # Consul Config file for our fake API service
 cat > /etc/consul.d/api.hcl <<- EOF
 service {
-  id = "api-v1"
-  name = "api"
+  id = "${SERVICE_NAME}-v1"
+  name = "${SERVICE_NAME}"
   port = 9090
-  token = "" # put api service token here
+  token = "${SERVICE_TOKEN}" # put api service token here
 
   check {
     id = "api"
-    name = "HTTP API on Port 9090"
+    name = "${SERVICE_NAME} on Port 9090"
     http = "http://localhost:9090/health"
     interval = "30s"
   }
