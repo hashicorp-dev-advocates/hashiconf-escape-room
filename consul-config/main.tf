@@ -44,9 +44,9 @@ resource "aws_security_group" "consul" {
   }
 
   egress {
-    from_port = 8301
+    from_port = 0
     protocol  = "tcp"
-    to_port   = "8301"
+    to_port   = 0
 
     cidr_blocks = [
       "0.0.0.0/0"
@@ -88,34 +88,6 @@ resource "aws_security_group" "service" {
     self = true
 
   }
-
-
-
-  egress {
-    from_port = 9090
-    protocol  = "tcp"
-    to_port   = "9090"
-
-    cidr_blocks = [
-      "0.0.0.0/0"
-    ]
-
-    self = true
-  }
-
-  egress {
-    from_port = 20000
-    protocol  = "tcp"
-    to_port   = "20000"
-
-    cidr_blocks = [
-      "0.0.0.0/0"
-    ]
-
-    self = true
-  }
-
-
 
   tags = {
     Name = "fake_service_port"
