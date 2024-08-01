@@ -11,6 +11,3 @@ output "hcp_file" {
   value = data.terraform_remote_state.hcp.outputs.consul.config_file
 }
 
-output "client_ip_addresses" {
-  value = aws_instance.consul_client[each.key].private_dns
-}
