@@ -42,5 +42,5 @@ output "security_groups" {
 }
 
 output "default_route_table_id" {
-  value = module.vpc.default_route_table_id
+  value = module.vpc.private_route_table_ids
 }
