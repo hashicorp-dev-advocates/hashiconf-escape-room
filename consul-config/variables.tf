@@ -11,9 +11,6 @@ variable "services" {
     object(
       {
         service_name = string
-        node_address = string
-        node_name    = string
-        port         = number
         meta         = map(string)
         tags         = list(string)
       }
@@ -21,10 +18,35 @@ variable "services" {
   )
   default = [
     {
-      service_name = "google"
-      node_address = "www.google.com"
-      node_name    = "google"
-      port         = 80
+      service_name = "catalog"
+      meta = {
+        default = "true"
+      }
+      tags = null
+    },
+    {
+      service_name = "wishlist"
+      meta = {
+        default = "true"
+      }
+      tags = null
+    },
+    {
+      service_name = "recommendation"
+      meta = {
+        default = "true"
+      }
+      tags = null
+    },
+    {
+      service_name = "notification"
+      meta = {
+        default = "true"
+      }
+      tags = null
+    },
+    {
+      service_name = "warehouse"
       meta = {
         default = "true"
       }

@@ -116,37 +116,37 @@ resource "consul_acl_token" "services" {
   ]
 }
 
-#resource "aws_instance" "consul_client" {
-#  for_each = {
-#    for svc in var.services :
-#    svc.service_name => svc
-#  }
-#
-#  ami                         = data.aws_ami.ubuntu.id
-#  instance_type               = "t3.medium"
-#  subnet_id                   = data.aws_subnet.private.id
-#  key_name                    = data.aws_key_pair.deployer.key_name
-#  associate_public_ip_address = false
-#
-#  user_data = templatefile("./scripts/consul.sh", {
-#    CA_PUBLIC_KEY     = base64encode(data.terraform_remote_state.hcp.outputs.consul.ca_public_key)
-#    HCP_CONFIG_FILE   = base64encode(data.terraform_remote_state.hcp.outputs.consul.config_file)
-#    CONSUL_ROOT_TOKEN = hcp_consul_cluster_root_token.root.secret_id
-#    SERVICE_NAME      = each.value["service_name"]
-#    SERVICE_TOKEN     = ""
-#  })
-#
-#  vpc_security_group_ids = local.combined_security_group_ids
-#
-#  tags = {
-#    Name          = each.value["service_name"]
-#    consul_server = false
-#  }
-#
-#  lifecycle {
-#    ignore_changes = [
-#      user_data,
-#      ami
-#    ]
-#  }
-#}
+resource "aws_instance" "consul_client" {
+  for_each = {
+    for svc in var.services :
+    svc.service_name => svc
+  }
+
+  ami                         = data.aws_ami.ubuntu.id
+  instance_type               = "t3.micro"
+  subnet_id                   = data.aws_subnet.private.id
+  key_name                    = data.aws_key_pair.deployer.key_name
+  associate_public_ip_address = false
+
+  user_data = templatefile("./scripts/consul.sh", {
+    CA_PUBLIC_KEY     = base64encode(data.terraform_remote_state.hcp.outputs.consul.ca_public_key)
+    HCP_CONFIG_FILE   = base64encode(data.terraform_remote_state.hcp.outputs.consul.config_file)
+    CONSUL_ROOT_TOKEN = hcp_consul_cluster_root_token.root.secret_id
+    SERVICE_NAME      = each.value["service_name"]
+    SERVICE_TOKEN     = ""
+  })
+
+  vpc_security_group_ids = local.combined_security_group_ids
+
+  tags = {
+    Name          = each.value["service_name"]
+    consul_server = false
+  }
+
+  lifecycle {
+    ignore_changes = [
+      user_data,
+      ami
+    ]
+  }
+}
