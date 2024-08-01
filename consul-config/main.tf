@@ -61,7 +61,7 @@ resource "aws_security_group" "consul" {
 
 locals {
   combined_security_group_ids = concat(
-    data.terraform_remote_state.nomad.outputs.securdata.terraform_remote_state.nomad.outputs.security_groups,
+    data.terraform_remote_state.nomad.outputs.security_groups,
     [aws_security_group.consul.id]
   )
 }
