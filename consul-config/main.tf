@@ -116,6 +116,13 @@ resource "consul_acl_token" "services" {
   ]
 }
 
+locals {
+  service_tokens = {
+    for svc_name, svc in data.consul_acl_token_secret_id.services :
+    svc_name => svc.secret_id
+  }
+}
+
 resource "aws_instance" "consul_client" {
   for_each = {
     for svc in var.services :
@@ -133,7 +140,7 @@ resource "aws_instance" "consul_client" {
     HCP_CONFIG_FILE   = base64encode(data.terraform_remote_state.hcp.outputs.consul.config_file)
     CONSUL_ROOT_TOKEN = hcp_consul_cluster_root_token.root.secret_id
     SERVICE_NAME      = each.value["service_name"]
-    SERVICE_TOKEN     = ""
+    SERVICE_TOKEN     = local.service_tokens[each.key]
   })
 
   vpc_security_group_ids = local.combined_security_group_ids

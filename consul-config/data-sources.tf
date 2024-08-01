@@ -45,3 +45,9 @@ data "aws_ami" "ubuntu" {
 data "aws_key_pair" "deployer" {
   key_name = "deployer-key"
 }
+
+data "consul_acl_token_secret_id" "services" {
+  for_each = consul_acl_token.services
+
+  accessor_id = each.value.id
+}
