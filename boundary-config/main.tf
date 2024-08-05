@@ -55,7 +55,7 @@ resource "aws_instance" "boundary_worker_public" {
   associate_public_ip_address = true
 
   user_data = templatefile("./scripts/boundary-setup.sh", {
-    CLUSTER_ID                            = base64decode(data.terraform_remote_state.hcp.outputs.boundary.cluster_id)
+    CLUSTER_ID                            = data.terraform_remote_state.hcp.outputs.boundary.cluster_id
     CONTROLLER_GENERATED_ACTIVATION_TOKEN = boundary_worker.main.controller_generated_activation_token
   })
 
