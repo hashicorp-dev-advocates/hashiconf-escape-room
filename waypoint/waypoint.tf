@@ -54,5 +54,10 @@ resource "hcp_waypoint_template" "nomad_app" {
       user_editable = true
       variable_type = "string"
     },
+    {
+      name          = "applications"
+      user_editable = false
+      variable_type = "map(object({ waypoint_clues = string nomad_clues = string node_pool = string port = number }))"
+    },
   ]
 }
