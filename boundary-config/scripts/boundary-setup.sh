@@ -6,8 +6,7 @@ echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://
 sudo apt update && sudo apt install boundary-enterprise
 
 # Write the config
-echo "[$(date +%T)] Writing config to /etc/boundary.d/worker.hcl
-cat <<-EOT > /etc/boundary.d/boundary.hcl
+cat <<EOT > /etc/boundary.d/boundary.hcl
   disable_mlock = true
   log_level = "debug"
 

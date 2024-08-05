@@ -5,3 +5,6 @@ doormat.sh
 /vault-config/.terraform.lock.hcl
 /consul-config/.terraform/
 /consul-config/.terraform.lock.hcl
+/hcp-infrastructure/.terraform/
+
+/hcp-infrastructure/backend.tf
