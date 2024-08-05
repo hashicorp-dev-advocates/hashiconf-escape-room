@@ -1,3 +1,3 @@
-# Deploy a container application to Nomad
+# {{ .ApplicationName }}
 
-Use this to deploy a container application to Nomad.
+This application runs on Nomad in a container.

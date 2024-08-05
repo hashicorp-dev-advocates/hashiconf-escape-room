@@ -14,50 +14,45 @@ resource "hcp_waypoint_template" "nomad_app" {
 
   readme_markdown_template = base64encode(file("templates/nomad-container-app.md"))
 
-  variable_options = [
-    {
-      name = "application_count"
-      options = [
-        "1",
-      ]
-      user_editable = false
-      variable_type = "number"
-    },
-    {
-      name          = "application_port"
-      options       = []
-      user_editable = true
-      variable_type = "number"
-    },
-    {
-      name          = "image"
-      options       = []
-      user_editable = true
-      variable_type = "string"
-    },
-    {
-      name          = "node_pool"
-      user_editable = true
-      variable_type = "string"
-    },
-    {
-      name = "service_provider"
-      options = [
-        "nomad",
-      ]
-      user_editable = false
-      variable_type = "string"
-    },
-    {
-      name          = "waypoint_additional_details"
-      options       = []
-      user_editable = true
-      variable_type = "string"
-    },
-    {
-      name          = "applications"
-      user_editable = false
-      variable_type = "map(object({ waypoint_clues = string nomad_clues = string node_pool = string port = number }))"
-    },
-  ]
+  # variable_options = [
+  #   {
+  #     name = "application_count"
+  #     options = [
+  #       "1",
+  #     ]
+  #     user_editable = false
+  #     variable_type = "number"
+  #   },
+  #   {
+  #     name          = "application_port"
+  #     options       = []
+  #     user_editable = true
+  #     variable_type = "number"
+  #   },
+  #   {
+  #     name          = "image"
+  #     options       = []
+  #     user_editable = true
+  #     variable_type = "string"
+  #   },
+  #   {
+  #     name          = "node_pool"
+  #     user_editable = true
+  #     variable_type = "string"
+  #   },
+  #   {
+  #     name = "service_provider"
+  #     options = [
+  #       "nomad",
+  #     ]
+  #     user_editable = false
+  #     variable_type = "string"
+  #   },
+  #   {
+  #     name          = "waypoint_additional_details"
+  #     options       = []
+  #     user_editable = true
+  #     variable_type = "string"
+  #   }
+  # ]
 }
