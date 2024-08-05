@@ -27,7 +27,7 @@ output "consul" {
 
 output "boundary" {
   value = {
-    cluster_id      = hcp_boundary_cluster.main.cluster_id
+    cluster_id      = hcp_boundary_cluster.main.id
     public_endpoint = hcp_boundary_cluster.main.cluster_url
     username        = hcp_boundary_cluster.main.username
   }
