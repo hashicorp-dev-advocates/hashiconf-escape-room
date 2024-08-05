@@ -11,9 +11,10 @@ variable "image" {
 
 variable "applications" {
   type = map(object({
-    port               = number
-    additional_details = string
-    node_pool          = string
+    waypoint_clues = string
+    nomad_clues    = string
+    node_pool      = string
+    port           = number
   }))
   description = "List of applications and attributes to use"
 }

@@ -28,7 +28,6 @@ variable "application_and_clues" {
     nomad_clues    = string
     node_pool      = string
     port           = number
-
   }))
   description = "Applications and their clues"
 }

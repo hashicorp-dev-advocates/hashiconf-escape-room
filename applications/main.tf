@@ -14,7 +14,7 @@ resource "hcp_waypoint_application" "apps" {
     },
     {
       name          = "waypoint_additional_details"
-      value         = each.value.additional_details
+      value         = each.value.waypoint_clues
       variable_type = "string"
     },
     {
