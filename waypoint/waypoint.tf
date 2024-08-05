@@ -1,3 +1,8 @@
+import {
+  id = "8932bd16-50d8-4dcc-b7d8-1d25da304ff4"
+  to = hcp_waypoint_tempate.nomad_app
+}
+
 resource "hcp_waypoint_template" "nomad_app" {
   name    = "nomad-container-application"
   summary = "Deploy a container application to Nomad"
@@ -14,45 +19,45 @@ resource "hcp_waypoint_template" "nomad_app" {
 
   readme_markdown_template = base64encode(file("templates/nomad-container-app.md"))
 
-  # variable_options = [
-  #   {
-  #     name = "application_count"
-  #     options = [
-  #       "1",
-  #     ]
-  #     user_editable = false
-  #     variable_type = "number"
-  #   },
-  #   {
-  #     name          = "application_port"
-  #     options       = []
-  #     user_editable = true
-  #     variable_type = "number"
-  #   },
-  #   {
-  #     name          = "image"
-  #     options       = []
-  #     user_editable = true
-  #     variable_type = "string"
-  #   },
-  #   {
-  #     name          = "node_pool"
-  #     user_editable = true
-  #     variable_type = "string"
-  #   },
-  #   {
-  #     name = "service_provider"
-  #     options = [
-  #       "nomad",
-  #     ]
-  #     user_editable = false
-  #     variable_type = "string"
-  #   },
-  #   {
-  #     name          = "waypoint_additional_details"
-  #     options       = []
-  #     user_editable = true
-  #     variable_type = "string"
-  #   }
-  # ]
+  variable_options = [
+    {
+      name = "application_count"
+      options = [
+        "1",
+      ]
+      user_editable = false
+      variable_type = "number"
+    },
+    {
+      name          = "application_port"
+      options       = []
+      user_editable = true
+      variable_type = "number"
+    },
+    {
+      name          = "image"
+      options       = []
+      user_editable = true
+      variable_type = "string"
+    },
+    {
+      name          = "node_pool"
+      user_editable = true
+      variable_type = "string"
+    },
+    {
+      name = "service_provider"
+      options = [
+        "nomad",
+      ]
+      user_editable = false
+      variable_type = "string"
+    },
+    {
+      name          = "waypoint_additional_details"
+      options       = []
+      user_editable = true
+      variable_type = "string"
+    }
+  ]
 }
