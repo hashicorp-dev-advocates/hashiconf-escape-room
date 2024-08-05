@@ -5,8 +5,10 @@ on:
     branches:
       - main
     paths:
+      - .github/workflows/packer.yaml
       - packer/app-ubuntu/**
       - packer/hashistack-ubuntu/**
+      - packer/base-linux/**
 
 permissions:
   id-token: write
@@ -87,6 +89,47 @@ jobs:
       - name: Build Artifact
         run: packer build -color=false .
         working-directory: ./packer/hashistack-ubuntu
+        env:
+          HCP_CLIENT_ID: ${{ secrets.HCP_CLIENT_ID }}
+          HCP_CLIENT_SECRET: ${{ secrets.HCP_CLIENT_SECRET }}
+          HCP_PROJECT_ID: ${{ secrets.HCP_PROJECT_ID }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          HCP_PACKER_BUILD_FINGERPRINT: "run.id.${{ github.run_id }}.run.attempt.${{ github.run_attempt }}"
+          HCP_PACKER_BUILD_DETAILS: "TODO: clue"
+
+  base-linux:
+    runs-on: ubuntu-latest
+    name: base-linux
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE }}
+          role-session-name: github-to-aws-packer-build
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Setup `packer`
+        uses: hashicorp/setup-packer@v3
+        id: setup
+        with:
+          version: "latest"
+
+      - name: Run `packer init`
+        id: init
+        run: "packer init ."
+        working-directory: ./packer/base-linux
+
+      - name: Run `packer validate`
+        id: validate
+        run: "packer validate ."
+        working-directory: ./packer/base-linux
+
+      - name: Build Artifact
+        run: packer build -color=false .
+        working-directory: ./packer/base-linux
         env:
           HCP_CLIENT_ID: ${{ secrets.HCP_CLIENT_ID }}
           HCP_CLIENT_SECRET: ${{ secrets.HCP_CLIENT_SECRET }}
