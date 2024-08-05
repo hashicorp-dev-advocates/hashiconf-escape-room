@@ -40,6 +40,7 @@ resource "tfe_variable" "clues" {
   hcl             = true
   description     = "A list of applications and codes"
   variable_set_id = tfe_variable_set.clues.id
+  sensitive       = true
 }
 
 resource "tfe_variable_set" "clues" {
