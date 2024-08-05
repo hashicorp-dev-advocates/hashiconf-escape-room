@@ -9,6 +9,13 @@ terraform {
 
 provider "tfe" {}
 
+
+variable "tfc_organization" {
+  type        = string
+  description = "TFC organization"
+  default     = "hashicorp-team-da-beta"
+}
+
 variable "workspaces" {
   type        = set(string)
   description = "Set of workspaces that use clues"
@@ -38,17 +45,27 @@ resource "tfe_variable" "clues" {
 resource "tfe_variable_set" "clues" {
   name         = "hashiconf-escape-room-clues"
   description  = "Clues for HashiConf escape room"
-  organization = "hashicorp-team-da-beta"
+  organization = var.tfc_organization
 }
 
 data "tfe_workspace" "attach" {
   for_each     = var.workspaces
   name         = each.value
-  organization = "hashicorp-team-da-beta"
+  organization = var.tfc_organization
 }
 
 resource "tfe_workspace_variable_set" "clues" {
   for_each        = data.tfe_workspace.attach
   workspace_id    = each.value.id
+  variable_set_id = tfe_variable_set.clues.id
+}
+
+data "tfe_project" "attach" {
+  name         = "hashiconf-escape-room-apps"
+  organization = var.tfc_organization
+}
+
+resource "tfe_project_variable_set" "apps" {
+  project_id      = data.tfe_project.attach.id
   variable_set_id = tfe_variable_set.clues.id
 }
