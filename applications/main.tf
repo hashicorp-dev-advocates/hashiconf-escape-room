@@ -3,7 +3,7 @@ data "hcp_waypoint_template" "nomad_app" {
 }
 
 resource "hcp_waypoint_application" "apps" {
-  for_each    = var.applications
+  for_each    = nonsensitive(var.applications)
   name        = each.key
   template_id = data.hcp_waypoint_template.nomad_app.id
   application_input_variables = [
