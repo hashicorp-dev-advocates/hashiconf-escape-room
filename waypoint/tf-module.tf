@@ -25,26 +25,26 @@ resource "tfe_registry_module" "nomad_app" {
 
 data "nomad_node_pools" "all" {}
 
-resource "tfe_no_code_module" "nomad_app" {
-  organization    = data.tfe_organization.org.name
-  registry_module = tfe_registry_module.nomad_app.id
+# resource "tfe_no_code_module" "nomad_app" {
+#   organization    = data.tfe_organization.org.name
+#   registry_module = tfe_registry_module.nomad_app.id
 
-  variable_options {
-    name    = "node_pool"
-    type    = "string"
-    options = data.nomad_node_pools.all.node_pools.*.name
-  }
+#   variable_options {
+#     name    = "node_pool"
+#     type    = "string"
+#     options = data.nomad_node_pools.all.node_pools.*.name
+#   }
 
-  variable_options {
-    name    = "service_provider"
-    type    = "string"
-    options = ["nomad"]
-  }
-}
+#   variable_options {
+#     name    = "service_provider"
+#     type    = "string"
+#     options = ["nomad"]
+#   }
+# }
 
-check "nomad_node_pools" {
-  assert {
-    condition     = data.nomad_node_pools.all.node_pools.*.name == tfe_no_code_module.nomad_app.variable_options.0.options
-    error_message = "Nomad node pools have changed, update no-code module inputs"
-  }
-}
+# check "nomad_node_pools" {
+#   assert {
+#     condition     = data.nomad_node_pools.all.node_pools.*.name == tfe_no_code_module.nomad_app.variable_options.0.options
+#     error_message = "Nomad node pools have changed, update no-code module inputs"
+#   }
+# }
