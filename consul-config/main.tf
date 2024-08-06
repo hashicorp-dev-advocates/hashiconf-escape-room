@@ -150,9 +150,15 @@ locals {
 }
 
 resource "tls_private_key" "ssh_key" {
-  algorithm = "ECDSA"
+  algorithm   = "ECDSA"
   ecdsa_curve = "P256"
 }
+
+resource "aws_key_pair" "services" {
+  public_key = tls_private_key.ssh_key.public_key_openssh
+  key_name   = "services"
+}
+
 resource "aws_instance" "consul_client" {
   for_each = {
     for svc in var.services :
@@ -162,7 +168,7 @@ resource "aws_instance" "consul_client" {
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = "t3.micro"
   subnet_id                   = data.aws_subnet.private.id
-  key_name                    = tls_private_key.ssh_key.public_key_openssh
+  key_name                    = aws_key_pair.services.key_name
   associate_public_ip_address = false
 
   user_data = templatefile("./scripts/consul.sh", {
