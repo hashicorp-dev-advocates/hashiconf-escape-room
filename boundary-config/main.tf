@@ -101,7 +101,19 @@ resource "boundary_credential_store_static" "creds_store" {
     svc.service_name => svc
   }
 
-  scope_id = boundary_scope.hashiconf_escape_room_projects[each.key].id
-  name = "${each.value["service_name"]}-static-creds-store"
+  scope_id    = boundary_scope.hashiconf_escape_room_projects[each.key].id
+  name        = "${each.value["service_name"]}-static-creds-store"
   description = "Static creds store for ${each.value["service_name"]}"
+}
+
+resource "boundary_credential_ssh_private_key" "ssh_key" {
+  for_each = {
+    for svc in var.services :
+    svc.service_name => svc
+  }
+
+  credential_store_id = boundary_credential_store_static.creds_store[each.key].id
+  private_key         = data.terraform_remote_state.consul.outputs.ssh_private_key
+  username            = "ubuntu"
+  name                = "ssh-key"
 }

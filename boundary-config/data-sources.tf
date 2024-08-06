@@ -22,6 +22,19 @@ data "terraform_remote_state" "nomad" {
   }
 }
 
+data "terraform_remote_state" "consul" {
+  backend = "remote"
+
+  config = {
+    organization = "hashicorp-team-da-beta"
+
+    workspaces = {
+      name = "consul-config"
+    }
+  }
+}
+
+
 data "aws_subnet" "private" {
   cidr_block = "10.0.1.0/24"
 }
