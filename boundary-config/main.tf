@@ -88,8 +88,8 @@ resource "boundary_scope" "hashiconf_escape_room_projects" {
     svc.service_name => svc
   }
 
-  scope_id                 = boundary_scope.hashiconf_escape_room_org.scope_id
-  name                     = each.value["service_name"]
+  scope_id                 = boundary_scope.hashiconf_escape_room_org.id
+  name                     = "${each.value["service_name"]}-infrastructure"
   description              = "Org containing infrastrure"
   auto_create_admin_role   = true
   auto_create_default_role = true
