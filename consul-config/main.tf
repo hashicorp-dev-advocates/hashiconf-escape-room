@@ -162,7 +162,7 @@ resource "aws_instance" "consul_client" {
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = "t3.micro"
   subnet_id                   = data.aws_subnet.private.id
-  key_name                    = tls_private_key.ssh_key.private_key_pem
+  key_name                    = tls_private_key.ssh_key.public_key_openssh
   associate_public_ip_address = false
 
   user_data = templatefile("./scripts/consul.sh", {
