@@ -127,7 +127,7 @@ resource "boundary_target" "targets" {
   }
 
   scope_id            = boundary_scope.hashiconf_escape_room_projects[each.key].id
-  type                = "SSH"
+  type                = "ssh"
   default_port        = 22
   default_client_port = 22
   name                = each.value["service_name"]
