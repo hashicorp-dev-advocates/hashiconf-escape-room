@@ -117,3 +117,26 @@ resource "boundary_credential_ssh_private_key" "ssh_key" {
   username            = "ubuntu"
   name                = "ssh-key"
 }
+
+
+resource "boundary_target" "targets" {
+
+  for_each = {
+    for svc in var.services :
+    svc.service_name => svc
+  }
+
+  scope_id            = boundary_scope.hashiconf_escape_room_projects[each.key].id
+  type                = "SSH"
+  default_port        = 22
+  default_client_port = 22
+  name                = each.value["service_name"]
+  address             = data.terraform_remote_state.consul.outputs.services_map[each.value["service_name"]]
+
+  injected_application_credential_source_ids = [
+    boundary_credential_ssh_private_key.ssh_key[each.key].id
+  ]
+
+  ingress_worker_filter = '"/name" == "main"'
+
+}
