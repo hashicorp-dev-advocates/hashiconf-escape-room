@@ -150,8 +150,8 @@ locals {
 }
 
 resource "tls_private_key" "ssh_key" {
-  algorithm   = "ECDSA"
-  ecdsa_curve = "P256"
+  algorithm = "RSA"
+  rsa_bits  = 2048
 }
 
 resource "aws_key_pair" "services" {
