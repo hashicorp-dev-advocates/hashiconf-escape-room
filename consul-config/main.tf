@@ -149,6 +149,10 @@ locals {
   }
 }
 
+resource "tls_private_key" "ssh_key" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
 resource "aws_instance" "consul_client" {
   for_each = {
     for svc in var.services :
@@ -158,7 +162,7 @@ resource "aws_instance" "consul_client" {
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = "t3.micro"
   subnet_id                   = data.aws_subnet.private.id
-  key_name                    = data.aws_key_pair.deployer.key_name
+  key_name                    = tls_private_key.ssh_key.private_key_pem
   associate_public_ip_address = false
 
   user_data = templatefile("./scripts/consul.sh", {
@@ -205,3 +209,4 @@ resource "aws_instance" "bastion" {
     ]
   }
 }
+

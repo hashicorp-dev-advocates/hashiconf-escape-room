@@ -26,11 +26,7 @@ output "consul" {
 }
 
 locals {
-
-  // Remove 'https://'
   without_https = replace(hcp_boundary_cluster.main.cluster_url, "https://", "")
-
-  // Remove '.boundary.hashicorp.cloud'
   final_string = replace(local.without_https, ".boundary.hashicorp.cloud", "")
 }
 

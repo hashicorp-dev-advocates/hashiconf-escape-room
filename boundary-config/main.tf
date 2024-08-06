@@ -1,6 +1,6 @@
 resource "boundary_worker" "main" {
   scope_id    = "global"
-  name        = "main public subnet worker"
+  name        = "main"
   description = "main public subnet worker"
 }
 
@@ -62,7 +62,7 @@ resource "aws_instance" "boundary_worker_public" {
   vpc_security_group_ids = local.combined_security_group_ids
 
   tags = {
-    Name          = "Boundary Worker Public"
+    Name = "Boundary Worker Public"
   }
 
   lifecycle {
@@ -71,4 +71,27 @@ resource "aws_instance" "boundary_worker_public" {
       ami
     ]
   }
+}
+
+resource "boundary_scope" "hashiconf_escape_room_org" {
+  scope_id                 = "global"
+  name                     = "HashiConf Escape Room Org"
+  description              = "Org containing infrastrure"
+  auto_create_admin_role   = true
+  auto_create_default_role = true
+}
+
+resource "boundary_scope" "hashiconf_escape_room_projects" {
+
+  for_each = {
+    for svc in var.services :
+    svc.service_name => svc
+  }
+
+  scope_id                 = boundary_scope.hashiconf_escape_room_org.scope_id
+  name                     = each.value["service_name"]
+  description              = "Org containing infrastrure"
+  auto_create_admin_role   = true
+  auto_create_default_role = true
+
 }
