@@ -82,7 +82,6 @@ resource "boundary_scope" "hashiconf_escape_room_org" {
 }
 
 resource "boundary_scope" "hashiconf_escape_room_projects" {
-
   for_each = {
     for svc in var.services :
     svc.service_name => svc
@@ -90,8 +89,19 @@ resource "boundary_scope" "hashiconf_escape_room_projects" {
 
   scope_id                 = boundary_scope.hashiconf_escape_room_org.id
   name                     = "${each.value["service_name"]}-infrastructure"
-  description              = "Org containing infrastrure"
+  description              = "Project containing infrastrure for ${each.value["service_name"]}"
   auto_create_admin_role   = true
   auto_create_default_role = true
+}
 
+resource "boundary_credential_store_static" "creds_store" {
+
+  for_each = {
+    for svc in var.services :
+    svc.service_name => svc
+  }
+
+  scope_id = boundary_scope.hashiconf_escape_room_projects[each.key].id
+  name = "${each.value["service_name"]}-static-creds-store"
+  description = "Static creds store for ${each.value["service_name"]}"
 }
