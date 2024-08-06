@@ -150,8 +150,8 @@ locals {
 }
 
 resource "tls_private_key" "ssh_key" {
-  algorithm = "RSA"
-  rsa_bits  = 4096
+  algorithm = "ECDSA"
+  ecdsa_curve = "P256"
 }
 resource "aws_instance" "consul_client" {
   for_each = {
