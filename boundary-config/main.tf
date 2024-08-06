@@ -137,7 +137,7 @@ resource "boundary_target" "targets" {
     boundary_credential_ssh_private_key.ssh_key[each.key].id
   ]
 
-  ingress_worker_filter = <<EOF
+  egress_worker_filter = <<EOF
 "/name" == "main"
 EOF
 }
