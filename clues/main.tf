@@ -32,12 +32,12 @@ variable "application_and_clues" {
   description = "Applications and their clues"
 }
 
-resource "tfe_variable" "clues" {
+resource "tfe_variable" "clues_ilm" {
   key             = "applications"
   value           = jsonencode(var.application_and_clues)
   category        = "terraform"
   hcl             = true
-  description     = "A list of applications and codes"
+  description     = "A list of applications and codes for infrastructure lifecycle management sequence"
   variable_set_id = tfe_variable_set.clues.id
   sensitive       = true
 }
