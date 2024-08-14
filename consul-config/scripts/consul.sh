@@ -98,7 +98,7 @@ service {
   }
 
   meta {
-    version = "v1"
+    clue = "${CONSUL_CLUE}"
   }
 
   connect {

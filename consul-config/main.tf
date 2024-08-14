@@ -177,6 +177,7 @@ resource "aws_instance" "consul_client" {
     CONSUL_ROOT_TOKEN = hcp_consul_cluster_root_token.root.secret_id
     SERVICE_NAME      = each.value["service_name"]
     SERVICE_TOKEN     = local.service_tokens[each.key]
+    CONSUL_CLUE       = each.value.meta.clue
   })
 
   vpc_security_group_ids = local.combined_security_group_ids

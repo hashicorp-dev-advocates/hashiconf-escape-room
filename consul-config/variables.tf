@@ -20,35 +20,35 @@ variable "services" {
     {
       service_name = "catalog"
       meta = {
-        default = "true"
+        clue = "Look at the tag of the Consul shirt."
       }
       tags = null
     },
     {
       service_name = "wishlist"
       meta = {
-        default = "true"
+        clue = "Look under the mug on the shelf."
       }
       tags = null
     },
     {
       service_name = "recommendation"
       meta = {
-        default = "true"
+        clue = "Look at the handle of the umbrella."
       }
       tags = null
     },
     {
       service_name = "notification"
       meta = {
-        default = "true"
+        clue = "Look at the top of the garment rack."
       }
       tags = null
     },
     {
       service_name = "warehouse"
       meta = {
-        default = "true"
+        clue = "Look on the inside cover of the book, “Consul: Up and Running”."
       }
       tags = null
     }
