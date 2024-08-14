@@ -20,9 +20,9 @@ output "ssh_private_key" {
   sensitive = true
 }
 
-output "services_map" {
-  value = {
-    for svc_name, instance in aws_instance.consul_client :
-    svc_name => instance.private_ip
-  }
-}
+#output "services_map" {
+#  value = {
+#    for svc_name, instance in aws_instance.consul_client :
+#    svc_name => instance.private_ip
+#  }
+#}
