@@ -150,3 +150,8 @@ systemctl enable consul
 systemctl restart consul
 systemctl enable ${SERVICE_NAME}
 systemctl restart ${SERVICE_NAME}
+
+sudo mkdir -p /clues
+sudo echo ${BOUNDARY_CLUE} > /clues/open-for-the-clue.txt
+sudo echo "Look in the pot of the large plant." > /clues/this-is-not-the-clue.txt
+sudo chmod -R 777 /clues
