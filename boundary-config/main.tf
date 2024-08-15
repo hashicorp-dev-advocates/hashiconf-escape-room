@@ -129,7 +129,6 @@ resource "boundary_target" "targets" {
   scope_id            = boundary_scope.hashiconf_escape_room_projects[each.key].id
   type                = "ssh"
   default_port        = 22
-#  default_client_port = 22
   name                = each.value["service_name"]
   address             = data.terraform_remote_state.consul.outputs.services_map[each.value["service_name"]]
 
@@ -141,3 +140,82 @@ resource "boundary_target" "targets" {
 "/name" == "main"
 EOF
 }
+
+resource "aws_s3_bucket" "backend_recordings" {
+  provider = "aws.boundary"
+  bucket = "hashiconf-recordings"
+
+}
+
+resource "aws_s3_access_point" "backend_recordings" {
+  provider = "aws.boundary"
+  bucket = aws_s3_bucket.backend_recordings.bucket
+  name   = aws_s3_bucket.backend_recordings.bucket
+
+  vpc_configuration {
+    vpc_id = data.terraform_remote_state.nomad.outputs.vpc_id
+  }
+}
+
+data "aws_iam_policy_document" "s3_bucket" {
+provider = "aws.boundary"
+  statement {
+    actions = [
+      "s3:PutObject",
+      "s3:GetObject",
+      "s3:GetObjectAttributes"
+    ]
+    effect = "Allow"
+    resources = [
+      aws_s3_bucket.backend_recordings.arn
+    ]
+    principals {
+      identifiers = [""]
+      type        = "AWS"
+    }
+  }
+
+  statement {
+    actions = [
+      "iam:DeleteAccessKey",
+      "iam:GetUser",
+      "iam:CreateAccessKey"
+    ]
+    effect = "Allow"
+    resources = [
+      ""
+    ]
+    principals {
+      identifiers = [""]
+      type        = "AWS"
+    }
+
+  }
+
+}
+
+#resource "boundary_storage_bucket" "backend_recordings" {
+#  name            = "backend_recordings"
+#  description     = "backend session recordings"
+#  scope_id        = boundary_scope.hashiconf_escape_room_org.id
+#  plugin_name     = "aws"
+#  bucket_name     = aws_s3_bucket.backend_recordings.bucket
+#  attributes_json = jsonencode({ "region" = "us-east-2" })
+#
+#  # recommended to pass in aws secrets using a file() or using environment variables
+#  # the secrets below must be generated in aws by creating a aws iam user with programmatic access
+#  secrets_json = jsonencode({
+#    "access_key_id"     = var.a
+#    "secret_access_key" = var.aws_secret_access_key
+#  })
+#
+#  worker_filter = <<EOF
+#"/name" == "main"
+#EOF
+#
+#
+#  depends_on = [
+#    aws_s3_access_point.backend_recordings,
+#    aws_instance.boundary_worker_public
+#  ]
+#}

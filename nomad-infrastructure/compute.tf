@@ -215,10 +215,16 @@ resource "aws_instance" "nomad_servers" {
   }
 }
 
+resource "tls_private_key" "ssh_key" {
+  algorithm = "RSA"
+  rsa_bits  = 2048
+}
+
 resource "aws_key_pair" "deployer" {
   key_name   = "deployer-key"
-  public_key = var.ssh_key
+  public_key = tls_private_key.ssh_key.public_key_openssh
 }
+
 
 resource "aws_instance" "nomad_clients" {
   count                       = var.client_count
