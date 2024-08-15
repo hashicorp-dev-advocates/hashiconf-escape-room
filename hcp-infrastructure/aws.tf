@@ -179,7 +179,7 @@ data "aws_iam_policy_document" "boundary_session_recordings" {
     actions = [
       "s3:ListBucket",
     ]
-    resources = [provider::aws::arn_build("aws", "s3", var.aws_region, data.aws_caller_identity.current.account_id, var.bucket_name)]
+    resources = [provider::aws::arn_build("aws", "s3", "", data.aws_caller_identity.current.account_id, var.bucket_name)]
   }
 
   statement {
@@ -190,7 +190,7 @@ data "aws_iam_policy_document" "boundary_session_recordings" {
       "s3:GetObjectAttributes",
       "s3:DeleteObject",
     ]
-    resources = [provider::aws::arn_build("aws", "s3", var.aws_region, data.aws_caller_identity.current.account_id, "${var.bucket_name}/*")]
+    resources = [provider::aws::arn_build("aws", "s3", "", data.aws_caller_identity.current.account_id, "${var.bucket_name}/*")]
   }
 
   statement {
