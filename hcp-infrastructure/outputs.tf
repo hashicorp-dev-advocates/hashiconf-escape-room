@@ -43,6 +43,9 @@ output "boundary_password" {
   sensitive = true
 }
 
-output "boundary_session_recording_role" {
-  value = aws_iam_role.boundary_session_recordings.arn
+output "boundary_session_recording_iam" {
+  value = {
+    role   = aws_iam_role.boundary_session_recordings.arn
+    policy = aws_iam_policy.boundary_session_recordings.arn
+  }
 }
