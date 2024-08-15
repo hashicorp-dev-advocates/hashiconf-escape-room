@@ -42,3 +42,7 @@ output "boundary_password" {
   value     = hcp_boundary_cluster.main.password
   sensitive = true
 }
+
+output "boundary_session_recording_role" {
+  value = aws_iam_role.boundary_session_recordings.arn
+}
