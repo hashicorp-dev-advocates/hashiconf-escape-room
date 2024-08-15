@@ -8,6 +8,7 @@ import (
 type Connection interface {
 	IsConnected() (bool, error)
 	GetTeams(teamid *int) (Teams, error)
+	GetTeamsByActivation(activation string) (Teams, error)
 	CreateTeam(*Team) (Team, error)
 	DeleteTeam(teamID int) error
 }
@@ -55,16 +56,29 @@ func (c *PostgresSQL) GetTeams(teamid *int) (Teams, error) {
 	return teams, nil
 }
 
+// GetTeamsByActivation returns all teams from the database by activation
+func (c *PostgresSQL) GetTeamsByActivation(activation string) (Teams, error) {
+	teams := Teams{}
+
+	err := c.db.Select(&teams, "SELECT * FROM teams WHERE activation = $1 AND deleted_at IS NULL ORDER BY time;", activation)
+	if err != nil {
+		return nil, err
+	}
+
+	return teams, nil
+}
+
 // CreateTeam creates a new team
 func (c *PostgresSQL) CreateTeam(team *Team) (Team, error) {
 	t := Team{}
 
 	rows, err := c.db.NamedQuery(
-		`INSERT INTO teams (name, time, created_at)
-		VALUES(:name, :time, now())
-		RETURNING id, name, time;`, map[string]interface{}{
-			"name": team.Name,
-			"time": team.Time,
+		`INSERT INTO teams (name, time, activation, created_at)
+		VALUES(:name, :time, :activation, now())
+		RETURNING id, name, activation, time;`, map[string]interface{}{
+			"name":       team.Name,
+			"activation": team.Activation,
+			"time":       team.Time,
 		})
 
 	if err != nil {

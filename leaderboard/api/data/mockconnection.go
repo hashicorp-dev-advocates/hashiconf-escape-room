@@ -24,6 +24,17 @@ func (c *MockConnection) GetTeams(*int) (Teams, error) {
 	return nil, args.Error(1)
 }
 
+// GetTeamsByActivation -
+func (c *MockConnection) GetTeamsByActivation(string) (Teams, error) {
+	args := c.Called()
+
+	if m, ok := args.Get(0).(Teams); ok {
+		return m, args.Error(1)
+	}
+
+	return nil, args.Error(1)
+}
+
 // CreateTeam -
 func (c *MockConnection) CreateTeam(team *Team) (Team, error) {
 	args := c.Called()

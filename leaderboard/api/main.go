@@ -73,6 +73,7 @@ func main() {
 	teamHandler := handlers.NewTeam(db, logger)
 	r.HandleFunc("/teams", teamHandler.GetTeams).Methods("GET")
 	r.HandleFunc("/teams/{id:[0-9]+}", teamHandler.GetTeam).Methods("GET")
+	r.HandleFunc("/teams/activations/{name}", teamHandler.GetTeamsByActivation).Methods("GET")
 	r.HandleFunc("/teams", teamHandler.CreateTeam).Methods("POST")
 	r.HandleFunc("/teams/{id:[0-9]+}", teamHandler.DeleteTeam).Methods("DELETE")
 

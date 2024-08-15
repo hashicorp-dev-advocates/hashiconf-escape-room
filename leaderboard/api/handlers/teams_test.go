@@ -19,19 +19,22 @@ func setupTeamHandler(_ *testing.T) (*Team, *httptest.ResponseRecorder) {
 	c := &data.MockConnection{}
 
 	testTeam := data.Team{
-		ID:   1,
-		Name: "HashiFans",
-		Time: 200.6,
+		ID:         1,
+		Name:       "HashiFans",
+		Time:       200.6,
+		Activation: "ilm",
 	}
 
 	testTeam2 := data.Team{
-		ID:   2,
-		Name: "FastRunners",
-		Time: 100.5,
+		ID:         2,
+		Name:       "FastRunners",
+		Time:       100.5,
+		Activation: "slm",
 	}
 
 	c.On("GetTeam").Return(data.Teams{testTeam}, nil)
 	c.On("GetTeams").Return(data.Teams{testTeam2, testTeam}, nil)
+	c.On("GetTeamsByActivation").Return(data.Teams{testTeam2}, nil)
 	c.On("CreateTeam").Return(testTeam, nil)
 	c.On("UpdateTeam").Return(testTeam, nil)
 	c.On("DeleteTeam").Return(nil)
@@ -46,6 +49,7 @@ func setupFailedTeamHandler(_ *testing.T) (*Team, *httptest.ResponseRecorder) {
 
 	c.On("GetTeams").Return(nil, errors.New("Unable to retrieve team"))
 	c.On("GetTeams").Return(nil, errors.New("Unable to retrieve team"))
+	c.On("GetTeamsByActivation").Return(nil, errors.New("Unable to retrieve team"))
 	c.On("CreateTeam").Return(nil, errors.New("Unable to create team"))
 	c.On("UpdateTeam").Return(nil, errors.New("Unable to update team"))
 	c.On("DeleteTeam").Return(errors.New("Unable to delete team"))
@@ -70,6 +74,28 @@ func TestReturnsTeams(t *testing.T) {
 
 	assert.NoError(t, err)
 	assert.Len(t, bd, 2)
+	assert.Equal(t, "FastRunners", bd[0].Name)
+}
+
+// TestReturnsTeamsByActivation - Tests success criteria
+func TestReturnsTeamsByActivation(t *testing.T) {
+	c, rw := setupTeamHandler(t)
+
+	r := httptest.NewRequest("GET", "/teams/activations/{name}", nil)
+
+	// set activation to slm
+	vars := map[string]string{"name": "slm"}
+	r = mux.SetURLVars(r, vars)
+
+	c.GetTeamsByActivation(rw, r)
+
+	assert.Equal(t, http.StatusOK, rw.Code)
+
+	bd := data.Teams{}
+	err := json.Unmarshal(rw.Body.Bytes(), &bd)
+
+	assert.NoError(t, err)
+	assert.Len(t, bd, 1)
 	assert.Equal(t, "FastRunners", bd[0].Name)
 }
 

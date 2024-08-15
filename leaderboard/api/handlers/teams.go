@@ -94,6 +94,36 @@ func (c *Team) GetTeams(rw http.ResponseWriter, r *http.Request) {
 	rw.Write(d)
 }
 
+// GetTeamsByActivation gets a list of teams by activation in order of speed
+func (c *Team) GetTeamsByActivation(rw http.ResponseWriter, r *http.Request) {
+	c.log.Info("Handle Teams | GetTeamsByActivation")
+
+	vars := mux.Vars(r)
+
+	activation, ok := vars["name"]
+	if !ok {
+		c.log.Error("activation provided could not be converted to a string")
+		http.Error(rw, "Unable to list team", http.StatusInternalServerError)
+		return
+	}
+
+	teams, err := c.con.GetTeamsByActivation(activation)
+	if err != nil {
+		c.log.Error("Unable to get teams from database", "error", err)
+		http.Error(rw, "Unable to list teams", http.StatusInternalServerError)
+		return
+	}
+
+	d, err := teams.ToJSON()
+	if err != nil {
+		c.log.Error("Unable to convert team to JSON", "error", err)
+		http.Error(rw, "Unable to list team", http.StatusInternalServerError)
+		return
+	}
+
+	rw.Write(d)
+}
+
 // GetTeam gets a specific team
 func (c *Team) GetTeam(rw http.ResponseWriter, r *http.Request) {
 	c.log.Info("Handle Teams | GetTeam")
