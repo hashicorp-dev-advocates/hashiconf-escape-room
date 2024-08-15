@@ -82,3 +82,9 @@ variable "bucket_name" {
   description = "S3 bucket name for session recordings"
   default     = "hashiconf-recordings"
 }
+
+variable "aws_iam_user" {
+  type        = string
+  description = "AWS IAM user for Boundary session recordings"
+  sensitive   = true
+}
