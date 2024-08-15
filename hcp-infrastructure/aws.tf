@@ -152,3 +152,65 @@ resource "aws_iam_role_policy_attachment" "github_actions" {
   role       = aws_iam_role.github_actions.name
   policy_arn = aws_iam_policy.github_actions.arn
 }
+
+resource "aws_iam_role" "boundary_session_recordings" {
+  name = "${var.name}-boundary-session-recordings"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Sid    = ""
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+      },
+    ]
+  })
+}
+
+data "aws_caller_identity" "current" {}
+
+data "aws_iam_policy_document" "boundary_session_recordings" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:ListBucket",
+    ]
+    resources = [provider::aws::arn_build("aws", "s3", var.aws_region, data.aws_caller_identity.current.account_id, var.bucket_name)]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:PutObject",
+      "s3:GetObject",
+      "s3:GetObjectAttributes",
+      "s3:DeleteObject",
+    ]
+    resources = [provider::aws::arn_build("aws", "s3", var.aws_region, data.aws_caller_identity.current.account_id, "${var.bucket_name}/*")]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "kms:Decrypt",
+      "kms:GenerateDataKey",
+      "kms:DescribeKey"
+    ]
+    resources = [provider::aws::arn_build("aws", "kms", var.aws_region, data.aws_caller_identity.current.account_id, var.bucket_name)]
+  }
+}
+
+resource "aws_iam_policy" "boundary_session_recordings" {
+  name_prefix = "${var.name}-boundary-bucket-"
+  description = "Policy for Boundary session recording"
+  policy      = data.aws_iam_policy_document.boundary_session_recordings.json
+}
+
+resource "aws_iam_role_policy_attachment" "boundary_session_recordings" {
+  role       = aws_iam_role.boundary_session_recordings.name
+  policy_arn = aws_iam_policy.boundary_session_recordings.arn
+}

@@ -76,3 +76,9 @@ variable "github_user" {
   description = "GitHub user or organization for repository"
   default     = "hashicorp-dev-advocates"
 }
+
+variable "bucket_name" {
+  type        = string
+  description = "S3 bucket name for session recordings"
+  default     = "hashiconf-recordings"
+}
