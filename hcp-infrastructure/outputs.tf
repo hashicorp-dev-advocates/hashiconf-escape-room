@@ -44,10 +44,5 @@ output "boundary_password" {
 }
 
 output "boundary_session_recording_role" {
-  value = {
-    role_arn          = aws_iam_role.boundary_session_recordings.arn
-    access_key_id     = aws_iam_access_key.boundary_session_recordings.id
-    secret_access_key = aws_iam_access_key.boundary_session_recordings.secret
-  }
-  sensitive = true
+  value = aws_iam_role.boundary_session_recordings.arn
 }

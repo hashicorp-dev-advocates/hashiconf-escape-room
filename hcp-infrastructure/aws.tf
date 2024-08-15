@@ -214,7 +214,3 @@ resource "aws_iam_role_policy_attachment" "boundary_session_recordings" {
   role       = aws_iam_role.boundary_session_recordings.name
   policy_arn = aws_iam_policy.boundary_session_recordings.arn
 }
-
-resource "aws_iam_access_key" "boundary_session_recordings" {
-  user = var.aws_iam_user
-}
