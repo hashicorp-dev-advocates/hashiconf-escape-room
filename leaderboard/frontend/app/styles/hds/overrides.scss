@@ -1,0 +1,55 @@
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: BUSL-1.1
+ */
+
+// field and button bottom margin (HDS leaves this to implementers)
+form {
+  [class*='hds-form-field--layout'],
+  [class*='hds-form-group--layout'],
+  .rose-form-actions.hds-button-set {
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* stylelint-disable selector-class-pattern */
+.hds-form-group__control-fields-wrapper {
+  .hds-form-group__legend ~ & {
+    .hds-form-label {
+      font-weight: var(--token-typography-font-weight-semibold);
+    }
+  }
+}
+
+.hds-table {
+  border-collapse: revert;
+
+  [class^='hds-form-field'],
+  [class^='hds-form-group'] {
+    margin-bottom: 0;
+  }
+
+  .hds-table__td p {
+    color: var(--token-form-indicator-optional-color);
+  }
+
+  // Override for sortable HDS table columns that ignore selected theme in app
+  // and use the system default theme causing color mismatch if selected theme
+  // is not the system default theme
+  .hds-table__th-sort button {
+    color: var(--token-color-foreground-strong);
+  }
+
+  // TODO: This is a temporary hack to fix an issue causing weird whitespace
+  //   and scrollbars from an accessible class in HDS. We have to use !important
+  //   as they already forced it with !important and we can't override it otherwise
+  .sr-only {
+    position: unset !important;
+  }
+}
+
+.hds-dropdown {
+  .hds-dropdown-toggle-icon {
+    color: inherit;
+  }
+}

@@ -1,0 +1,43 @@
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+ @font-face {
+  font-family: hashicorp-sans-variable;
+  font-style: normal;
+  font-display: swap;
+  src:
+    local("Hashicorp Sans (variable)"),
+    url("/assets/fonts/hashicorp-sans-variable.woff2") format("woff2");
+}
+
+@font-face {
+  font-weight: 400;
+  font-family: metro-web;
+  font-style: normal;
+  font-display: swap;
+  src:
+    local("Metro Sans Regular"),
+    url("/assets/fonts/metro-400-normal.woff2") format("woff2");
+}
+
+@font-face {
+  font-weight: 600;
+  font-family: metro-web;
+  font-style: normal;
+  font-display: swap;
+  src:
+    local("Metro Sans Semi-Bold"),
+    url("/assets/fonts/metro-600-normal.woff2") format("woff2");
+}
+
+@font-face {
+  font-weight: 700;
+  font-family: metro-web;
+  font-style: normal;
+  font-display: swap;
+  src:
+    local("Metro Sans Bold"),
+    url("/assets/fonts/metro-700-normal.woff2") format("woff2");
+}
