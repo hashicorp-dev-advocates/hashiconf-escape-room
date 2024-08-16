@@ -1,7 +1,7 @@
 import config from '../config/environment';
 
 async function GetTeams(activation) {
-    let url = encodeURI(config.APP.LEADERBOARD_API + '/teams/activations/' + activation);
+    let url = encodeURI(config.leaderboardAPI + '/teams/activations/' + activation);
     let response = await fetch(url);
     let data = await response.json();
     return data.map((model, index) => {

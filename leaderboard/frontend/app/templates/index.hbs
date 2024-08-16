@@ -1,23 +1,16 @@
-<Header>
-    <h2>HashiConf - Activations Leaderboards</h2>
-    <div>
-        <h3>Team Submissions</h3>
-        <p>Submit a team to the leaderboard for the activation.</p>
-
-        <body>
-            <div>
-                <LinkTo @route="escape-room" class="button">Escape Room</LinkTo>
-                <LinkTo @route="robots-leaderboard" class="button">Robots</LinkTo>
-            </div>
-        </body>
-    </div>
-    <div>
-        <h3>Leaderboards</h3>
-        <p>View leaderboards for each activation.</p>
-        <div>
-            <LinkTo @route="escape-room-ilm" class="button">ILM Escape Room</LinkTo>
-            <LinkTo @route="escape-room-ilm" class="button">SLM Escape Room</LinkTo>
-            <LinkTo @route="robots" class="button">Robots</LinkTo>
-        </div>
-    </div>
-</Header>
+<div>
+    <Hds::AppFrame as |Frame|>
+        <Frame.Header>
+            <Hds::PageHeader as |PH|>
+                <PH.Title>HashiConf Activations Leaderboards</PH.Title>
+            </Hds::PageHeader>
+        </Frame.Header>
+        <Frame.Main>
+            <Hds::ButtonSet>
+                <Hds::Button @icon="server" @text="ILM" @route="escape-room-ilm" />
+                <Hds::Button @icon="lock" @text="SLM" @route="escape-room-slm" />
+                <Hds::Button @icon="robot" @text="Robots" @route="robots" />
+            </Hds::ButtonSet>
+        </Frame.Main>
+    </Hds::AppFrame>
+</div>

@@ -6,6 +6,7 @@ module.exports = function (environment) {
     environment,
     rootURL: '/',
     locationType: 'history',
+    leaderboardAPI: 'http://localhost:9090',
     EmberENV: {
       EXTEND_PROTOTYPES: false,
       FEATURES: {
@@ -43,8 +44,6 @@ module.exports = function (environment) {
   if (environment === 'production') {
     // here you can enable a production-specific feature
   }
-
-  ENV.APP.LEADERBOARD_API = 'http://localhost:9090';
 
   return ENV;
 };
