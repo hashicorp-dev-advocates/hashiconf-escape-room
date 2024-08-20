@@ -28,7 +28,7 @@ resource "boundary_storage_bucket" "backend_recordings" {
   secrets_json = jsonencode({})
 
   worker_filter = <<EOF
-"/name" == "main"
+"/name" == "session-recording"
 EOF
 
 
