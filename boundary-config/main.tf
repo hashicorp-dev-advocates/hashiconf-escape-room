@@ -1,78 +1,3 @@
-resource "boundary_worker" "main" {
-  scope_id    = "global"
-  name        = "main"
-  description = "main private subnet worker"
-}
-
-resource "aws_security_group" "boundary" {
-  vpc_id = data.terraform_remote_state.nomad.outputs.vpc_id
-  name   = "boundary"
-
-  ingress {
-    from_port = 9202
-    protocol  = "tcp"
-    to_port   = 9202
-
-    cidr_blocks = [
-      "0.0.0.0/0"
-    ]
-    self = true
-
-  }
-
-
-  egress {
-    from_port = 0
-    protocol  = "tcp"
-    to_port   = 0
-
-    cidr_blocks = [
-      "0.0.0.0/0"
-    ]
-
-    self = true
-  }
-
-  tags = {
-    Name = "boundary_port"
-  }
-
-}
-
-locals {
-  combined_security_group_ids = concat(
-    data.terraform_remote_state.nomad.outputs.security_groups,
-    [aws_security_group.boundary.id]
-  )
-}
-
-resource "aws_instance" "boundary_worker_public" {
-
-  ami                         = data.aws_ami.ubuntu.id
-  instance_type               = "t3.micro"
-  subnet_id                   = data.aws_subnet.private.id
-  key_name                    = data.aws_key_pair.deployer.key_name
-  associate_public_ip_address = false
-
-  user_data = templatefile("./scripts/boundary-setup.sh", {
-    CLUSTER_ID                            = data.terraform_remote_state.hcp.outputs.boundary.cluster_id
-    CONTROLLER_GENERATED_ACTIVATION_TOKEN = boundary_worker.main.controller_generated_activation_token
-  })
-
-  vpc_security_group_ids = local.combined_security_group_ids
-
-  tags = {
-    Name = "Boundary Worker Private"
-  }
-
-  lifecycle {
-    ignore_changes = [
-      user_data,
-      ami
-    ]
-  }
-}
-
 resource "boundary_scope" "hashiconf_escape_room_org" {
   scope_id                 = "global"
   name                     = "HashiConf Escape Room Org"
@@ -80,24 +5,6 @@ resource "boundary_scope" "hashiconf_escape_room_org" {
   auto_create_admin_role   = true
   auto_create_default_role = true
 }
-
-resource "boundary_scope" "back_door" {
-  scope_id                 = "global"
-  name                     = "Developer Advocates"
-  description              = "Back door access for Escape room infrastrucure for HashiCorp Developer Advocates only!"
-  auto_create_admin_role   = true
-  auto_create_default_role = true
-}
-
-resource "boundary_scope" "back_door_project" {
-
-  scope_id                 = boundary_scope.back_door.id
-  name                     = "Back door infrastructure"
-  description              = "Nomad servers and clients infrastructure. Consul clients infrastructure."
-  auto_create_admin_role   = true
-  auto_create_default_role = true
-}
-
 
 resource "boundary_scope" "hashiconf_escape_room_projects" {
   for_each = {
@@ -160,20 +67,20 @@ EOF
 }
 
 
-#resource "aws_s3_bucket" "hashiconf" {
-#  bucket = "hashiconf-recordings"
-#
-#}
-#
-#resource "aws_s3_access_point" "backend_recordings" {
-#  provider = "aws.boundary"
-#  bucket   = aws_s3_bucket.hashiconf.bucket
-#  name     = aws_s3_bucket.hashiconf.bucket
-#
-#  vpc_configuration {
-#    vpc_id = data.terraform_remote_state.nomad.outputs.vpc_id
-#  }
-#}
+resource "aws_s3_bucket" "hashiconf" {
+  bucket = "hashiconf-recordings"
+
+}
+
+resource "aws_s3_access_point" "backend_recordings" {
+  provider = "aws.boundary"
+  bucket   = aws_s3_bucket.hashiconf.bucket
+  name     = aws_s3_bucket.hashiconf.bucket
+
+  vpc_configuration {
+    vpc_id = data.terraform_remote_state.nomad.outputs.vpc_id
+  }
+}
 
 #resource "boundary_storage_bucket" "backend_recordings" {
 #  name        = "hashiconf_escape_room"
