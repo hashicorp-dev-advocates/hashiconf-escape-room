@@ -88,7 +88,12 @@ resource "boundary_role" "contestants" {
 
 resource "boundary_role" "contestants_project" {
 
-  scope_id = boundary_scope.hashiconf_escape_room_projects.id
+  for_each = {
+    for svc in var.services :
+    svc.service_name => svc
+  }
+
+  scope_id = boundary_scope.hashiconf_escape_room_projects[each.key].id
   #  grant_scope_id = boundary_scope.hashiconf_escape_room_org.id
 
   grant_strings = [
