@@ -7,6 +7,9 @@ sudo apt update && sudo apt install boundary-enterprise
 
 sudo mkdir -p "/boundary/auth_data"
 sudo chmod -R 777 /boundary/auth_data
+sudo mkdir -p "/boundary/session_recordings"
+sudo chmod -R 777 /boundary/session_recordings
+
 # Write the config
 cat <<EOT > /etc/boundary.d/boundary.hcl
   disable_mlock = true
@@ -21,7 +24,7 @@ cat <<EOT > /etc/boundary.d/boundary.hcl
 
   worker {
     auth_storage_path="/boundary/auth_data"
-
+    recording_storage_path = "/boundary/session_recordings"
     controller_generated_activation_token = "${CONTROLLER_GENERATED_ACTIVATION_TOKEN}"
 
     tags {
