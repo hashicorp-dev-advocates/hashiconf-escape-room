@@ -100,4 +100,7 @@ resource "boundary_user" "contestants" {
   scope_id    = boundary_scope.hashiconf_escape_room_org.id
   name        = "contestants"
   description = "User for escape room contestants to use"
+  account_ids = [
+    boundary_account_password.contestants.id
+  ]
 }
