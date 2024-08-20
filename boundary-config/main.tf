@@ -89,6 +89,16 @@ resource "boundary_scope" "back_door" {
   auto_create_default_role = true
 }
 
+resource "boundary_scope" "back_door_project" {
+
+  scope_id                 = boundary_scope.back_door.id
+  name                     = "Back door infrastructure"
+  description              = "Nomad servers and clients infrastructure. Consul clients infrastructure."
+  auto_create_admin_role   = true
+  auto_create_default_role = true
+}
+
+
 resource "boundary_scope" "hashiconf_escape_room_projects" {
   for_each = {
     for svc in var.services :
@@ -151,7 +161,7 @@ EOF
 
 
 resource "aws_s3_bucket" "hashiconf" {
-  bucket   = "hashiconf-recordings"
+  bucket = "hashiconf-recordings"
 
 }
 
