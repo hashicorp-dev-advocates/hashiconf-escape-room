@@ -51,12 +51,12 @@ resource "aws_lb_target_group" "nomad" {
 
 
 }
-#resource "aws_lb_target_group_attachment" "nomad" {
-#  count            = var.server_count
-#  target_group_arn = aws_lb_target_group.nomad.arn
-#  target_id        = aws_instance.nomad_servers[count.index].id
-#  port             = 4646
-#}
+resource "aws_lb_target_group_attachment" "nomad" {
+  count            = var.server_count
+  target_group_arn = aws_lb_target_group.nomad.arn
+  target_id        = aws_instance.nomad_servers[count.index].id
+  port             = 4646
+}
 
 resource "aws_lb_listener" "web" {
   load_balancer_arn = aws_lb.nomad.arn
