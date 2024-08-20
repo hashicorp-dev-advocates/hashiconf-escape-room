@@ -67,7 +67,7 @@ EOF
 }
 
 resource "boundary_auth_method_password" "contestants" {
-  scope_id    = boundary_scope.hashiconf_escape_room_org
+  scope_id    = boundary_scope.hashiconf_escape_room_org.id
   description = "Password auth method for contestants to use"
   name        = "Contestants Login"
 }
