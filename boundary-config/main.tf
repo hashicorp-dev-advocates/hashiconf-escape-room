@@ -74,7 +74,7 @@ resource "boundary_auth_method_password" "contestants" {
 
 resource "boundary_role" "contestants" {
 
-  scope_id = boundary_scope.hashiconf_escape_room_org
+  scope_id = boundary_scope.hashiconf_escape_room_org.id
   grant_scope_id = boundary_scope.hashiconf_escape_room_org.id
   grant_strings = [
     "ids=*;actions=read,list"
