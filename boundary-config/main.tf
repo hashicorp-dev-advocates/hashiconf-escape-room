@@ -86,6 +86,20 @@ resource "boundary_role" "contestants" {
   ]
 }
 
+resource "boundary_role" "contestants_project" {
+
+  scope_id = boundary_scope.hashiconf_escape_room_projects.id
+  #  grant_scope_id = boundary_scope.hashiconf_escape_room_org.id
+
+  grant_strings = [
+    "ids=*;type=*;actions=read"
+  ]
+
+  principal_ids = [
+    boundary_user.contestants.id
+  ]
+}
+
 
 resource "boundary_account_password" "contestants" {
   auth_method_id = boundary_auth_method_password.contestants.id
