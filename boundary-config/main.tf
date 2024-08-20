@@ -74,8 +74,8 @@ resource "boundary_auth_method_password" "contestants" {
 
 resource "boundary_role" "contestants" {
 
-  scope_id       = boundary_scope.hashiconf_escape_room_org.id
-  grant_scope_id = boundary_scope.hashiconf_escape_room_org.id
+  scope_id = boundary_scope.hashiconf_escape_room_org.id
+  #  grant_scope_id = boundary_scope.hashiconf_escape_room_org.id
 
   grant_strings = [
     "ids=*;type=*;actions=read"
@@ -90,6 +90,7 @@ resource "boundary_role" "contestants" {
 resource "boundary_account_password" "contestants" {
   auth_method_id = boundary_auth_method_password.contestants.id
   name           = "contestants"
+  login_name     = "contestants"
   description    = "Password account for escape room contestants to use"
   password       = var.contestants_password
 
