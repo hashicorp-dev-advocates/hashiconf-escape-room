@@ -9,3 +9,7 @@ variable "aws_region" {
 variable "services" {
   description = "The services for which Boundary targets will be created"
 }
+
+variable "contestants_password" {
+  description = "Password for contestants to use."
+}
