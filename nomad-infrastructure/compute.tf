@@ -179,131 +179,131 @@ resource "aws_iam_instance_profile" "nomad" {
   role = aws_iam_role.nomad.name
 }
 
-resource "aws_instance" "nomad_servers" {
-  count                = var.server_count
-  ami                  = data.aws_ami.ubuntu.id
-  instance_type        = "t3.micro"
-  iam_instance_profile = aws_iam_instance_profile.nomad.name
-
-  subnet_id = module.vpc.private_subnets.0
-  key_name  = aws_key_pair.deployer.key_name
-
-  user_data = templatefile("./servers.sh", {
-    NOMAD_SERVER_TAG     = "true"
-    NOMAD_SERVER_TAG_KEY = "nomad_server"
-    NOMAD_SERVER_COUNT   = var.server_count
-    AWS_REGION           = var.aws_region
-  })
-
-  vpc_security_group_ids = [
-    aws_security_group.ssh.id,
-    aws_security_group.subnet_allow.id,
-    aws_security_group.nomad.id,
-    aws_security_group.egress.id
-  ]
-
-  lifecycle {
-    ignore_changes = [
-      user_data,
-      ami
-    ]
-  }
-
-  tags = {
-    Name         = "nomad-server-${count.index + 1}"
-    nomad_server = true
-  }
-}
-
-resource "tls_private_key" "ssh_key" {
-  algorithm = "RSA"
-  rsa_bits  = 2048
-}
-
-resource "aws_key_pair" "deployer" {
-  key_name   = "deployer-key"
-  public_key = tls_private_key.ssh_key.public_key_openssh
-}
-
-
-resource "aws_instance" "nomad_clients" {
-  count                       = var.client_count
-  ami                         = data.aws_ami.ubuntu.id
-  instance_type               = "t3.medium"
-  subnet_id                   = module.vpc.private_subnets.0
-  key_name                    = aws_key_pair.deployer.key_name
-  associate_public_ip_address = false
-  iam_instance_profile        = aws_iam_instance_profile.nomad.name
-
-
-  user_data = templatefile("./clients.sh", {
-    NOMAD_SERVER_TAG     = "true"
-    NOMAD_SERVER_TAG_KEY = "nomad_server"
-    NOMAD_SERVER_COUNT   = var.server_count
-    AWS_REGION           = var.aws_region
-  })
-
-  vpc_security_group_ids = [
-    aws_security_group.ssh.id,
-    aws_security_group.subnet_allow.id,
-    aws_security_group.nomad.id,
-    aws_security_group.egress.id
-  ]
-
-  tags = {
-    Name         = "nomad-client-${count.index + 1}"
-    nomad_server = false
-  }
-
-  lifecycle {
-    ignore_changes = [
-      user_data,
-      ami
-    ]
-  }
-
-  depends_on = [
-    terracurl_request.nomad_status
-  ]
-}
-
-
-resource "aws_instance" "boundary_target" {
-  count                       = var.target_count
-  ami                         = data.aws_ami.ubuntu.id
-  instance_type               = "t3.medium"
-  subnet_id                   = module.vpc.private_subnets.0
-  key_name                    = aws_key_pair.deployer.key_name
-  associate_public_ip_address = false
-  iam_instance_profile        = aws_iam_instance_profile.nomad.name
-
-  user_data = templatefile("./nomad-client-boundary-target.sh", {
-    NOMAD_SERVER_TAG     = "true"
-    NOMAD_SERVER_TAG_KEY = "nomad_server"
-    NOMAD_SERVER_COUNT   = var.server_count
-    AWS_REGION           = var.aws_region
-  })
-
-  vpc_security_group_ids = [
-    aws_security_group.ssh.id,
-    aws_security_group.subnet_allow.id,
-    aws_security_group.nomad.id,
-    aws_security_group.egress.id
-  ]
-
-  tags = {
-    Name         = "boundary-target"
-    nomad_server = false
-  }
-
-  lifecycle {
-    ignore_changes = [
-      user_data,
-      ami
-    ]
-  }
-
-  depends_on = [
-    terracurl_request.nomad_status
-  ]
-}
+#resource "aws_instance" "nomad_servers" {
+#  count                = var.server_count
+#  ami                  = data.aws_ami.ubuntu.id
+#  instance_type        = "t3.micro"
+#  iam_instance_profile = aws_iam_instance_profile.nomad.name
+#
+#  subnet_id = module.vpc.private_subnets.0
+#  key_name  = aws_key_pair.deployer.key_name
+#
+#  user_data = templatefile("./servers.sh", {
+#    NOMAD_SERVER_TAG     = "true"
+#    NOMAD_SERVER_TAG_KEY = "nomad_server"
+#    NOMAD_SERVER_COUNT   = var.server_count
+#    AWS_REGION           = var.aws_region
+#  })
+#
+#  vpc_security_group_ids = [
+#    aws_security_group.ssh.id,
+#    aws_security_group.subnet_allow.id,
+#    aws_security_group.nomad.id,
+#    aws_security_group.egress.id
+#  ]
+#
+#  lifecycle {
+#    ignore_changes = [
+#      user_data,
+#      ami
+#    ]
+#  }
+#
+#  tags = {
+#    Name         = "nomad-server-${count.index + 1}"
+#    nomad_server = true
+#  }
+#}
+#
+#resource "tls_private_key" "ssh_key" {
+#  algorithm = "RSA"
+#  rsa_bits  = 2048
+#}
+#
+#resource "aws_key_pair" "deployer" {
+#  key_name   = "deployer-key"
+#  public_key = tls_private_key.ssh_key.public_key_openssh
+#}
+#
+#
+#resource "aws_instance" "nomad_clients" {
+#  count                       = var.client_count
+#  ami                         = data.aws_ami.ubuntu.id
+#  instance_type               = "t3.medium"
+#  subnet_id                   = module.vpc.private_subnets.0
+#  key_name                    = aws_key_pair.deployer.key_name
+#  associate_public_ip_address = false
+#  iam_instance_profile        = aws_iam_instance_profile.nomad.name
+#
+#
+#  user_data = templatefile("./clients.sh", {
+#    NOMAD_SERVER_TAG     = "true"
+#    NOMAD_SERVER_TAG_KEY = "nomad_server"
+#    NOMAD_SERVER_COUNT   = var.server_count
+#    AWS_REGION           = var.aws_region
+#  })
+#
+#  vpc_security_group_ids = [
+#    aws_security_group.ssh.id,
+#    aws_security_group.subnet_allow.id,
+#    aws_security_group.nomad.id,
+#    aws_security_group.egress.id
+#  ]
+#
+#  tags = {
+#    Name         = "nomad-client-${count.index + 1}"
+#    nomad_server = false
+#  }
+#
+#  lifecycle {
+#    ignore_changes = [
+#      user_data,
+#      ami
+#    ]
+#  }
+#
+#  depends_on = [
+#    terracurl_request.nomad_status
+#  ]
+#}
+#
+#
+#resource "aws_instance" "boundary_target" {
+#  count                       = var.target_count
+#  ami                         = data.aws_ami.ubuntu.id
+#  instance_type               = "t3.medium"
+#  subnet_id                   = module.vpc.private_subnets.0
+#  key_name                    = aws_key_pair.deployer.key_name
+#  associate_public_ip_address = false
+#  iam_instance_profile        = aws_iam_instance_profile.nomad.name
+#
+#  user_data = templatefile("./nomad-client-boundary-target.sh", {
+#    NOMAD_SERVER_TAG     = "true"
+#    NOMAD_SERVER_TAG_KEY = "nomad_server"
+#    NOMAD_SERVER_COUNT   = var.server_count
+#    AWS_REGION           = var.aws_region
+#  })
+#
+#  vpc_security_group_ids = [
+#    aws_security_group.ssh.id,
+#    aws_security_group.subnet_allow.id,
+#    aws_security_group.nomad.id,
+#    aws_security_group.egress.id
+#  ]
+#
+#  tags = {
+#    Name         = "boundary-target"
+#    nomad_server = false
+#  }
+#
+#  lifecycle {
+#    ignore_changes = [
+#      user_data,
+#      ami
+#    ]
+#  }
+#
+#  depends_on = [
+#    terracurl_request.nomad_status
+#  ]
+#}
