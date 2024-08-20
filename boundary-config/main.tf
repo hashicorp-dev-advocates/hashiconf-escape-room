@@ -65,3 +65,19 @@ resource "boundary_target" "targets" {
 "/name" == "main"
 EOF
 }
+
+resource "boundary_auth_method_password" "contestants" {
+  scope_id    = boundary_scope.hashiconf_escape_room_org
+  description = "Password auth method for contestants to use"
+  name        = "Contestants Login"
+}
+
+resource "boundary_role" "contestants" {
+
+  scope_id = boundary_scope.hashiconf_escape_room_org
+  grant_scope_id = boundary_scope.hashiconf_escape_room_org.id
+  grant_strings = [
+    "ids=*;actions=read,list"
+  ]
+}
+
