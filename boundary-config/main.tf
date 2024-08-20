@@ -160,20 +160,20 @@ EOF
 }
 
 
-resource "aws_s3_bucket" "hashiconf" {
-  bucket = "hashiconf-recordings"
-
-}
-
-resource "aws_s3_access_point" "backend_recordings" {
-  provider = "aws.boundary"
-  bucket   = aws_s3_bucket.hashiconf.bucket
-  name     = aws_s3_bucket.hashiconf.bucket
-
-  vpc_configuration {
-    vpc_id = data.terraform_remote_state.nomad.outputs.vpc_id
-  }
-}
+#resource "aws_s3_bucket" "hashiconf" {
+#  bucket = "hashiconf-recordings"
+#
+#}
+#
+#resource "aws_s3_access_point" "backend_recordings" {
+#  provider = "aws.boundary"
+#  bucket   = aws_s3_bucket.hashiconf.bucket
+#  name     = aws_s3_bucket.hashiconf.bucket
+#
+#  vpc_configuration {
+#    vpc_id = data.terraform_remote_state.nomad.outputs.vpc_id
+#  }
+#}
 
 #resource "boundary_storage_bucket" "backend_recordings" {
 #  name        = "hashiconf_escape_room"
