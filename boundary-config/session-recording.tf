@@ -22,7 +22,7 @@ resource "boundary_storage_bucket" "backend_recordings" {
   attributes_json = jsonencode({
     "region"                      = var.aws_region
     "disable_credential_rotation" = true
-    "role_arn" = data.terraform_remote_state.hcp.outputs.boundary_session_recording_iam
+    "role_arn" = data.terraform_remote_state.hcp.outputs.boundary_session_recording_iam.role
   })
 
   secrets_json = jsonencode({})
