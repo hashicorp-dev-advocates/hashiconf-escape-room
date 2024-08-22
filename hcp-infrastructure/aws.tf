@@ -54,6 +54,7 @@ resource "aws_iam_policy" "hcp_terraform" {
         "iam:*Policy*",
         "iam:*Profile*",
         "rds:*",
+        "ecr:*",
       ]
       Effect   = "Allow"
       Resource = "*"
@@ -162,7 +163,12 @@ resource "aws_iam_policy" "github_actions_ecr" {
     Statement = [
       {
         Action = [
-          "ecr:*",
+          "ecr:CompleteLayerUpload",
+          "ecr:GetAuthorizationToken",
+          "ecr:UploadLayerPart",
+          "ecr:InitiateLayerUpload",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:PutImage"
         ]
         Effect   = "Allow"
         Resource = "*"
