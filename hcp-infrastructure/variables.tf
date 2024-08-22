@@ -3,10 +3,10 @@ variable "hcp_project_id" {
   description = "HCP project ID"
 }
 
-variable "repository" {
-  type        = string
+variable "repositories" {
+  type        = list(string)
   description = "Repository with resources"
-  default     = "hashiconf-escape-room"
+  default     = ["hashiconf-escape-room", "hashiconf-leaderboard"]
 }
 
 variable "name" {
