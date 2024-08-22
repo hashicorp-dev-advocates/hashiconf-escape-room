@@ -52,7 +52,8 @@ resource "aws_iam_policy" "hcp_terraform" {
         "elasticloadbalancing:*",
         "iam:*Role*",
         "iam:*Policy*",
-        "iam:*Profile*"
+        "iam:*Profile*",
+        "rds:*",
       ]
       Effect   = "Allow"
       Resource = "*"
