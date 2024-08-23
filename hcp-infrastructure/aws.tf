@@ -55,9 +55,38 @@ resource "aws_iam_policy" "hcp_terraform" {
         "iam:*Profile*",
         "rds:*",
         "ecr:*",
+        "apprunner:*",
       ]
       Effect   = "Allow"
       Resource = "*"
+      }, {
+      Action = [
+        "iam:CreateServiceLinkedRole",
+      ]
+      Effect = "Allow"
+      Resource = [
+        "arn:aws:iam::*:role/aws-service-role/apprunner.amazonaws.com/AWSServiceRoleForAppRunner",
+        "arn:aws:iam::*:role/aws-service-role/networking.apprunner.amazonaws.com/AWSServiceRoleForAppRunnerNetworking"
+      ],
+      Condition = {
+        StringLike = {
+          "iam:AWSServiceName" = [
+            "apprunner.amazonaws.com",
+            "networking.apprunner.amazonaws.com"
+          ]
+        }
+      }
+      }, {
+      Action = [
+        "iam:PassRole",
+      ]
+      Effect   = "Allow"
+      Resource = "*",
+      Condition = {
+        StringLike = {
+          "iam:PassedToService" = "apprunner.amazonaws.com"
+        }
+      }
     }]
   })
 }
