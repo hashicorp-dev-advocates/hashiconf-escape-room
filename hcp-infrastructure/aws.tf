@@ -55,39 +55,10 @@ resource "aws_iam_policy" "hcp_terraform" {
         "iam:*Profile*",
         "rds:*",
         "ecr:*",
-        "apprunner:*",
         "secretsmanager:*",
       ]
       Effect   = "Allow"
       Resource = "*"
-      }, {
-      Action = [
-        "iam:CreateServiceLinkedRole",
-      ]
-      Effect = "Allow"
-      Resource = [
-        "arn:aws:iam::*:role/aws-service-role/apprunner.amazonaws.com/AWSServiceRoleForAppRunner",
-        "arn:aws:iam::*:role/aws-service-role/networking.apprunner.amazonaws.com/AWSServiceRoleForAppRunnerNetworking"
-      ],
-      Condition = {
-        StringLike = {
-          "iam:AWSServiceName" = [
-            "apprunner.amazonaws.com",
-            "networking.apprunner.amazonaws.com"
-          ]
-        }
-      }
-      }, {
-      Action = [
-        "iam:PassRole",
-      ]
-      Effect   = "Allow"
-      Resource = "*",
-      Condition = {
-        StringLike = {
-          "iam:PassedToService" = "apprunner.amazonaws.com"
-        }
-      }
     }]
   })
 }
@@ -95,6 +66,11 @@ resource "aws_iam_policy" "hcp_terraform" {
 resource "aws_iam_role_policy_attachment" "hcp_terraform" {
   role       = aws_iam_role.hcp_terraform.name
   policy_arn = aws_iam_policy.hcp_terraform.arn
+}
+
+resource "aws_iam_role_policy_attachment" "hcp_terraform_apprunner" {
+  role       = aws_iam_role.hcp_terraform.name
+  policy_arn = "arn:aws:iam::aws:policy/AWSAppRunnerFullAccess"
 }
 
 data "tls_certificate" "github_actions" {
