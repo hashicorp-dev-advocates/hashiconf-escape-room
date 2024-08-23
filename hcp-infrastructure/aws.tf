@@ -56,6 +56,7 @@ resource "aws_iam_policy" "hcp_terraform" {
         "rds:*",
         "ecr:*",
         "apprunner:*",
+        "secretsmanager:*",
       ]
       Effect   = "Allow"
       Resource = "*"
