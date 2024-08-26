@@ -1,10 +1,8 @@
 resource "aws_s3_bucket" "hashiconf" {
   bucket = "hashiconf-recordings"
-
 }
 
 resource "aws_s3_access_point" "backend_recordings" {
-  provider = "aws.boundary"
   bucket   = aws_s3_bucket.hashiconf.bucket
   name     = aws_s3_bucket.hashiconf.bucket
 
