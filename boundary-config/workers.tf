@@ -78,6 +78,11 @@ resource "boundary_worker" "session_recording" {
   name        = "session-recording"
 }
 
+resource "aws_iam_instance_profile" "boundary_worker" {
+  name = "boundary_worker"
+  role = data.terraform_remote_state.hcp.outputs.boundary_session_recording_iam.role
+
+}
 
 resource "aws_instance" "boundary_worker_session_recording" {
 
@@ -94,6 +99,7 @@ resource "aws_instance" "boundary_worker_session_recording" {
 
   vpc_security_group_ids = local.combined_security_group_ids
 
+  iam_instance_profile = aws_iam_instance_profile.boundary_worker.name
   tags = {
     Name = "Boundary Worker Private"
   }
