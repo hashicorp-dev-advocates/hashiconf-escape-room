@@ -45,7 +45,8 @@ output "boundary_password" {
 
 output "boundary_session_recording_iam" {
   value = {
-    role   = aws_iam_role.boundary_session_recordings.arn
-    policy = aws_iam_policy.boundary_session_recordings.arn
+    role      = aws_iam_role.boundary_session_recordings.arn
+    role_name = aws_iam_role.boundary_session_recordings.name
+    policy    = aws_iam_policy.boundary_session_recordings.arn
   }
 }
