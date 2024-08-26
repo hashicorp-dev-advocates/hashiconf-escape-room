@@ -79,7 +79,7 @@ resource "boundary_worker" "session_recording" {
 }
 
 resource "aws_iam_instance_profile" "boundary_worker" {
-  name = "boundary_worker"
+  name = "boundary-worker"
   role = data.terraform_remote_state.hcp.outputs.boundary_session_recording_iam.role
 
 }
