@@ -62,7 +62,7 @@ resource "boundary_target" "targets" {
   ]
 
   egress_worker_filter = <<EOF
-"/name" == "main"
+"/name" == "session-recording"
 EOF
 }
 
