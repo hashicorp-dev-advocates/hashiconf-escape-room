@@ -30,6 +30,6 @@ resource "aws_s3_access_point" "backend_recordings" {
 #
 #  depends_on = [
 #    aws_s3_access_point.backend_recordings,
-#    aws_instance.boundary_worker_public
+#    aws_instance.boundary_worker_session_recording
 #  ]
 #}
