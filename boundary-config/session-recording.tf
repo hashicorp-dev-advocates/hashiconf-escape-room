@@ -23,8 +23,6 @@ resource "boundary_storage_bucket" "backend_recordings" {
     "role_arn" = data.terraform_remote_state.hcp.outputs.boundary_session_recording_iam.role
   })
 
-  secrets_json = jsonencode({})
-
   worker_filter = <<EOF
 "/name" == "session-recording"
 EOF
