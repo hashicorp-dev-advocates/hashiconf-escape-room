@@ -67,7 +67,7 @@ variable "hcp_boundary" {
   })
   description = "Attributes for HCP Boundary cluster"
   default = {
-    tier = "Standard"
+    tier = "Plus"
   }
 }
 
