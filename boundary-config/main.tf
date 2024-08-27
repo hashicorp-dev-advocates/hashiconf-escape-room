@@ -64,6 +64,8 @@ resource "boundary_target" "targets" {
   egress_worker_filter = <<EOF
 "/name" == "session-recording"
 EOF
+  enable_session_recording = true
+  storage_bucket_id        = boundary_storage_bucket.backend_recordings.id
 }
 
 resource "boundary_auth_method_password" "contestants" {

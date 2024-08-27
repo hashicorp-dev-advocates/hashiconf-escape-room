@@ -33,3 +33,4 @@ EOF
     aws_instance.boundary_worker_session_recording
   ]
 }
+
