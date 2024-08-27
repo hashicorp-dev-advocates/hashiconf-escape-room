@@ -32,5 +32,9 @@ EOF
     aws_s3_access_point.backend_recordings,
     aws_instance.boundary_worker_session_recording
   ]
+
+  lifecycle {
+    ignore_changes = [internal_force_update]
+  }
 }
 
