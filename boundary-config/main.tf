@@ -76,7 +76,7 @@ resource "boundary_auth_method_password" "contestants" {
 
 resource "boundary_role" "contestants" {
 
-  scope_id = boundary_scope.hashiconf_escape_room_org.id
+  scope_id = "global"# boundary_scope.hashiconf_escape_room_org.id
   #  grant_scope_id = boundary_scope.hashiconf_escape_room_org.id
 
   grant_strings = [
@@ -86,6 +86,8 @@ resource "boundary_role" "contestants" {
   principal_ids = [
     boundary_user.contestants.id
   ]
+
+  name = "Contestants"
 }
 
 resource "boundary_role" "contestants_project" {
@@ -109,7 +111,7 @@ resource "boundary_role" "contestants_project" {
 
 
 resource "boundary_account_password" "contestants" {
-  auth_method_id = boundary_auth_method_password.contestants.id
+  auth_method_id = data.boundary_auth_method.auth_method.id
   name           = "contestants"
   login_name     = "contestants"
   description    = "Password account for escape room contestants to use"
@@ -118,7 +120,7 @@ resource "boundary_account_password" "contestants" {
 }
 resource "boundary_user" "contestants" {
 
-  scope_id    = boundary_scope.hashiconf_escape_room_org.id
+  scope_id    = "global"# boundary_scope.hashiconf_escape_room_org.id
   name        = "contestants"
   description = "User for escape room contestants to use"
   account_ids = [

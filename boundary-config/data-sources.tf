@@ -63,3 +63,6 @@ data "aws_key_pair" "deployer" {
   key_name = "deployer-key"
 }
 
+data "boundary_auth_method" "auth_method" {
+  name = "password"
+}
