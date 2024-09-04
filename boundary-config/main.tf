@@ -75,19 +75,33 @@ resource "boundary_auth_method_password" "contestants" {
 }
 
 resource "boundary_role" "contestants" {
+  name = "Contestants"
 
-  scope_id = "global"# boundary_scope.hashiconf_escape_room_org.id
-  #  grant_scope_id = boundary_scope.hashiconf_escape_room_org.id
+  scope_id = "global"
 
   grant_strings = [
-    "ids=*;type=*;actions=read"
+    "ids=*;type=*;actions=read,list"
   ]
 
   principal_ids = [
     boundary_user.contestants.id
   ]
 
+}
+
+resource "boundary_role" "contestants_org" {
   name = "Contestants"
+
+  scope_id = boundary_scope.hashiconf_escape_room_org.id
+
+  grant_strings = [
+    "ids=*;type=*;actions=read,list"
+  ]
+
+  principal_ids = [
+    boundary_user.contestants.id
+  ]
+
 }
 
 resource "boundary_role" "contestants_project" {
@@ -101,12 +115,14 @@ resource "boundary_role" "contestants_project" {
   #  grant_scope_id = boundary_scope.hashiconf_escape_room_org.id
 
   grant_strings = [
-    "ids=*;type=*;actions=read"
+    "ids=*;type=*;actions=read,list"
   ]
 
   principal_ids = [
     boundary_user.contestants.id
   ]
+
+  name = "Contestants"
 }
 
 
