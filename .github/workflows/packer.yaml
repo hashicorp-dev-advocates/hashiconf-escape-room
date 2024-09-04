@@ -54,7 +54,7 @@ jobs:
           HCP_PROJECT_ID: ${{ secrets.HCP_PROJECT_ID }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
           HCP_PACKER_BUILD_FINGERPRINT: "run.id.${{ github.run_id }}.run.attempt.${{ github.run_attempt }}"
-          HCP_PACKER_BUILD_DETAILS: "TODO: clue"
+          HCP_PACKER_BUILD_DETAILS: "Look under the mug on the shelf."
 
   hashistack-ubuntu:
     runs-on: ubuntu-latest
@@ -95,7 +95,7 @@ jobs:
           HCP_PROJECT_ID: ${{ secrets.HCP_PROJECT_ID }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
           HCP_PACKER_BUILD_FINGERPRINT: "run.id.${{ github.run_id }}.run.attempt.${{ github.run_attempt }}"
-          HCP_PACKER_BUILD_DETAILS: "TODO: clue"
+          HCP_PACKER_BUILD_DETAILS: "Look at the tag of the Packer shirt."
 
   base-linux:
     runs-on: ubuntu-latest
@@ -136,4 +136,4 @@ jobs:
           HCP_PROJECT_ID: ${{ secrets.HCP_PROJECT_ID }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
           HCP_PACKER_BUILD_FINGERPRINT: "run.id.${{ github.run_id }}.run.attempt.${{ github.run_attempt }}"
-          HCP_PACKER_BUILD_DETAILS: "TODO: clue"
+          HCP_PACKER_BUILD_DETAILS: "Look behind the framed HashiCorp art."
