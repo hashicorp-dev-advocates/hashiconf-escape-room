@@ -95,7 +95,8 @@ resource "boundary_role" "contestants_org" {
   scope_id = boundary_scope.hashiconf_escape_room_org.id
 
   grant_strings = [
-    "ids=*;type=*;actions=read,list"
+    "ids=*;type=*;actions=read,list",
+    "ids=*;type=session-recording;actions=download"
   ]
 
   principal_ids = [
