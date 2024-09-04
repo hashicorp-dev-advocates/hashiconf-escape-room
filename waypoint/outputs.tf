@@ -8,3 +8,9 @@ output "nomad_read_only_token" {
   sensitive   = true
   description = "Nomad read-only token"
 }
+
+output "nomad_waypoint_actions_token" {
+  value       = nomad_acl_token.waypoint_actions.secret_id
+  sensitive   = true
+  description = "Nomad token for Waypoint Actions"
+}

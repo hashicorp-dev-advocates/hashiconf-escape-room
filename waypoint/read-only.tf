@@ -21,3 +21,21 @@ resource "nomad_acl_token" "read_only" {
   policies = [nomad_acl_policy.read_only.name]
   global   = true
 }
+
+resource "nomad_acl_policy" "waypoint_actions" {
+  name        = "waypoint-actions"
+  description = "Policy for Waypoint actions"
+
+  rules_hcl = <<EOT
+namespace "default" {
+  policy       = "scale"
+}
+EOT
+}
+
+resource "nomad_acl_token" "waypoint_actions" {
+  name     = "waypoint-actions"
+  type     = "client"
+  policies = [nomad_acl_policy.waypoint_actions.name]
+  global   = true
+}
