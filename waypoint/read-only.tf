@@ -5,12 +5,7 @@ resource "nomad_acl_policy" "read_only" {
   rules_hcl = <<EOT
 namespace "default" {
   policy       = "read"
-
-  variables {
-    path "*" {
-      capabilities = ["read"]
-    }
-  }
+  capabilities = ["alloc-exec"]
 }
 EOT
 }
