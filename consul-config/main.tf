@@ -241,3 +241,7 @@ resource "consul_acl_token" "read_only" {
     consul_acl_policy.read_only.name
   ]
 }
+
+data "consul_acl_token_secret_id" "read_only" {
+  accessor_id = consul_acl_token.read_only.id
+}

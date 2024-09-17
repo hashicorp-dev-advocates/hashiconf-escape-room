@@ -28,6 +28,6 @@ output "services_map" {
 }
 
 output "consul_acl_token_read_only" {
-  value     = consul_acl_token.read_only.id
+  value     = data.consul_acl_token_secret_id.read_only.secret_id
   sensitive = true
 }
