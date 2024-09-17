@@ -218,3 +218,26 @@ resource "aws_instance" "bastion" {
   }
 }
 
+resource "consul_acl_policy" "read_only" {
+  name  = "read-only"
+  rules = <<EOF
+
+# Allow read access to services
+service "" {
+  policy = "read"
+}
+
+# Allow read access to the agent node
+node "" {
+  policy = "read"
+}
+  EOF
+}
+
+resource "consul_acl_token" "read_only" {
+  description = "ACL token for read-only to services"
+
+  policies = [
+    consul_acl_policy.read_only.name
+  ]
+}

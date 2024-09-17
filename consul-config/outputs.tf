@@ -26,3 +26,8 @@ output "services_map" {
     svc_name => instance.private_ip
   }
 }
+
+output "consul_acl_token_read_only" {
+  value     = consul_acl_token.read_only.id
+  sensitive = true
+}
