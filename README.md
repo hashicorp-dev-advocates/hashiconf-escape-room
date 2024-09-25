@@ -37,12 +37,14 @@ TODO
 
 Version 2 of the tracks in case the puzzles are compromised:
 
-- [ILM]()
-- [SLM]()
+- [ILM](https://play.instruqt.com/manage/hashicorp-field-ops/tracks/hashiconf-2024-ilm-v2)
+- [SLM](https://play.instruqt.com/manage/hashicorp-field-ops/tracks/hashiconf-2024-slm-v2)
 
 ## Backup plans
 
-TODO
+- If Instruqt, HCP, or AWS goes down, switch to [backup slides](https://docs.google.com/presentation/d/1kikqISVF8vwCPVSfe20xnl65E9svFt8TvJ2EqQglyMQ/edit?usp=sharing) with clues and video playback
+- If Nomad, Waypoint, Packer goes down, let staff outside know we are only running SLM.
+- If HCP Vault, Boundary, or Consul goes down, let staff outside know we are only running ILM.
 
 ## Technical details
 
