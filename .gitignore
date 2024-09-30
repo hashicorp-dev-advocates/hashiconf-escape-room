@@ -10,3 +10,5 @@ doormat.sh
 /hcp-infrastructure/backend.tf
 /boundary-config/.terraform.lock.hcl
 /boundary-config/.terraform/
+
+!backend.tf
