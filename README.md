@@ -5,40 +5,30 @@ This repository contains all setup and configuration code for the infrastructure
 * Infrastructure lifecycle management (ILM) - puzzles use Waypoint, Terraform, Nomad, and Packer
 * Security lifecycle management (SLM) - puzzles use Vault, Consul, and Boundary
 
-## Updating clues
+## Important links
 
-In order for changes to propagate across tools, you need to change
-clues in a few places.
+### Registration
 
-A complete list of valid clues can be found at [`clues/README.md`](./clues/README.md).
+- [Form](https://hashi.co/hashiconf24-escape-room)
+- Scan badge.
+- ILM/SLM sticker
 
-### ILM
+### Instruqt tracks
 
-There are two places to update clues for infrastructure lifecycle management puzzles.
+These are the official puzzles for ILM/SLM:
 
-1. Waypoint and Nomad
-   1. Go to `clues/`.
-   1. Update `terraform.auto.tfvars`.
-   1. Push.
-   1. This will run the `clues` workspace in HCP Terraform.
-   1. Run workspaces corresponding to each application.
-1. Packer
-   1. Go to `.github/workflows/packer`.
-   1. Update the `HCP_PACKER_BUILD_DETAILS` for each job.
-
-### SLM
-
-TODO
-
-## Instruqt tracks
-
-- [ILM](https://play.instruqt.com/manage/hashicorp-field-ops/tracks/hashiconf-2024-ilm)
-- [SLM](https://play.instruqt.com/manage/hashicorp-field-ops/tracks/hashiconf-2024-slm)
+- [ILM](https://play.instruqt.com/hashicorp-field-ops/tracks/hashiconf-2024-ilm)
+- [SLM](https://play.instruqt.com/hashicorp-field-ops/tracks/hashiconf-2024-slm)
 
 Version 2 of the tracks in case the puzzles are compromised:
 
 - [ILM](https://play.instruqt.com/manage/hashicorp-field-ops/tracks/hashiconf-2024-ilm-v2)
 - [SLM](https://play.instruqt.com/manage/hashicorp-field-ops/tracks/hashiconf-2024-slm-v2)
+
+### Leaderboard
+
+- [Frontend](https://hashi.co/hashiconf24-leaderboard)
+- [Admin](https://hashi.co/hashiconf24-leaderboard-admin)
 
 ## Backup plans
 
@@ -77,3 +67,28 @@ Other technicalities:
 - Secrets get synchronized from various resources to
   GitHub Actions using HCP Vault Secrets. Check out `hcp-infrastructure/hvs.tf`
   for a list of secrets. **NOTE: The sync is manually configured in HCP Vault Secrets!**
+
+## Updating clues
+
+In order for changes to propagate across tools, you need to change
+clues in a few places.
+
+A complete list of valid clues can be found at [`clues/README.md`](./clues/README.md).
+
+### ILM
+
+There are two places to update clues for infrastructure lifecycle management puzzles.
+
+1. Waypoint and Nomad
+   1. Go to `clues/`.
+   1. Update `terraform.auto.tfvars`.
+   1. Push.
+   1. This will run the `clues` workspace in HCP Terraform.
+   1. Run workspaces corresponding to each application.
+1. Packer
+   1. Go to `.github/workflows/packer`.
+   1. Update the `HCP_PACKER_BUILD_DETAILS` for each job.
+
+### SLM
+
+TODO
