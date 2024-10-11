@@ -51,12 +51,6 @@ data "hcp_waypoint_template" "nomad_app" {
 #       ]
 #       user_editable = false
 #       variable_type = "string"
-#     },
-#     {
-#       name          = "waypoint_additional_details"
-#       options       = []
-#       user_editable = true
-#       variable_type = "string"
 #     }
 #   ]
 # }
