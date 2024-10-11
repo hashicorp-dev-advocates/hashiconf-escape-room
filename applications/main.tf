@@ -13,11 +13,6 @@ resource "hcp_waypoint_application" "apps" {
       variable_type = "number"
     },
     {
-      name          = "waypoint_additional_details"
-      value         = each.value.waypoint_clues
-      variable_type = "string"
-    },
-    {
       name          = "node_pool"
       value         = each.value.node_pool
       variable_type = "string"
