@@ -5,36 +5,7 @@ This repository contains all setup and configuration code for the infrastructure
 * Infrastructure lifecycle management (ILM) - puzzles use Waypoint, Terraform, Nomad, and Packer
 * Security lifecycle management (SLM) - puzzles use Vault, Consul, and Boundary
 
-## Important links
-
-### Registration
-
-- [Form](https://hashi.co/hashiconf24-escape-room)
-- Scan badge.
-- ILM/SLM sticker
-
-### Instruqt tracks
-
-These are the official puzzles for ILM/SLM:
-
-- [ILM](https://play.instruqt.com/hashicorp-field-ops/tracks/hashiconf-2024-ilm)
-- [SLM](https://play.instruqt.com/hashicorp-field-ops/tracks/hashiconf-2024-slm)
-
-Version 2 of the tracks in case the puzzles are compromised:
-
-- [ILM](https://play.instruqt.com/manage/hashicorp-field-ops/tracks/hashiconf-2024-ilm-v2)
-- [SLM](https://play.instruqt.com/manage/hashicorp-field-ops/tracks/hashiconf-2024-slm-v2)
-
-### Leaderboard
-
-- [Frontend](https://hashi.co/hashiconf24-leaderboard)
-- [Admin](https://hashi.co/hashiconf24-leaderboard-admin)
-
-## Backup plans
-
-- If Instruqt, HCP, or AWS goes down, switch to [backup slides](https://docs.google.com/presentation/d/1kikqISVF8vwCPVSfe20xnl65E9svFt8TvJ2EqQglyMQ/edit?usp=sharing) with clues and video playback
-- If Nomad, Waypoint, Packer goes down, let staff outside know we are only running SLM.
-- If HCP Vault, Boundary, or Consul goes down, let staff outside know we are only running ILM.
+The Instruqt tracks have been exported and are located in the `instruqt/` directory.
 
 ## Technical details
 
@@ -67,6 +38,11 @@ Other technicalities:
 - Secrets get synchronized from various resources to
   GitHub Actions using HCP Vault Secrets. Check out `hcp-infrastructure/hvs.tf`
   for a list of secrets. **NOTE: The sync is manually configured in HCP Vault Secrets!**
+
+## Manual configuration
+
+- Creation of Waypoint template
+- Read-only user for escape room
 
 ## Updating clues
 
