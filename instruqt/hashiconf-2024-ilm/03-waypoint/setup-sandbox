@@ -1,0 +1,13 @@
+mkdir -p /var/lib/puzzle
+
+cat > /var/lib/puzzle/terraform.tf <<- EOF
+terraform {
+  cloud {
+    organization = "<change to application workspace prefix in HCP Waypoint>"
+
+    workspaces {
+      name = "<change to application workspace name in HCP Waypoint>"
+    }
+  }
+}
+EOF

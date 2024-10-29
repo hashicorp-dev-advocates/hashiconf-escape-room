@@ -1,0 +1,22 @@
+slug: hashiconf-2024-ilm
+id: 0wqldjujmfnz
+title: '[HashiConf 2024] ILM Escape Room'
+teaser: ILM Escape Room for HashiConf 2024
+description: Infrastructure lifecycle management escape room for HashiConf 2024.
+icon: ./assets/hashiconf-instruqt-ilm.png
+tags:
+- ilm
+- hashiconf
+owner: hashicorp-field-ops
+show_timer: true
+timelimit: 1200
+lab_config:
+  sidebar_enabled: true
+  feedback_recap_enabled: false
+  feedback_tab_enabled: false
+  loadingMessages: true
+  override_challenge_layout: false
+  hideStopButton: false
+  default_layout: AssignmentRight
+  default_layout_sidebar_size: 33
+enhanced_loading: false

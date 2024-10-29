@@ -1,0 +1,11 @@
+version: "3"
+containers:
+- name: sandbox
+  image: ghcr.io/hashicorp-dev-advocates/hashiconf-escape-room:main
+  shell: /bin/bash
+  environment:
+    HCP_PASSWORD: SECRET
+    HCP_USER: SECRET
+    NOMAD_TOKEN: SECRET
+    TF_TOKEN_app_terraform_io: SECRET
+  memory: 256

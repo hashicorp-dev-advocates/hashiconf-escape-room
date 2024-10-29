@@ -1,0 +1,22 @@
+slug: hashiconf-2024-slm
+id: dpszuraq5sdh
+title: '[HashiConf 2024] SLM Escape Room'
+teaser: SLM Escape Room for HashiConf 2024
+description: Security lifecycle management escape room for HashiConf 2024.
+icon: ./assets/hashiconf-instruqt-slm.png
+tags:
+- slm
+- hashiconf
+owner: hashicorp-field-ops
+show_timer: true
+timelimit: 1200
+lab_config:
+  sidebar_enabled: true
+  feedback_recap_enabled: false
+  feedback_tab_enabled: false
+  loadingMessages: true
+  override_challenge_layout: false
+  hideStopButton: false
+  default_layout: AssignmentRight
+  default_layout_sidebar_size: 33
+enhanced_loading: false

@@ -1,0 +1,12 @@
+cat > /usr/local/bin/creds <<- EOF
+echo "*** To log into HashiCorp Cloud Platform, use the following credentials. ***"
+echo "Username: ${HCP_USER}"
+echo "Password: ${HCP_PASSWORD}"
+
+echo ""
+
+echo "*** To log into Nomad, use the following credentials. ***"
+echo "Token: ${NOMAD_TOKEN}"
+EOF
+
+chmod +x /usr/local/bin/creds
