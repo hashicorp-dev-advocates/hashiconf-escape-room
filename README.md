@@ -41,6 +41,7 @@ Other technicalities:
 
 ## Manual configuration
 
+- Creation of AWS credentials for `hcp-infrastructure` to configure dynamic credentials
 - Creation of Waypoint template
 - Read-only user for escape room
 
