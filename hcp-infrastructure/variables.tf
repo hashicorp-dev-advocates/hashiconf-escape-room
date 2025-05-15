@@ -45,7 +45,7 @@ variable "hcp_vault" {
   description = "Attributes for HCP Vault cluster"
   default = {
     public_endpoint = true
-    tier            = "dev"
+    tier            = "plus_small"
   }
 }
 
