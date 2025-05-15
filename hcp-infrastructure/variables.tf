@@ -49,18 +49,6 @@ variable "hcp_vault" {
   }
 }
 
-variable "hcp_consul" {
-  type = object({
-    public_endpoint = bool
-    tier            = string
-  })
-  description = "Attributes for HCP Consul cluster"
-  default = {
-    public_endpoint = true
-    tier            = "development"
-  }
-}
-
 variable "hcp_boundary" {
   type = object({
     tier = string
@@ -81,10 +69,4 @@ variable "bucket_name" {
   type        = string
   description = "S3 bucket name for session recordings"
   default     = "hashiconf-recordings"
-}
-
-variable "aws_iam_user" {
-  type        = string
-  description = "AWS IAM user for Boundary session recordings"
-  sensitive   = true
 }

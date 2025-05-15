@@ -14,17 +14,6 @@ output "vault" {
   }
 }
 
-output "consul" {
-  value = {
-    cluster_id       = hcp_consul_cluster.main.cluster_id
-    public_endpoint  = hcp_consul_cluster.main.consul_public_endpoint_url
-    private_endpoint = hcp_consul_cluster.main.consul_private_endpoint_url
-    datacenter       = hcp_consul_cluster.main.datacenter
-    ca_public_key    = hcp_consul_cluster.main.consul_ca_file
-    config_file      = hcp_consul_cluster.main.consul_config_file
-  }
-}
-
 locals {
   without_https = replace(hcp_boundary_cluster.main.cluster_url, "https://", "")
   final_string  = replace(local.without_https, ".boundary.hashicorp.cloud", "")

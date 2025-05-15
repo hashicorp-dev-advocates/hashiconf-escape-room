@@ -12,14 +12,6 @@ resource "hcp_vault_cluster" "main" {
   tier            = var.hcp_vault.tier
 }
 
-resource "hcp_consul_cluster" "main" {
-  cluster_id      = var.name
-  hvn_id          = hcp_hvn.main.hvn_id
-  public_endpoint = var.hcp_consul.public_endpoint
-  tier            = var.hcp_consul.tier
-  datacenter      = var.aws_region
-}
-
 resource "random_string" "boundary" {
   length  = 4
   upper   = false
