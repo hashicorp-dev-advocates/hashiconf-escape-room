@@ -28,11 +28,6 @@ jobs:
           role-session-name: github-to-aws-packer-build
           aws-region: ${{ vars.AWS_REGION }}
 
-      - name: Configure HCP Packer credentials
-        uses: 'hashicorp/hcp-auth-action@v0'
-        with:
-          workload_identity_provider: ${{ vars.PROVIDER_NAME }}
-
       - name: Setup `packer`
         uses: hashicorp/setup-packer@v3
         id: setup
@@ -53,6 +48,8 @@ jobs:
         run: packer build -color=false .
         working-directory: ./packer/app-ubuntu
         env:
+          HCP_CLIENT_ID: ${{ secrets.HCP_CLIENT_ID }}
+          HCP_CLIENT_SECRET: ${{ secrets.HCP_CLIENT_SECRET }}
           AWS_REGION: ${{ vars.AWS_REGION }}
           HCP_PACKER_BUILD_FINGERPRINT: "run.id.${{ github.run_id }}.run.attempt.${{ github.run_attempt }}"
           HCP_PACKER_BUILD_DETAILS: "Look under the mug on the shelf."
