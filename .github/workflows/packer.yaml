@@ -8,8 +8,6 @@ on:
     paths:
       - .github/workflows/packer.yaml
       - packer/app-ubuntu/**
-      - packer/hashistack-ubuntu/**
-      - packer/base-linux/**
 
 permissions:
   id-token: write
@@ -23,12 +21,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: configure aws credentials
+      - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.AWS_ROLE }}
+          role-to-assume: ${{ vars.AWS_ROLE }}
           role-session-name: github-to-aws-packer-build
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Configure HCP Packer credentials
+        uses: 'hashicorp/hcp-auth-action@v0'
+        with:
+          workload_identity_provider: ${{ vars.PROVIDER_NAME }}
 
       - name: Setup `packer`
         uses: hashicorp/setup-packer@v3
@@ -50,91 +53,6 @@ jobs:
         run: packer build -color=false .
         working-directory: ./packer/app-ubuntu
         env:
-          HCP_CLIENT_ID: ${{ secrets.HCP_CLIENT_ID }}
-          HCP_CLIENT_SECRET: ${{ secrets.HCP_CLIENT_SECRET }}
-          HCP_PROJECT_ID: ${{ secrets.HCP_PROJECT_ID }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_REGION: ${{ vars.AWS_REGION }}
           HCP_PACKER_BUILD_FINGERPRINT: "run.id.${{ github.run_id }}.run.attempt.${{ github.run_attempt }}"
           HCP_PACKER_BUILD_DETAILS: "Look under the mug on the shelf."
-
-  hashistack-ubuntu:
-    runs-on: ubuntu-latest
-    name: hashistack-ubuntu
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.AWS_ROLE }}
-          role-session-name: github-to-aws-packer-build
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Setup `packer`
-        uses: hashicorp/setup-packer@v3
-        id: setup
-        with:
-          version: "latest"
-
-      - name: Run `packer init`
-        id: init
-        run: "packer init ."
-        working-directory: ./packer/hashistack-ubuntu
-
-      - name: Run `packer validate`
-        id: validate
-        run: "packer validate ."
-        working-directory: ./packer/hashistack-ubuntu
-
-      - name: Build Artifact
-        run: packer build -color=false .
-        working-directory: ./packer/hashistack-ubuntu
-        env:
-          HCP_CLIENT_ID: ${{ secrets.HCP_CLIENT_ID }}
-          HCP_CLIENT_SECRET: ${{ secrets.HCP_CLIENT_SECRET }}
-          HCP_PROJECT_ID: ${{ secrets.HCP_PROJECT_ID }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          HCP_PACKER_BUILD_FINGERPRINT: "run.id.${{ github.run_id }}.run.attempt.${{ github.run_attempt }}"
-          HCP_PACKER_BUILD_DETAILS: "Look at the tag of the Packer shirt."
-
-  base-linux:
-    runs-on: ubuntu-latest
-    name: base-linux
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.AWS_ROLE }}
-          role-session-name: github-to-aws-packer-build
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Setup `packer`
-        uses: hashicorp/setup-packer@v3
-        id: setup
-        with:
-          version: "latest"
-
-      - name: Run `packer init`
-        id: init
-        run: "packer init ."
-        working-directory: ./packer/base-linux
-
-      - name: Run `packer validate`
-        id: validate
-        run: "packer validate ."
-        working-directory: ./packer/base-linux
-
-      - name: Build Artifact
-        run: packer build -color=false .
-        working-directory: ./packer/base-linux
-        env:
-          HCP_CLIENT_ID: ${{ secrets.HCP_CLIENT_ID }}
-          HCP_CLIENT_SECRET: ${{ secrets.HCP_CLIENT_SECRET }}
-          HCP_PROJECT_ID: ${{ secrets.HCP_PROJECT_ID }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          HCP_PACKER_BUILD_FINGERPRINT: "run.id.${{ github.run_id }}.run.attempt.${{ github.run_attempt }}"
-          HCP_PACKER_BUILD_DETAILS: "Look behind the framed HashiCorp art."
