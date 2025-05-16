@@ -49,5 +49,9 @@ acl = {
 }
 EOF
 
+cat <<EOF > /root/ubuntu/update.sh
+## TODO: Update this file when you build a new AMI.
+EOF
+
 systemctl enable nomad
 systemctl restart nomad

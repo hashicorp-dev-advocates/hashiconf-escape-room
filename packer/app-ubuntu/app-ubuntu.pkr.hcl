@@ -61,6 +61,7 @@ build {
 
     bucket_labels = {
       "owner"    = var.owner
+      "purpose"  = "general"
       "os"       = "Ubuntu",
       "details"  = var.bucket_details,
       "includes" = "nomad,vault,docker,fake-service"

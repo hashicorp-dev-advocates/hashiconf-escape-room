@@ -3,7 +3,7 @@
 sudo mv /tmp/user-data.sh /opt/user-data.sh
 
 # Install the CNI Plugins
-curl -L https://github.com/containernetworking/plugins/releases/download/v0.9.1/cni-plugins-linux-amd64-v0.9.1.tgz -o /tmp/cni.tgz
+curl -L https://github.com/containernetworking/plugins/releases/download/v1.6.2/cni-plugins-linux-amd64-v1.6.2.tgz -o /tmp/cni.tgz
 sudo mkdir -p /opt/cni/bin
 sudo tar -C /opt/cni/bin -xzf /tmp/cni.tgz
 
