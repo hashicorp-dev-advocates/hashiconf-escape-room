@@ -8,6 +8,10 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 5.98.0"
     }
+    github = {
+      source  = "integrations/github"
+      version = "~> 6.6.0"
+    }
   }
 }
 
@@ -23,4 +27,8 @@ provider "aws" {
       purpose    = "hcp-infrastructure"
     }
   }
+}
+
+provider "github" {
+  owner = var.github_user
 }
