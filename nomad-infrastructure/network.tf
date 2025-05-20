@@ -94,9 +94,9 @@ resource "aws_vpc_peering_connection_accepter" "peer" {
 }
 
 resource "aws_route" "hvn_route" {
-  for_each = toset(module.vpc.private_route_table_ids)
+  count = length(toset(module.vpc.private_route_table_ids))
 
-  route_table_id            = each.key
+  route_table_id            = module.vpc.private_route_table_ids[count.index]
   destination_cidr_block    = data.hcp_hvn.main.cidr_block
   vpc_peering_connection_id = aws_vpc_peering_connection_accepter.peer.vpc_peering_connection_id
 }
