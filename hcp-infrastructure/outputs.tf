@@ -5,6 +5,10 @@ output "hvn" {
   }
 }
 
+output "region" {
+  value = var.aws_region
+}
+
 output "vault" {
   value = {
     cluster_id       = hcp_vault_cluster.main.cluster_id
