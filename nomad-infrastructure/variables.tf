@@ -17,15 +17,6 @@ variable "target_count" {
   default     = 1
 }
 
-variable "availability_zones" {
-  type        = list(string)
-  description = "List of AWS availability zones"
-  default = [
-    "us-east-2a",
-    "us-east-2b",
-  ]
-}
-
 variable "subnet_ip_prefix" {
   description = "subnet address space prefix"
   type        = string
