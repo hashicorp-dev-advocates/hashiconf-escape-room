@@ -1,7 +1,7 @@
 #! /bin/bash -e
 
 # Install the CNI Plugins
-curl -L https://github.com/containernetworking/plugins/releases/download/v0.9.1/cni-plugins-linux-amd64-v0.9.1.tgz -o /tmp/cni.tgz
+curl -L https://github.com/containernetworking/plugins/releases/download/v1.6.2/cni-plugins-linux-amd64-v1.6.2.tgz -o /tmp/cni.tgz
 mkdir -p /opt/cni/bin
 tar -C /opt/cni/bin -xzf /tmp/cni.tgz
 
@@ -21,9 +21,6 @@ sudo apt-get install vault -y
 
 # Create Vault directory.
 mkdir -p /etc/vault.d
-
-
-
 
 # Add Docker's official GPG key:
 sudo apt-get update
