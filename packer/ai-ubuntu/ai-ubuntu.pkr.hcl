@@ -14,7 +14,7 @@ variable "aws_region" {
 
 variable "name" {
   type    = string
-  default = "app-ubuntu"
+  default = "ai-ubuntu"
 }
 
 variable "owner" {
@@ -35,15 +35,15 @@ variable "bucket_details" {
 data "amazon-ami" "ubuntu" {
   region = var.aws_region
   filters = {
-    name = "ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-*"
+    name = "Deep Learning OSS Nvidia Driver AMI GPU PyTorch 2.6.0 (Ubuntu 22.04)*"
   }
   most_recent = true
-  owners      = ["099720109477"]
+  owners      = ["898082745236"]
 }
 
-source "amazon-ebs" "app-ubuntu" {
+source "amazon-ebs" "ai-ubuntu" {
   ami_name      = "${var.name}-${var.version}"
-  instance_type = "t2.micro"
+  instance_type = "g6.xlarge"
   region        = var.aws_region
   source_ami    = data.amazon-ami.ubuntu.id
   ssh_username  = "ubuntu"
@@ -56,7 +56,7 @@ build {
 
     bucket_labels = {
       "owner"    = var.owner
-      "purpose"  = "general"
+      "purpose"  = "gpu"
       "os"       = "Ubuntu",
       "details"  = var.bucket_details,
       "includes" = "nomad,vault,docker"
@@ -69,7 +69,7 @@ build {
   }
 
   sources = [
-    "source.amazon-ebs.app-ubuntu"
+    "source.amazon-ebs.ai-ubuntu"
   ]
 
   provisioner "file" {
