@@ -9,12 +9,12 @@ variable "server_count" {
 
 variable "client_count" {
   description = "Number of nomad clients"
-  default     = 3
+  default     = 1
 }
 
 variable "target_count" {
   description = "Number of boundary target vms"
-  default     = 1
+  default     = 0
 }
 
 variable "subnet_ip_prefix" {
