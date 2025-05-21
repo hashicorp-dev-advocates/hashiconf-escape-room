@@ -250,3 +250,13 @@ resource "aws_iam_role_policy_attachment" "boundary_session_recordings" {
   role       = aws_iam_role.boundary_session_recordings.name
   policy_arn = aws_iam_policy.boundary_session_recordings.arn
 }
+
+resource "tls_private_key" "escape_room" {
+  algorithm = "RSA"
+  rsa_bits  = 2048
+}
+
+resource "aws_key_pair" "escape_room" {
+  key_name   = var.name
+  public_key = tls_private_key.escape_room.public_key_openssh
+}

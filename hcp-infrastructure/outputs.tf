@@ -43,3 +43,7 @@ output "boundary_session_recording_iam" {
     policy    = aws_iam_policy.boundary_session_recordings.arn
   }
 }
+
+output "escape_room_key_pair" {
+  value = aws_key_pair.escape_room.key_name
+}
