@@ -1,14 +1,9 @@
 doormat.sh
 /nomad-infrastructure/.terraform/
-/nomad-infrastructure/.terraform.lock.hcl
 /vault-config/.terraform/
-/vault-config/.terraform.lock.hcl
-/consul-config/.terraform/
-/consul-config/.terraform.lock.hcl
 /hcp-infrastructure/.terraform/
 
 /hcp-infrastructure/backend.tf
-/boundary-config/.terraform.lock.hcl
 /boundary-config/.terraform/
 
 !backend.tf
