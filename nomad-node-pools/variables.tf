@@ -34,6 +34,7 @@ variable "node_pools" {
   type = map(object({
     bucket_name   = string
     instance_type = string
+    key_name      = string
     desired_size  = number
   }))
   description = "A set of node pools to create"
@@ -41,12 +42,8 @@ variable "node_pools" {
     gpu = {
       bucket_name   = "ai-ubuntu"
       instance_type = "g6.xlarge"
-      desired_size  = "2"
-    },
-    payments = {
-      bucket_name   = "app-ubuntu"
-      instance_type = "t2.micro"
-      desired_size  = "1"
+      key_name      = "deployer-key"
+      desired_size  = 2
     }
   }
 }

@@ -63,7 +63,7 @@ resource "aws_launch_template" "node_pool" {
   name_prefix   = "${var.name}-${each.key}"
   image_id      = data.hcp_packer_artifact.packer[each.key].external_identifier
   instance_type = each.value.instance_type
-  key_name      = data.terraform_remote_state.nomad.outputs.keypair
+  key_name      = each.value.key_name
 
   iam_instance_profile {
     name = aws_iam_instance_profile.nomad.name
