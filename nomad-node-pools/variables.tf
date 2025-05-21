@@ -27,16 +27,21 @@ variable "tags" {
 variable "hcp_packer_bucket_name" {
   type        = string
   description = "HCP Packer bucket name, also used for node pool"
-  default     = "app-ubuntu"
+  default     = "ai-ubuntu"
 }
 
 variable "node_pools" {
-  type        = map(string)
-  description = "A list of node pools to create by name and HCP Packer bucket"
-}
-
-variable "node_pool_desired_size" {
-  type        = number
-  description = "Desired size of node pools"
-  default     = 1
+  type = map(object({
+    bucket_name   = string
+    instance_type = string
+    desired_size  = number
+  }))
+  description = "A set of node pools to create"
+  default = {
+    gpu = {
+      bucket_name   = "ai-ubuntu"
+      instance_type = "g6.xlarge"
+      desired_size  = "2"
+    }
+  }
 }

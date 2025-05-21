@@ -1,12 +1,12 @@
 data "hcp_packer_version" "packer" {
   for_each     = var.node_pools
-  bucket_name  = each.value
+  bucket_name  = each.value.bucket_name
   channel_name = "latest"
 }
 
 data "hcp_packer_artifact" "packer" {
   for_each            = var.node_pools
-  bucket_name         = each.value
+  bucket_name         = each.value.bucket_name
   platform            = "aws"
   version_fingerprint = data.hcp_packer_version.packer[each.key].fingerprint
   region              = var.aws_region
@@ -62,7 +62,7 @@ resource "aws_launch_template" "node_pool" {
   for_each      = var.node_pools
   name_prefix   = "${var.name}-${each.key}"
   image_id      = data.hcp_packer_artifact.packer[each.key].external_identifier
-  instance_type = "t3.medium"
+  instance_type = each.value.instance_type
   key_name      = data.terraform_remote_state.nomad.outputs.keypair
 
   iam_instance_profile {
@@ -109,9 +109,9 @@ resource "aws_autoscaling_group" "node_pool" {
     }
   }
 
-  desired_capacity = var.node_pool_desired_size
+  desired_capacity = each.value.desired_size
   min_size         = 1
-  max_size         = var.node_pool_desired_size * 2
+  max_size         = each.value.desired_size * 2
 
   vpc_zone_identifier = data.terraform_remote_state.nomad.outputs.private_subnets
   # vpc_zone_identifier = data.terraform_remote_state.nomad.outputs.public_subnets
