@@ -114,6 +114,10 @@ resource "vault_auth_backend" "userpass" {
   }
 }
 
+resource "random_pet" "attendee" {
+  length = 1
+}
+
 resource "random_password" "attendee" {
   length  = 10
   special = false
@@ -121,7 +125,7 @@ resource "random_password" "attendee" {
 
 resource "vault_generic_endpoint" "attendee" {
   depends_on           = [vault_auth_backend.userpass]
-  path                 = vault_auth_backend.userpass.path
+  path                 = "auth/${vault_auth_backend.userpass.path}/users/${random_pet.attendee.id}"
   ignore_absent_fields = true
 
   data_json = jsonencode({
