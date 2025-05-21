@@ -47,3 +47,12 @@ output "boundary_session_recording_iam" {
 output "escape_room_key_pair" {
   value = aws_key_pair.escape_room.key_name
 }
+
+output "escape_room_public_key" {
+  value = tls_private_key.escape_room.public_key_openssh
+}
+
+output "escape_room_private_key" {
+  value     = tls_private_key.escape_room.private_key_pem
+  sensitive = true
+}
