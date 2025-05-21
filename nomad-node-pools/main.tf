@@ -85,11 +85,6 @@ resource "aws_launch_template" "node_pool" {
 
   vpc_security_group_ids = data.terraform_remote_state.nomad.outputs.security_groups
 
-  # network_interfaces {
-  #   associate_public_ip_address = true
-  #   security_groups             = data.terraform_remote_state.nomad.outputs.security_groups
-  # }
-
   user_data = base64encode(file("./setup.sh"))
 }
 

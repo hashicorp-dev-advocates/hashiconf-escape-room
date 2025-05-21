@@ -42,6 +42,11 @@ variable "node_pools" {
       bucket_name   = "ai-ubuntu"
       instance_type = "g6.xlarge"
       desired_size  = "2"
+    },
+    payments = {
+      bucket_name   = "app-ubuntu"
+      instance_type = "t2.micro"
+      desired_size  = "1"
     }
   }
 }
