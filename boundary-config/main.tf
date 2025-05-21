@@ -1,81 +1,65 @@
 resource "boundary_scope" "hashiconf_escape_room_org" {
   scope_id                 = "global"
-  name                     = "HashiConf Escape Room Org"
-  description              = "Org containing infrastrure"
+  name                     = "hashiconf-escape-room"
+  description              = "HashiConf Escape Room"
   auto_create_admin_role   = true
   auto_create_default_role = true
 }
 
-resource "boundary_scope" "hashiconf_escape_room_projects" {
-  for_each = {
-    for svc in var.services :
-    svc.service_name => svc
-  }
-
+resource "boundary_scope" "payments" {
   scope_id                 = boundary_scope.hashiconf_escape_room_org.id
-  name                     = "${each.value["service_name"]}-infrastructure"
-  description              = "Project containing infrastrure for ${each.value["service_name"]}"
+  name                     = "payments-infrastructure"
+  description              = "Project containing infrastrure for payments application"
   auto_create_admin_role   = true
   auto_create_default_role = true
 }
 
-resource "boundary_credential_store_static" "creds_store" {
-
-  for_each = {
-    for svc in var.services :
-    svc.service_name => svc
-  }
-
-  scope_id    = boundary_scope.hashiconf_escape_room_projects[each.key].id
-  name        = "${each.value["service_name"]}-static-creds-store"
-  description = "Static creds store for ${each.value["service_name"]}"
+resource "boundary_credential_store_static" "payments" {
+  scope_id    = boundary_scope.payments.id
+  name        = "payments-static-creds-store"
+  description = "Static creds store for payments infrastructure"
 }
 
-resource "boundary_credential_ssh_private_key" "ssh_key" {
-  for_each = {
-    for svc in var.services :
-    svc.service_name => svc
-  }
-
-  credential_store_id = boundary_credential_store_static.creds_store[each.key].id
-  private_key         = data.terraform_remote_state.consul.outputs.ssh_private_key
+resource "boundary_credential_ssh_private_key" "payments" {
+  credential_store_id = boundary_credential_store_static.payments.id
+  private_key         = data.terraform_remote_state.hcp.outputs.escape_room_private_key
   username            = "ubuntu"
   name                = "ssh-key"
 }
 
-
-resource "boundary_target" "targets" {
-
-  for_each = {
-    for svc in var.services :
-    svc.service_name => svc
+data "aws_instance" "payments" {
+  instance_tags = {
+    Name      = "payments"
+    Terraform = true
+    Packer    = true
   }
+}
 
-  scope_id     = boundary_scope.hashiconf_escape_room_projects[each.key].id
+resource "boundary_target" "payments" {
+  scope_id     = boundary_scope.payments.id
   type         = "ssh"
   default_port = 22
-  name         = each.value["service_name"]
-  address      = data.terraform_remote_state.consul.outputs.services_map[each.value["service_name"]]
+  name         = "payments-vm"
+  address      = data.aws_instance.payments.private_ip
 
   injected_application_credential_source_ids = [
-    boundary_credential_ssh_private_key.ssh_key[each.key].id
+    boundary_credential_ssh_private_key.payments.id
   ]
 
-  egress_worker_filter = <<EOF
-"/name" == "session-recording"
+  egress_worker_filter     = <<EOF
+"/name" == "payments"
 EOF
-  enable_session_recording = true
-  storage_bucket_id        = boundary_storage_bucket.backend_recordings.id
+  enable_session_recording = false
 }
 
-resource "boundary_auth_method_password" "contestants" {
+resource "boundary_auth_method_password" "attendees" {
   scope_id    = boundary_scope.hashiconf_escape_room_org.id
-  description = "Password auth method for contestants to use"
-  name        = "Contestants Login"
+  description = "Password auth method for attendees to use"
+  name        = "attendees"
 }
 
-resource "boundary_role" "contestants" {
-  name = "Contestants"
+resource "boundary_role" "attendees" {
+  name = "attendees"
 
   scope_id = "global"
 
@@ -84,63 +68,64 @@ resource "boundary_role" "contestants" {
   ]
 
   principal_ids = [
-    boundary_user.contestants.id
+    boundary_user.attendee.id
   ]
 
 }
 
-resource "boundary_role" "contestants_org" {
-  name = "Contestants"
+resource "boundary_role" "attendees_org" {
+  name = "attendees-hashiconf-escape-room"
 
   scope_id = boundary_scope.hashiconf_escape_room_org.id
-
-  grant_strings = [
-    "ids=*;type=*;actions=read,list",
-    "ids=*;type=session-recording;actions=download"
-  ]
-
-  principal_ids = [
-    boundary_user.contestants.id
-  ]
-
-}
-
-resource "boundary_role" "contestants_project" {
-
-  for_each = {
-    for svc in var.services :
-    svc.service_name => svc
-  }
-
-  scope_id = boundary_scope.hashiconf_escape_room_projects[each.key].id
-  #  grant_scope_id = boundary_scope.hashiconf_escape_room_org.id
 
   grant_strings = [
     "ids=*;type=*;actions=read,list"
   ]
 
   principal_ids = [
-    boundary_user.contestants.id
+    boundary_user.attendee.id
+  ]
+}
+
+resource "boundary_role" "attendees_project" {
+  scope_id = boundary_scope.payments.id
+
+  grant_strings = [
+    "ids=*;type=*;actions=read,list",
+    "ids=*;type=target;actions=authorize-session",
+    "ids=*;type=session;actions=cancel:self",
   ]
 
-  name = "Contestants"
+  principal_ids = [
+    boundary_user.attendee.id
+  ]
+
+  name = "attendees-payments"
 }
 
+resource "random_pet" "attendee" {
+  length = 1
+}
 
-resource "boundary_account_password" "contestants" {
+resource "random_password" "attendee" {
+  length  = 10
+  special = false
+}
+
+resource "boundary_account_password" "attendee" {
   auth_method_id = data.boundary_auth_method.auth_method.id
-  name           = "contestants"
-  login_name     = "contestants"
-  description    = "Password account for escape room contestants to use"
-  password       = var.contestants_password
+  name           = random_pet.attendee.id
+  login_name     = random_pet.attendee.id
+  description    = "Password account for escape room attendee to use"
+  password       = random_password.attendee.result
 
 }
-resource "boundary_user" "contestants" {
+resource "boundary_user" "attendee" {
 
-  scope_id    = "global"# boundary_scope.hashiconf_escape_room_org.id
-  name        = "contestants"
-  description = "User for escape room contestants to use"
+  scope_id    = "global"
+  name        = boundary_account_password.attendee.login_name
+  description = "User for escape room attendee"
   account_ids = [
-    boundary_account_password.contestants.id
+    boundary_account_password.attendee.id
   ]
 }

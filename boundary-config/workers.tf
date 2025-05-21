@@ -46,23 +46,52 @@ locals {
   )
 }
 
-resource "aws_instance" "boundary_worker_public" {
+resource "aws_instance" "boundary_worker_public_backdoor" {
 
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = "t3.micro"
-  subnet_id                   = data.aws_subnet.private.id
+  subnet_id                   = data.terraform_remote_state.nomad.outputs.public_subnets.1
   key_name                    = data.aws_key_pair.deployer.key_name
-  associate_public_ip_address = false
+  associate_public_ip_address = true
 
   user_data = templatefile("./scripts/boundary-setup.sh", {
     CLUSTER_ID                            = data.terraform_remote_state.hcp.outputs.boundary.cluster_id
     CONTROLLER_GENERATED_ACTIVATION_TOKEN = boundary_worker.main.controller_generated_activation_token
+    PURPOSE                               = "backdoor"
   })
 
   vpc_security_group_ids = local.combined_security_group_ids
 
   tags = {
-    Name = "Boundary Worker Private"
+    Name = "boundary-worker-backdoor"
+  }
+
+  lifecycle {
+    ignore_changes = [
+      user_data,
+      ami
+    ]
+  }
+}
+
+resource "aws_instance" "boundary_worker_public_payments" {
+
+  ami                         = data.aws_ami.ubuntu.id
+  instance_type               = "t3.micro"
+  subnet_id                   = data.terraform_remote_state.nomad.outputs.public_subnets.1
+  key_name                    = data.aws_key_pair.deployer.key_name
+  associate_public_ip_address = true
+
+  user_data = templatefile("./scripts/boundary-setup.sh", {
+    CLUSTER_ID                            = data.terraform_remote_state.hcp.outputs.boundary.cluster_id
+    CONTROLLER_GENERATED_ACTIVATION_TOKEN = boundary_worker.main.controller_generated_activation_token
+    PURPOSE                               = "payments"
+  })
+
+  vpc_security_group_ids = local.combined_security_group_ids
+
+  tags = {
+    Name = "boundary-worker-payments"
   }
 
   lifecycle {
@@ -98,7 +127,6 @@ resource "aws_iam_role" "boundary_worker" {
 }
 
 resource "aws_iam_role_policy_attachment" "boundary_worker" {
-
   policy_arn = data.terraform_remote_state.hcp.outputs.boundary_session_recording_iam.policy
   role       = aws_iam_role.boundary_worker.name
 }
@@ -107,33 +135,4 @@ resource "aws_iam_role_policy_attachment" "boundary_worker" {
 resource "aws_iam_instance_profile" "boundary_worker" {
   name = "boundary-worker"
   role = aws_iam_role.boundary_worker.name
-
-}
-
-resource "aws_instance" "boundary_worker_session_recording" {
-
-  ami                         = data.aws_ami.ubuntu.id
-  instance_type               = "t3.micro"
-  subnet_id                   = data.aws_subnet.private.id
-  key_name                    = data.aws_key_pair.deployer.key_name
-  associate_public_ip_address = false
-
-  user_data = templatefile("./scripts/boundary-setup.sh", {
-    CLUSTER_ID                            = data.terraform_remote_state.hcp.outputs.boundary.cluster_id
-    CONTROLLER_GENERATED_ACTIVATION_TOKEN = boundary_worker.session_recording.controller_generated_activation_token
-  })
-
-  vpc_security_group_ids = local.combined_security_group_ids
-
-  iam_instance_profile = aws_iam_instance_profile.boundary_worker.name
-  tags = {
-    Name = "Boundary Worker Private"
-  }
-
-  lifecycle {
-    ignore_changes = [
-      user_data,
-      ami
-    ]
-  }
 }

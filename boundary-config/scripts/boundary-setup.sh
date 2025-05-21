@@ -28,7 +28,8 @@ cat <<EOT > /etc/boundary.d/boundary.hcl
     controller_generated_activation_token = "${CONTROLLER_GENERATED_ACTIVATION_TOKEN}"
 
     tags {
-      type   = ["public"]
+      type    = ["public"]
+      purpose = "${PURPOSE}"
     }
   }
 EOT

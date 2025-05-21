@@ -2,17 +2,17 @@ terraform {
   required_providers {
     hcp = {
       source  = "hashicorp/hcp"
-      version = "~> 0.93.0"
+      version = "~> 0.106.0"
     }
 
     aws = {
       source  = "hashicorp/aws"
-      version = "5.60.0"
+      version = "~> 5.98.0"
     }
 
     boundary = {
       source  = "hashicorp/boundary"
-      version = "1.1.15"
+      version = "~> 1.2.0"
     }
   }
 }
@@ -33,7 +33,7 @@ provider "aws" {
 }
 
 provider "aws" {
-  alias = "boundary"
+  alias  = "boundary"
   region = var.aws_region
 }
 
