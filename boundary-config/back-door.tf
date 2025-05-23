@@ -79,7 +79,6 @@ data "aws_instances" "nomad_clients_gpu" {
 
 
 resource "boundary_target" "nomad_clients_gpu" {
-
   for_each = toset(data.aws_instances.nomad_clients_gpu.private_ips)
 
   scope_id     = boundary_scope.nomad.id
