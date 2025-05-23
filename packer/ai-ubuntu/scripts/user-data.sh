@@ -49,7 +49,7 @@ acl = {
 }
 EOF
 
-cat <<EOF > /root/ubuntu/update.sh
+cat <<EOF > /home/ubuntu/update.sh
 ## TODO: Update this file when you build a new AMI.
 EOF
 
