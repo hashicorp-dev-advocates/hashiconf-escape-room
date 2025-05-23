@@ -38,9 +38,10 @@ job "ollama" {
     }
 
     service {
-      name = "ollama"
-      port = "http"
-      tags = ["http"]
+      name     = "ollama"
+      port     = "http"
+      tags     = ["http"]
+      provider = "nomad"
     }
 
     task "ollama" {
