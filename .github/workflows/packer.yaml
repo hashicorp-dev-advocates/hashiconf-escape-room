@@ -8,6 +8,7 @@ on:
     paths:
       - .github/workflows/packer.yaml
       - packer/app-ubuntu/**
+      - packer/ai-ubuntu/**
 
 permissions:
   id-token: write
