@@ -8,3 +8,4 @@ doormat.sh
 
 !backend.tf
 .ssh/
+.DS_Store
