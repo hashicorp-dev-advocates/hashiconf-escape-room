@@ -27,7 +27,7 @@ job "ollama" {
     volume "ollama" {
       type            = "host"
       source          = "${nomad_dynamic_host_volume.ollama.name}"
-      access_mode     = "single-node-single-writer"
+      access_mode     = "single-node-writer"
       attachment_mode = "file-system"
     }
 
