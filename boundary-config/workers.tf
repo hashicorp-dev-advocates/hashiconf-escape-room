@@ -1,7 +1,13 @@
-resource "boundary_worker" "main" {
+resource "boundary_worker" "backdoor" {
   scope_id    = "global"
-  name        = "main"
-  description = "main private subnet worker"
+  name        = "backdoor"
+  description = "Worker for administrative purposes"
+}
+
+resource "boundary_worker" "payments" {
+  scope_id    = "global"
+  name        = "payments"
+  description = "Worker for payments application"
 }
 
 resource "aws_security_group" "boundary" {
@@ -56,7 +62,7 @@ resource "aws_instance" "boundary_worker_public_backdoor" {
 
   user_data = templatefile("./scripts/boundary-setup.sh", {
     CLUSTER_ID                            = data.terraform_remote_state.hcp.outputs.boundary.cluster_id
-    CONTROLLER_GENERATED_ACTIVATION_TOKEN = boundary_worker.main.controller_generated_activation_token
+    CONTROLLER_GENERATED_ACTIVATION_TOKEN = boundary_worker.backdoor.controller_generated_activation_token
     PURPOSE                               = "backdoor"
   })
 
@@ -84,7 +90,7 @@ resource "aws_instance" "boundary_worker_public_payments" {
 
   user_data = templatefile("./scripts/boundary-setup.sh", {
     CLUSTER_ID                            = data.terraform_remote_state.hcp.outputs.boundary.cluster_id
-    CONTROLLER_GENERATED_ACTIVATION_TOKEN = boundary_worker.main.controller_generated_activation_token
+    CONTROLLER_GENERATED_ACTIVATION_TOKEN = boundary_worker.payments.controller_generated_activation_token
     PURPOSE                               = "payments"
   })
 
@@ -100,39 +106,4 @@ resource "aws_instance" "boundary_worker_public_payments" {
       ami
     ]
   }
-}
-
-resource "boundary_worker" "session_recording" {
-  scope_id = "global"
-  name     = "session-recording"
-}
-
-resource "aws_iam_role" "boundary_worker" {
-
-  name = "boundary-worker"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Sid    = ""
-        Principal = {
-          Service = "ec2.amazonaws.com"
-        }
-      },
-    ]
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "boundary_worker" {
-  policy_arn = data.terraform_remote_state.hcp.outputs.boundary_session_recording_iam.policy
-  role       = aws_iam_role.boundary_worker.name
-}
-
-
-resource "aws_iam_instance_profile" "boundary_worker" {
-  name = "boundary-worker"
-  role = aws_iam_role.boundary_worker.name
 }

@@ -7,31 +7,27 @@ sudo apt update && sudo apt install boundary-enterprise
 
 sudo mkdir -p "/boundary/auth_data"
 sudo chmod -R 777 /boundary/auth_data
-sudo mkdir -p "/boundary/session_recordings"
-sudo chmod -R 777 /boundary/session_recordings
 
 # Write the config
 cat <<EOT > /etc/boundary.d/boundary.hcl
-  disable_mlock = true
-  log_level = "debug"
+disable_mlock = true
 
-  hcp_boundary_cluster_id = "${CLUSTER_ID}"
+hcp_boundary_cluster_id = "${CLUSTER_ID}"
 
-  listener "tcp" {
-    address = "0.0.0.0:9202"
-    purpose = "proxy"
+listener "tcp" {
+  address = "0.0.0.0:9202"
+  purpose = "proxy"
+}
+
+worker {
+  auth_storage_path="/boundary/auth_data"
+  controller_generated_activation_token = "${CONTROLLER_GENERATED_ACTIVATION_TOKEN}"
+
+  tags {
+    type    = ["public"]
+    purpose = "${PURPOSE}"
   }
-
-  worker {
-    auth_storage_path="/boundary/auth_data"
-    recording_storage_path = "/boundary/session_recordings"
-    controller_generated_activation_token = "${CONTROLLER_GENERATED_ACTIVATION_TOKEN}"
-
-    tags {
-      type    = ["public"]
-      purpose = "${PURPOSE}"
-    }
-  }
+}
 EOT
 
 
