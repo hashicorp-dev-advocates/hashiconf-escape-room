@@ -6,8 +6,9 @@ AWS_REGION=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/l
 
 # Nomad configuration files
 cat <<EOF > /etc/nomad.d/nomad.hcl
-log_level = "DEBUG"
+log_level = "INFO"
 data_dir = "/etc/nomad.d/data"
+plugin_dir = "/opt/nomad/plugins"
 
 client {
   enabled    = true
