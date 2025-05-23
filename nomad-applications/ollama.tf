@@ -8,7 +8,7 @@ resource "nomad_dynamic_host_volume" "ollama" {
   capacity_min = "1.0 GiB"
 
   capability {
-    access_mode     = "single-node-single-writer"
+    access_mode     = "single-node-writer"
     attachment_mode = "file-system"
   }
 
