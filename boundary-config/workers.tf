@@ -66,6 +66,8 @@ resource "aws_instance" "boundary_worker_public_backdoor" {
     PURPOSE                               = "backdoor"
   })
 
+  user_data_replace_on_change = true
+
   vpc_security_group_ids = local.combined_security_group_ids
 
   tags = {
@@ -74,7 +76,6 @@ resource "aws_instance" "boundary_worker_public_backdoor" {
 
   lifecycle {
     ignore_changes = [
-      user_data,
       ami
     ]
   }
@@ -85,7 +86,7 @@ resource "aws_instance" "boundary_worker_public_payments" {
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = "t3.micro"
   subnet_id                   = data.terraform_remote_state.nomad.outputs.public_subnets.1
-  key_name                    = data.aws_key_pair.deployer.key_name
+  key_name                    = data.aws_key_pair.hashiconf_escape_room.key_name
   associate_public_ip_address = true
 
   user_data = templatefile("./scripts/boundary-setup.sh", {
@@ -93,6 +94,8 @@ resource "aws_instance" "boundary_worker_public_payments" {
     CONTROLLER_GENERATED_ACTIVATION_TOKEN = boundary_worker.payments.controller_generated_activation_token
     PURPOSE                               = "payments"
   })
+
+  user_data_replace_on_change = true
 
   vpc_security_group_ids = local.combined_security_group_ids
 
@@ -102,7 +105,6 @@ resource "aws_instance" "boundary_worker_public_payments" {
 
   lifecycle {
     ignore_changes = [
-      user_data,
       ami
     ]
   }

@@ -42,6 +42,10 @@ data "aws_key_pair" "deployer" {
   key_name = "deployer-key"
 }
 
+data "aws_key_pair" "hashiconf_escape_room" {
+  key_name = "hashiconf-escape-room"
+}
+
 data "boundary_auth_method" "auth_method" {
   name = "password"
 }

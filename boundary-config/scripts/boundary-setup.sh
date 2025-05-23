@@ -5,6 +5,9 @@ wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/sha
 echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
 sudo apt update && sudo apt install boundary-enterprise
 
+TOKEN=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
+PUBLIC_IPV4=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" -s "http://169.254.169.254/latest/meta-data/public-ipv4")
+
 sudo mkdir -p "/boundary/auth_data"
 sudo chmod -R 777 /boundary/auth_data
 
@@ -20,7 +23,10 @@ listener "tcp" {
 }
 
 worker {
+  public_addr = "$${PUBLIC_IPV4}"
+
   auth_storage_path="/boundary/auth_data"
+
   controller_generated_activation_token = "${CONTROLLER_GENERATED_ACTIVATION_TOKEN}"
 
   tags {
@@ -29,7 +35,6 @@ worker {
   }
 }
 EOT
-
 
 systemctl enable boundary
 systemctl start boundary
