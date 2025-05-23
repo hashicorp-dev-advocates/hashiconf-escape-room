@@ -20,7 +20,7 @@ sudo mkdir -p /etc/nomad.d
 
 curl -L https://releases.hashicorp.com/nomad-device-nvidia/1.1.0/nomad-device-nvidia_1.1.0_linux_amd64.zip -o /tmp/nomad-device-nvidia.zip
 sudo mkdir -p /opt/nomad/plugins
-sudo unzip /tmp/nomad-device-nvidia -d /opt/nomad/plugins
+sudo unzip /tmp/nomad-device-nvidia.zip -d /opt/nomad/plugins
 
 # Install Vault
 sudo apt-get install vault -y
