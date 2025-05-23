@@ -45,7 +45,7 @@ resource "boundary_target" "nomad_servers" {
   ]
 
   egress_worker_filter = <<EOF
-"/name" == "main"
+"/name" == "${boundary_worker.backdoor.name}"
 EOF
 }
 
@@ -64,7 +64,7 @@ resource "boundary_target" "nomad_clients" {
   ]
 
   egress_worker_filter = <<EOF
-"/name" == "main"
+"/name" == "${boundary_worker.backdoor.name}"
 EOF
 }
 
@@ -93,6 +93,6 @@ resource "boundary_target" "nomad_clients_gpu" {
   ]
 
   egress_worker_filter = <<EOF
-"/name" == "main"
+"/name" == "${boundary_worker.backdoor.name}"
 EOF
 }

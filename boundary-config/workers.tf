@@ -66,8 +66,6 @@ resource "aws_instance" "boundary_worker_public_backdoor" {
     PURPOSE                               = "backdoor"
   })
 
-  user_data_replace_on_change = true
-
   vpc_security_group_ids = local.combined_security_group_ids
 
   tags = {
@@ -76,6 +74,7 @@ resource "aws_instance" "boundary_worker_public_backdoor" {
 
   lifecycle {
     ignore_changes = [
+      user_data,
       ami
     ]
   }
@@ -95,8 +94,6 @@ resource "aws_instance" "boundary_worker_public_payments" {
     PURPOSE                               = "payments"
   })
 
-  user_data_replace_on_change = true
-
   vpc_security_group_ids = local.combined_security_group_ids
 
   tags = {
@@ -105,6 +102,7 @@ resource "aws_instance" "boundary_worker_public_payments" {
 
   lifecycle {
     ignore_changes = [
+      user_data,
       ami
     ]
   }
