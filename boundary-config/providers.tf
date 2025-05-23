@@ -30,6 +30,13 @@ provider "boundary" {
 
 provider "aws" {
   region = var.aws_region
+
+  default_tags {
+    tags = {
+      repository = "hashiconf-escape-room"
+      purpose    = "boundary-config"
+    }
+  }
 }
 
 provider "aws" {
