@@ -7,3 +7,4 @@ doormat.sh
 /boundary-config/.terraform/
 
 !backend.tf
+.ssh/

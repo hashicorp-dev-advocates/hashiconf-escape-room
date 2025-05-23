@@ -30,6 +30,13 @@ plugin "docker" {
   }
 }
 
+plugin "nomad-device-nvidia" {
+  config {
+    enabled            = true
+    fingerprint_period = "1m"
+  }
+}
+
 autopilot {
     cleanup_dead_servers      = true
     last_contact_threshold    = "200ms"
@@ -39,8 +46,6 @@ autopilot {
     disable_upgrade_migration = false
     enable_custom_upgrades    = false
 }
-
-
 EOF
 
 cat <<EOF > /etc/nomad.d/acl.hcl
