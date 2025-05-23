@@ -12,9 +12,7 @@ resource "nomad_dynamic_host_volume" "ollama" {
     attachment_mode = "file-system"
   }
 
-  node_id = "44f28ce0-706b-f233-fbb8-e3644fab9284"
-
-  #   node_pool = "gpu"
+  node_pool = "gpu"
 }
 
 resource "nomad_job" "ollama" {
