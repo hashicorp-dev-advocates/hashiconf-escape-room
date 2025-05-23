@@ -20,6 +20,8 @@ The workspaces require the following order:
 1. `nomad-node-pools`
 1. `vault-config`
 1. `boundary-config`
+1. `nomad-applications`
+1. `payments-infrastructure`
 
 Other technicalities:
 
