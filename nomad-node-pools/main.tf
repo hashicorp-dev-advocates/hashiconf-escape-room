@@ -74,7 +74,7 @@ resource "aws_launch_template" "node_pool" {
 
     tags = merge({
       NodePool = each.key,
-      Name     = var.name
+      Name     = "${var.name}-${each.key}"
     }, var.tags)
   }
 
