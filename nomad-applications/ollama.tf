@@ -12,10 +12,7 @@ resource "nomad_dynamic_host_volume" "ollama" {
     attachment_mode = "file-system"
   }
 
-  constraint {
-    attribute = "$${driver.docker.runtimes}"
-    value     = "io.containerd.runc.v2,nvidia,runc"
-  }
+  node_pool = "gpu"
 }
 
 resource "nomad_job" "ollama" {
