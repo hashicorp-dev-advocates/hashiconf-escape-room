@@ -69,6 +69,18 @@ resource "aws_launch_template" "node_pool" {
     name = aws_iam_instance_profile.nomad.name
   }
 
+  block_device_mappings {
+    device_name = "/dev/sdf"
+
+
+    ebs {
+      delete_on_termination = true
+      encrypted             = false
+      volume_size           = 32
+      volume_type           = "gp2"
+    }
+  }
+
   tag_specifications {
     resource_type = "instance"
 
@@ -110,7 +122,6 @@ resource "aws_autoscaling_group" "node_pool" {
   max_size         = each.value.desired_size * 2
 
   vpc_zone_identifier = data.terraform_remote_state.nomad.outputs.private_subnets
-  # vpc_zone_identifier = data.terraform_remote_state.nomad.outputs.public_subnets
 
   health_check_grace_period = 300
   health_check_type         = "EC2"
