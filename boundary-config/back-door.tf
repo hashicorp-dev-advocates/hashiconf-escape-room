@@ -7,7 +7,6 @@ resource "boundary_scope" "back_door" {
 }
 
 resource "boundary_scope" "nomad" {
-
   scope_id                 = boundary_scope.back_door.id
   name                     = "nomad"
   description              = "Nomad servers and clients infrastructure"
@@ -71,7 +70,7 @@ EOF
 data "aws_instances" "nomad_clients_gpu" {
   instance_tags = {
     repository = "hashiconf-escape-room"
-    NodePool   = "gpu"
+    Purpose    = "gpu"
   }
 
   instance_state_names = ["running"]
