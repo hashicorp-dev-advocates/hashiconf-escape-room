@@ -48,7 +48,7 @@ job "openwebui" {
       driver = "docker"
 
       config {
-        image   = "ghcr.io/open-webui/open-webui"
+        image   = "ghcr.io/open-webui/open-webui:main"
         ports   = ["http"]
       }
 
@@ -71,7 +71,6 @@ EOF
         env           = true
         change_mode   = "restart"
       }
-    }
     }
   }
 }
