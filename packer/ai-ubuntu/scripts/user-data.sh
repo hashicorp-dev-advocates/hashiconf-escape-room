@@ -4,6 +4,17 @@ TOKEN=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-meta
 NODE_POOL=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/tags/instance/NodePool)
 AWS_REGION=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/placement/region)
 
+# Add EBS volume for Docker
+mkfs -t xfs /dev/nvme1n1
+mkdir -p /var/lib/docker
+mount /dev/nvme1n1 /var/lib/docker
+
+chgrp docker /var/lib/docker
+chmod g+rwx /var/lib/docker
+
+systemctl enable docker
+systemctl restart docker
+
 # Nomad configuration files
 cat <<EOF > /etc/nomad.d/nomad.hcl
 log_level = "INFO"
