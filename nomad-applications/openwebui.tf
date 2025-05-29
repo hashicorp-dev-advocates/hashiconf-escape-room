@@ -15,6 +15,23 @@ resource "nomad_dynamic_host_volume" "open_webui" {
   node_pool = "rag"
 }
 
+resource "random_password" "open_webui_token" {
+  length           = 16
+  special          = true
+  override_special = "!*-"
+  min_lower        = 1
+  min_upper        = 1
+  min_numeric      = 1
+  min_special      = 1
+}
+
+resource "nomad_variable" "open_webui_token" {
+  path = "nomad/jobs/openwebui/openwebui/openwebui"
+  items = {
+    WEBUI_SECRET_KEY = random_password.open_webui_token.result
+  }
+}
+
 resource "nomad_job" "open_webui" {
   jobspec = <<EOT
 job "openwebui" {
@@ -48,8 +65,9 @@ job "openwebui" {
       driver = "docker"
 
       config {
-        image   = "ghcr.io/open-webui/open-webui:cuda"
-        ports   = ["http"]
+        image       = "ghcr.io/open-webui/open-webui:cuda"
+        ports       = ["http"]
+        extra_hosts = ["host.docker.internal:host-gateway"]
       }
 
       resources {
@@ -76,6 +94,11 @@ job "openwebui" {
       template {
         data = <<EOF
 {{- range nomadService "ollama" }}OLLAMA_BASE_URL="http://{{ .Address }}:{{ .Port }}"{{ end -}}
+{{- with nomadVar "nomad/jobs/openwebui/openwebui/openwebui" -}}
+{{- range $k, $v := . }}
+{{ $k }}={{ $v }}
+{{- end }}
+{{- end }}
 EOF
         destination   = "/app/env.txt"
         env           = true
