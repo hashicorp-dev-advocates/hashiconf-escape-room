@@ -4,15 +4,15 @@ resource "nomad_dynamic_host_volume" "ollama" {
 
   plugin_id = "mkdir"
 
-  capacity_max = "8.0 GiB"
-  capacity_min = "1.0 GiB"
+  capacity_max = "12.0 GiB"
+  capacity_min = "8.0 GiB"
 
   capability {
     access_mode     = "single-node-writer"
     attachment_mode = "file-system"
   }
 
-  node_pool = "gpu"
+  node_pool = "llm"
 }
 
 resource "nomad_job" "ollama" {
@@ -20,7 +20,7 @@ resource "nomad_job" "ollama" {
 job "ollama" {
   datacenters = ["dc1"]
   type        = "service"
-  node_pool   = "gpu"
+  node_pool   = "llm"
 
   group "ollama" {
 
