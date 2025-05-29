@@ -70,7 +70,7 @@ EOF
 data "aws_instances" "nomad_clients_gpu" {
   instance_tags = {
     repository = "hashiconf-escape-room"
-    Purpose    = "gpu"
+    Type       = "gpu"
   }
 
   instance_state_names = ["running"]
