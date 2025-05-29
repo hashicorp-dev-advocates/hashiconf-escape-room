@@ -75,7 +75,7 @@ resource "aws_launch_template" "node_pool" {
     tags = merge({
       NodePool = each.key,
       Name     = "nomad-client-${each.key}"
-      Purpose  = each.value.purpose
+      Type     = each.value.type
     }, var.tags)
   }
 
