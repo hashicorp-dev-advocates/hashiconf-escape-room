@@ -39,11 +39,17 @@ variable "node_pools" {
   }))
   description = "A set of node pools to create"
   default = {
-    gpu = {
+    llm = {
       bucket_name   = "ai-ubuntu"
       instance_type = "g6.xlarge"
       key_name      = "deployer-key"
-      desired_size  = 2
+      desired_size  = 1
+    }
+    rag = {
+      bucket_name   = "ai-ubuntu"
+      instance_type = "g6.xlarge"
+      key_name      = "deployer-key"
+      desired_size  = 1
     }
   }
 }
