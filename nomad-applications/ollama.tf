@@ -63,6 +63,12 @@ job "ollama" {
         destination = "/root/.ollama"
       }
 
+      env {
+        NVIDIA_VISIBLE_DEVICES     = "all"
+        NVIDIA_DRIVER_CAPABILITIES = "compute,utility"
+        CUDA_VISIBLE_DEVICES       = "0"
+      }
+
       action "pull-model" {
         command = "ollama"
         args = [

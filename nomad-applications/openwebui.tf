@@ -48,7 +48,7 @@ job "openwebui" {
       driver = "docker"
 
       config {
-        image   = "ghcr.io/open-webui/open-webui:0.6-cuda"
+        image   = "ghcr.io/open-webui/open-webui:cuda"
         ports   = ["http"]
       }
 
