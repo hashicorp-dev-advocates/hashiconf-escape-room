@@ -12,10 +12,7 @@ resource "nomad_dynamic_host_volume" "ollama" {
     attachment_mode = "file-system"
   }
 
-  constraint {
-    attribute = attr.platform.aws.instance-type
-    value     = "g6.xlarge"
-  }
+  node_pool = "gpu"
 }
 
 resource "nomad_job" "ollama" {
