@@ -36,6 +36,7 @@ variable "node_pools" {
     instance_type = string
     key_name      = string
     desired_size  = number
+    purpose       = string
   }))
   description = "A set of node pools to create"
   default = {
@@ -44,12 +45,14 @@ variable "node_pools" {
       instance_type = "g6.xlarge"
       key_name      = "deployer-key"
       desired_size  = 1
+      purpose       = "gpu"
     }
     rag = {
       bucket_name   = "ai-ubuntu"
       instance_type = "g6.xlarge"
       key_name      = "deployer-key"
       desired_size  = 1
+      purpose       = "gpu"
     }
   }
 }
