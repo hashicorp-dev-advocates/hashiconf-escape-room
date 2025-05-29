@@ -12,7 +12,10 @@ resource "nomad_dynamic_host_volume" "open_webui" {
     attachment_mode = "file-system"
   }
 
-  node_pool = "gpu"
+  constraint {
+    attribute = attr.platform.aws.instance-type
+    value     = "g6.xlarge"
+  }
 }
 
 resource "nomad_job" "open_webui" {
