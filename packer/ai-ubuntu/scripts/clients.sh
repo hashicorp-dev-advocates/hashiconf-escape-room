@@ -28,6 +28,14 @@ sudo apt-get install vault -y
 # Create Vault directory.
 sudo mkdir -p /etc/vault.d
 
+# Add EBS volume for Docker
+mkfs -t xfs /dev/nvme1n1
+mkdir -p /var/lib/docker
+mount /dev/nvme1n1 /var/lib/docker
+
+chgrp docker /var/lib/docker
+chmod g+rwx /var/lib/docker
+
 # Add Docker's official GPG key:
 sudo apt-get update
 sudo apt-get install ca-certificates curl -y
