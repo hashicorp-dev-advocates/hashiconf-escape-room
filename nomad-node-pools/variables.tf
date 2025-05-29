@@ -43,7 +43,7 @@ variable "node_pools" {
       bucket_name   = "ai-ubuntu"
       instance_type = "g6.xlarge"
       key_name      = "deployer-key"
-      desired_size  = 1
+      desired_size  = 2
     }
   }
 }
