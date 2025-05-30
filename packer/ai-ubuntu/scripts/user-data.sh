@@ -6,14 +6,11 @@ AWS_REGION=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/l
 
 # Add EBS volume for Docker
 mkfs -t xfs /dev/nvme1n1
-mkdir -p /var/lib/docker
-mount /dev/nvme1n1 /var/lib/docker
+mkdir -p /etc/nomad.d
+mount /dev/nvme1n1 /etc/nomad.d
 
-chgrp docker /var/lib/docker
-chmod g+rwx /var/lib/docker
-
-systemctl enable docker
-systemctl restart docker
+chgrp nomad /etc/nomad.d
+chmod g+rwx /etc/nomad.d
 
 # Nomad configuration files
 cat <<EOF > /etc/nomad.d/nomad.hcl
