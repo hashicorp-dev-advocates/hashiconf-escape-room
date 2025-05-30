@@ -1,8 +1,31 @@
+resource "aws_security_group" "open_webui" {
+  vpc_id = data.terraform_remote_state.nomad.outputs.vpc_id
+  name   = "${var.name}-open-webui"
+}
+
+resource "aws_vpc_security_group_ingress_rule" "open_webui_lb" {
+  security_group_id = aws_security_group.open_webui.id
+
+  cidr_ipv4   = "0.0.0.0/0"
+  from_port   = 80
+  ip_protocol = "tcp"
+  to_port     = 80
+}
+
+resource "aws_vpc_security_group_egress_rule" "open_webui_lb" {
+  security_group_id = aws_security_group.open_webui.id
+
+  cidr_ipv4   = "0.0.0.0/0"
+  from_port   = 0
+  ip_protocol = -1
+  to_port     = 0
+}
+
 resource "aws_lb" "open_webui" {
   name               = "${var.name}-open-webui"
   internal           = false
   load_balancer_type = "application"
-  security_groups    = data.terraform_remote_state.nomad.outputs.security_groups
+  security_groups    = aws_security_group.open_webui.id
   subnets            = data.terraform_remote_state.nomad.outputs.public_subnets
 }
 
