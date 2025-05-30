@@ -100,7 +100,7 @@ resource "random_password" "attendee" {
 }
 
 resource "boundary_account_password" "attendee" {
-  auth_method_id = data.boundary_auth_method.auth_method.id
+  auth_method_id = boundary_auth_method_password.attendees.id
   name           = random_pet.attendee.id
   login_name     = random_pet.attendee.id
   description    = "Password account for escape room attendee to use"
