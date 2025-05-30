@@ -25,7 +25,7 @@ resource "aws_lb" "open_webui" {
   name               = "${var.name}-open-webui"
   internal           = false
   load_balancer_type = "application"
-  security_groups    = aws_security_group.open_webui.id
+  security_groups    = [aws_security_group.open_webui.id]
   subnets            = data.terraform_remote_state.nomad.outputs.public_subnets
 }
 
