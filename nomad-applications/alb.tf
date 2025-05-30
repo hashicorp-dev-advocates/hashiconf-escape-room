@@ -16,9 +16,7 @@ resource "aws_vpc_security_group_egress_rule" "open_webui_lb" {
   security_group_id = aws_security_group.open_webui.id
 
   cidr_ipv4   = "0.0.0.0/0"
-  from_port   = 0
   ip_protocol = -1
-  to_port     = 0
 }
 
 resource "aws_lb" "open_webui" {
