@@ -33,7 +33,7 @@ job "ollama" {
 
     network {
       port "http" {
-        to = 11434
+        static = 11434
       }
     }
 
