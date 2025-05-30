@@ -38,13 +38,11 @@ data "aws_instances" "payments" {
 }
 
 resource "boundary_target" "payments" {
-  for_each = toset(data.aws_instances.payments.private_ips)
-
   scope_id     = boundary_scope.payments.id
   type         = "ssh"
   default_port = 22
-  name         = "payments-vm-${each.key}"
-  address      = each.value
+  name         = "payments-vm"
+  address      = one(data.aws_instances.payments.private_ips)
 
   injected_application_credential_source_ids = [
     boundary_credential_ssh_private_key.payments.id
