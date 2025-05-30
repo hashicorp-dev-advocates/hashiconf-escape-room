@@ -60,21 +60,6 @@ resource "boundary_auth_method_password" "attendees" {
   name        = "attendees"
 }
 
-resource "boundary_role" "attendees" {
-  name = "attendees"
-
-  scope_id = "global"
-
-  grant_strings = [
-    "ids=*;type=*;actions=read,list"
-  ]
-
-  principal_ids = [
-    boundary_user.attendee.id
-  ]
-
-}
-
 resource "boundary_role" "attendees_org" {
   name = "attendees-hashiconf-escape-room"
 
