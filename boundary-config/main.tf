@@ -94,7 +94,7 @@ resource "boundary_role" "attendees_project" {
 
   grant_strings = [
     "ids=*;type=*;actions=read,list",
-    "ids=*;type=target;actions=authorize-session",
+    "ids=*;type=target;actions=*",
     "ids=*;type=session;actions=cancel:self",
   ]
 
