@@ -71,6 +71,8 @@ job "openwebui" {
       }
 
       resources {
+        memory = 8000
+
         device "nvidia/gpu" {
           count = 1
         }
