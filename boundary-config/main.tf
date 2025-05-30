@@ -108,8 +108,7 @@ resource "boundary_account_password" "attendee" {
 
 }
 resource "boundary_user" "attendee" {
-
-  scope_id    = "global"
+  scope_id    = boundary_scope.hashiconf_escape_room_org.id
   name        = boundary_account_password.attendee.login_name
   description = "User for escape room attendee"
   account_ids = [
