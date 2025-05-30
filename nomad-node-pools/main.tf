@@ -1,14 +1,12 @@
 data "hcp_packer_version" "packer" {
-  for_each     = var.node_pools
-  bucket_name  = each.value.bucket_name
+  bucket_name  = var.hcp_packer_bucket_name
   channel_name = "latest"
 }
 
 data "hcp_packer_artifact" "packer" {
-  for_each            = var.node_pools
-  bucket_name         = each.value.bucket_name
+  bucket_name         = var.hcp_packer_bucket_name
   platform            = "aws"
-  version_fingerprint = data.hcp_packer_version.packer[each.key].fingerprint
+  version_fingerprint = data.hcp_packer_version.packer.fingerprint
   region              = var.aws_region
 }
 
@@ -58,96 +56,78 @@ resource "aws_iam_instance_profile" "nomad" {
   role = aws_iam_role.nomad.name
 }
 
-resource "aws_launch_template" "node_pool" {
-  for_each      = var.node_pools
-  name_prefix   = "${var.name}-${each.key}"
-  image_id      = data.hcp_packer_artifact.packer[each.key].external_identifier
-  instance_type = each.value.instance_type
-  key_name      = each.value.key_name
+resource "aws_instance" "nomad_client_llm" {
+  ami                         = data.hcp_packer_artifact.packer.external_identifier
+  instance_type               = "g6.xlarge"
+  subnet_id                   = data.terraform_remote_state.nomad.outputs.private_subnets.1
+  key_name                    = "deployer-key"
+  associate_public_ip_address = false
+  iam_instance_profile        = aws_iam_instance_profile.nomad.name
 
-  iam_instance_profile {
-    name = aws_iam_instance_profile.nomad.name
+  root_block_device {
+    delete_on_termination = false
+    volume_size           = 100
+    volume_type           = "gp3"
   }
 
-  block_device_mappings {
-    device_name = "/dev/sdf"
-
-
-    ebs {
-      delete_on_termination = true
-      encrypted             = false
-      volume_size           = 32
-      volume_type           = "gp2"
-    }
+  ebs_block_device {
+    device_name           = "/dev/sdf"
+    delete_on_termination = true
+    encrypted             = false
+    volume_size           = 32
+    volume_type           = "gp2"
   }
 
-  tag_specifications {
-    resource_type = "instance"
-
-    tags = merge({
-      NodePool = each.key,
-      Name     = "nomad-client-${each.key}"
-      Type     = each.value.type
-    }, var.tags)
-  }
+  vpc_security_group_ids = data.terraform_remote_state.nomad.outputs.security_groups
 
   metadata_options {
     http_endpoint          = "enabled"
     instance_metadata_tags = "enabled"
   }
 
+  user_data = base64encode(file("./setup.sh"))
+
+  tags = {
+    NodePool = "llm",
+    Name     = "nomad-client-llm"
+    Type     = "gpu"
+  }
+}
+
+resource "aws_instance" "nomad_client_rag" {
+  ami                         = data.hcp_packer_artifact.packer.external_identifier
+  instance_type               = "g6.xlarge"
+  subnet_id                   = data.terraform_remote_state.nomad.outputs.private_subnets.1
+  key_name                    = "deployer-key"
+  associate_public_ip_address = false
+  iam_instance_profile        = aws_iam_instance_profile.nomad.name
+
+  root_block_device {
+    delete_on_termination = false
+    volume_size           = 100
+    volume_type           = "gp3"
+  }
+
+  ebs_block_device {
+    device_name           = "/dev/sdf"
+    delete_on_termination = true
+    encrypted             = false
+    volume_size           = 32
+    volume_type           = "gp2"
+  }
+
   vpc_security_group_ids = data.terraform_remote_state.nomad.outputs.security_groups
 
+  metadata_options {
+    http_endpoint          = "enabled"
+    instance_metadata_tags = "enabled"
+  }
+
   user_data = base64encode(file("./setup.sh"))
-}
 
-resource "aws_autoscaling_group" "node_pool" {
-  for_each    = var.node_pools
-  name_prefix = "${var.name}-${each.key}"
-
-  launch_template {
-    id      = aws_launch_template.node_pool[each.key].id
-    version = aws_launch_template.node_pool[each.key].latest_version
-  }
-
-  instance_refresh {
-    strategy = "Rolling"
-    preferences {
-      min_healthy_percentage = 0
-    }
-  }
-
-  desired_capacity = each.value.desired_size
-  min_size         = 1
-  max_size         = each.value.desired_size * 2
-
-  vpc_zone_identifier = data.terraform_remote_state.nomad.outputs.private_subnets
-
-  health_check_grace_period = 300
-  health_check_type         = "EC2"
-  termination_policies      = ["OldestLaunchTemplate"]
-  wait_for_capacity_timeout = 0
-
-  enabled_metrics = [
-    "GroupDesiredCapacity",
-    "GroupInServiceCapacity",
-    "GroupPendingCapacity",
-    "GroupMinSize",
-    "GroupMaxSize",
-    "GroupInServiceInstances",
-    "GroupPendingInstances",
-    "GroupStandbyInstances",
-    "GroupStandbyCapacity",
-    "GroupTerminatingCapacity",
-    "GroupTerminatingInstances",
-    "GroupTotalCapacity",
-    "GroupTotalInstances"
-  ]
-}
-
-check "ami_version_check" {
-  assert {
-    condition     = alltrue([for p, _ in var.node_pools : data.hcp_packer_artifact.packer[p].external_identifier == aws_launch_template.node_pool[p].image_id])
-    error_message = "Launch templates must use the latest available AMIs"
+  tags = {
+    NodePool = "tag",
+    Name     = "nomad-client-rag"
+    Type     = "gpu"
   }
 }

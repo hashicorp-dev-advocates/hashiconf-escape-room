@@ -29,30 +29,3 @@ variable "hcp_packer_bucket_name" {
   description = "HCP Packer bucket name, also used for node pool"
   default     = "ai-ubuntu"
 }
-
-variable "node_pools" {
-  type = map(object({
-    bucket_name   = string
-    instance_type = string
-    key_name      = string
-    desired_size  = number
-    type          = string
-  }))
-  description = "A set of node pools to create"
-  default = {
-    llm = {
-      bucket_name   = "ai-ubuntu"
-      instance_type = "g6.xlarge"
-      key_name      = "deployer-key"
-      desired_size  = 1
-      type          = "gpu"
-    }
-    rag = {
-      bucket_name   = "ai-ubuntu"
-      instance_type = "g6.xlarge"
-      key_name      = "deployer-key"
-      desired_size  = 1
-      type          = "gpu"
-    }
-  }
-}
