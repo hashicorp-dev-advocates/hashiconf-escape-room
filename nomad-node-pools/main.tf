@@ -74,7 +74,7 @@ resource "aws_iam_instance_profile" "nomad" {
 #   }
 
 #   ebs_block_device {
-#     device_name           = "/dev/sdf"
+#     device_name           = "/dev/sdg"
 #     delete_on_termination = true
 #     encrypted             = false
 #     volume_size           = 100
@@ -99,7 +99,7 @@ resource "aws_iam_instance_profile" "nomad" {
 
 # resource "aws_instance" "nomad_client_rag" {
 #   ami                         = data.hcp_packer_artifact.packer.external_identifier
-#   instance_type               = "g6.4xlarge"
+#   instance_type               = "g6.xlarge"
 #   subnet_id                   = data.terraform_remote_state.nomad.outputs.private_subnets.1
 #   key_name                    = "deployer-key"
 #   associate_public_ip_address = false
@@ -115,7 +115,7 @@ resource "aws_iam_instance_profile" "nomad" {
 #   }
 
 #   ebs_block_device {
-#     device_name           = "/dev/sdf"
+#     device_name           = "/dev/sdg"
 #     delete_on_termination = true
 #     encrypted             = false
 #     volume_size           = 100
