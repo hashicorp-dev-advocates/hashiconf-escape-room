@@ -56,68 +56,68 @@ resource "aws_iam_instance_profile" "nomad" {
   role = aws_iam_role.nomad.name
 }
 
-# resource "aws_instance" "nomad_client_llm" {
-#   ami                         = data.hcp_packer_artifact.packer.external_identifier
-#   instance_type               = "g6.4xlarge"
-#   subnet_id                   = data.terraform_remote_state.nomad.outputs.private_subnets.1
-#   key_name                    = "deployer-key"
-#   associate_public_ip_address = false
-#   iam_instance_profile        = aws_iam_instance_profile.nomad.name
-#   ebs_optimized               = true
+resource "aws_instance" "nomad_client_llm" {
+  ami                         = data.hcp_packer_artifact.packer.external_identifier
+  instance_type               = "g6.4xlarge"
+  subnet_id                   = data.terraform_remote_state.nomad.outputs.private_subnets.1
+  key_name                    = "deployer-key"
+  associate_public_ip_address = false
+  iam_instance_profile        = aws_iam_instance_profile.nomad.name
+  ebs_optimized               = true
 
-#   ebs_block_device {
-#     device_name           = "/dev/sdf"
-#     delete_on_termination = true
-#     encrypted             = false
-#     volume_size           = 100
-#     volume_type           = "gp3"
-#   }
+  ebs_block_device {
+    device_name           = "/dev/sdf"
+    delete_on_termination = true
+    encrypted             = false
+    volume_size           = 100
+    volume_type           = "gp3"
+  }
 
-#   vpc_security_group_ids = data.terraform_remote_state.nomad.outputs.security_groups
+  vpc_security_group_ids = data.terraform_remote_state.nomad.outputs.security_groups
 
-#   metadata_options {
-#     http_endpoint          = "enabled"
-#     instance_metadata_tags = "enabled"
-#   }
+  metadata_options {
+    http_endpoint          = "enabled"
+    instance_metadata_tags = "enabled"
+  }
 
-#   user_data = base64encode(file("./setup.sh"))
+  user_data = base64encode(file("./setup.sh"))
 
-#   tags = {
-#     NodePool = "llm",
-#     Name     = "nomad-client-llm"
-#     Type     = "gpu"
-#   }
-# }
+  tags = {
+    NodePool = "llm",
+    Name     = "nomad-client-llm"
+    Type     = "gpu"
+  }
+}
 
-# resource "aws_instance" "nomad_client_rag" {
-#   ami                         = data.hcp_packer_artifact.packer.external_identifier
-#   instance_type               = "g6.4xlarge"
-#   subnet_id                   = data.terraform_remote_state.nomad.outputs.private_subnets.1
-#   key_name                    = "deployer-key"
-#   associate_public_ip_address = false
-#   iam_instance_profile        = aws_iam_instance_profile.nomad.name
-#   ebs_optimized               = true
+resource "aws_instance" "nomad_client_rag" {
+  ami                         = data.hcp_packer_artifact.packer.external_identifier
+  instance_type               = "g6.4xlarge"
+  subnet_id                   = data.terraform_remote_state.nomad.outputs.private_subnets.1
+  key_name                    = "deployer-key"
+  associate_public_ip_address = false
+  iam_instance_profile        = aws_iam_instance_profile.nomad.name
+  ebs_optimized               = true
 
-#   ebs_block_device {
-#     device_name           = "/dev/sdf"
-#     delete_on_termination = true
-#     encrypted             = false
-#     volume_size           = 100
-#     volume_type           = "gp3"
-#   }
+  ebs_block_device {
+    device_name           = "/dev/sdf"
+    delete_on_termination = true
+    encrypted             = false
+    volume_size           = 100
+    volume_type           = "gp3"
+  }
 
-#   vpc_security_group_ids = data.terraform_remote_state.nomad.outputs.security_groups
+  vpc_security_group_ids = data.terraform_remote_state.nomad.outputs.security_groups
 
-#   metadata_options {
-#     http_endpoint          = "enabled"
-#     instance_metadata_tags = "enabled"
-#   }
+  metadata_options {
+    http_endpoint          = "enabled"
+    instance_metadata_tags = "enabled"
+  }
 
-#   user_data = base64encode(file("./setup.sh"))
+  user_data = base64encode(file("./setup.sh"))
 
-#   tags = {
-#     NodePool = "rag",
-#     Name     = "nomad-client-rag"
-#     Type     = "gpu"
-#   }
-# }
+  tags = {
+    NodePool = "rag",
+    Name     = "nomad-client-rag"
+    Type     = "gpu"
+  }
+}
