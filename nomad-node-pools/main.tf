@@ -65,12 +65,6 @@ resource "aws_instance" "nomad_client_llm" {
   iam_instance_profile        = aws_iam_instance_profile.nomad.name
   ebs_optimized               = true
 
-  root_block_device {
-    delete_on_termination = false
-    volume_size           = 100
-    volume_type           = "gp3"
-  }
-
   ebs_block_device {
     device_name           = "/dev/sdf"
     delete_on_termination = true
@@ -103,12 +97,6 @@ resource "aws_instance" "nomad_client_rag" {
   associate_public_ip_address = false
   iam_instance_profile        = aws_iam_instance_profile.nomad.name
   ebs_optimized               = true
-
-  root_block_device {
-    delete_on_termination = false
-    volume_size           = 100
-    volume_type           = "gp3"
-  }
 
   ebs_block_device {
     device_name           = "/dev/sdf"
