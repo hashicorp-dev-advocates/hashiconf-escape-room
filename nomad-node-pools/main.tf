@@ -128,7 +128,7 @@ resource "aws_instance" "nomad_client_rag" {
   user_data = base64encode(file("./setup.sh"))
 
   tags = {
-    NodePool = "tag",
+    NodePool = "rag",
     Name     = "nomad-client-rag"
     Type     = "gpu"
   }
