@@ -97,7 +97,7 @@ resource "aws_instance" "nomad_client_llm" {
 
 resource "aws_instance" "nomad_client_rag" {
   ami                         = data.hcp_packer_artifact.packer.external_identifier
-  instance_type               = "g6.xlarge"
+  instance_type               = "g6.4xlarge"
   subnet_id                   = data.terraform_remote_state.nomad.outputs.private_subnets.1
   key_name                    = "deployer-key"
   associate_public_ip_address = false
