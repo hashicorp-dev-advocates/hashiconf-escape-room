@@ -65,8 +65,7 @@ resource "aws_instance" "nomad_client_llm" {
   iam_instance_profile        = aws_iam_instance_profile.nomad.name
   ebs_optimized               = true
 
-  ebs_block_device {
-    device_name           = "/dev/sdf"
+  root_block_device {
     delete_on_termination = true
     encrypted             = false
     volume_size           = 100
@@ -106,8 +105,7 @@ resource "aws_instance" "nomad_client_rag" {
   iam_instance_profile        = aws_iam_instance_profile.nomad.name
   ebs_optimized               = true
 
-  ebs_block_device {
-    device_name           = "/dev/sdf"
+  root_block_device {
     delete_on_termination = true
     encrypted             = false
     volume_size           = 100
