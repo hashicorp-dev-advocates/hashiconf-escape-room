@@ -65,9 +65,10 @@ job "openwebui" {
       driver = "docker"
 
       config {
-        image       = "ghcr.io/open-webui/open-webui:cuda"
-        ports       = ["http"]
-        extra_hosts = ["host.docker.internal:host-gateway"]
+        image              = "ghcr.io/open-webui/open-webui:cuda"
+        image_pull_timeout = "10m"
+        ports              = ["http"]
+        extra_hosts        = ["host.docker.internal:host-gateway"]
       }
 
       resources {
