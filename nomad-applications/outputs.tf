@@ -2,11 +2,11 @@ output "openweb_ui_url" {
   value = "http://${aws_lb.open_webui.dns_name}"
 }
 
-output "open_webui_username" {
-  value = "demos@hashicorp.com"
+output "open_webui_admin_username" {
+  value = "team-da@hashicorp.com"
 }
 
-resource "random_password" "open_webui_password" {
+resource "random_password" "open_webui_admin_password" {
   length           = 16
   special          = true
   override_special = "!*-"
@@ -16,8 +16,8 @@ resource "random_password" "open_webui_password" {
   min_special      = 1
 }
 
-output "open_webui_password" {
-  value     = random_password.open_webui_password.result
+output "open_webui_admin_password" {
+  value     = random_password.open_webui_admin_password.result
   sensitive = true
 }
 
