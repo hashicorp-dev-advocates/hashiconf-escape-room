@@ -1,9 +1,11 @@
 output "openweb_ui_url" {
-  value = "http://${aws_lb.open_webui.dns_name}"
+  value       = "http://${aws_lb.open_webui.dns_name}"
+  description = "URL for Open WebUI console"
 }
 
 output "open_webui_admin_username" {
-  value = "team-da@hashicorp.com"
+  value       = "team-da@hashicorp.com"
+  description = "Email for administrative login"
 }
 
 resource "random_password" "open_webui_admin_password" {
@@ -17,7 +19,13 @@ resource "random_password" "open_webui_admin_password" {
 }
 
 output "open_webui_admin_password" {
-  value     = random_password.open_webui_admin_password.result
-  sensitive = true
+  value       = random_password.open_webui_admin_password.result
+  description = "Password for administrative login"
+  sensitive   = true
 }
 
+output "open_webui_admin_token" {
+  value       = random_password.open_webui_token.result
+  description = "Token for API orchestration"
+  sensitive   = true
+}
