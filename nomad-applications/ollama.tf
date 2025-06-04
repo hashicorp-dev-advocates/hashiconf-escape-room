@@ -70,6 +70,7 @@ job "ollama" {
         NVIDIA_VISIBLE_DEVICES     = "all"
         NVIDIA_DRIVER_CAPABILITIES = "compute,utility"
         CUDA_VISIBLE_DEVICES       = "0"
+        OLLAMA_CONTEXT_LENGTH      = "131072"
       }
 
       action "pull-model" {
