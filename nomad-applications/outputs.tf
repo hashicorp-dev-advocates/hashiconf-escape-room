@@ -23,9 +23,3 @@ output "open_webui_admin_password" {
   description = "Password for administrative login"
   sensitive   = true
 }
-
-# output "open_webui_admin_token" {
-#   value       = random_password.open_webui_token.result
-#   description = "Token for API orchestration"
-#   sensitive   = true
-# }
