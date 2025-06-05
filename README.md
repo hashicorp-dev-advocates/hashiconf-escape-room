@@ -54,6 +54,11 @@ The AI portions are divided into two parts:
 
 In order to access Open WebUI, we deploy a Nginx reverse proxy to access it.
 
+Running Ollama + Granite requires multiple GPUs and VRAM because Granite's context length is 128K.
+To ensure that we do not overload VRAM, we are using the `granite3.3:2b` model. EC2 instance sizing
+based on [related documentation](https://www.ibm.com/docs/en/software-hub/5.1.x?topic=install-foundation-models#watsonxai-models__txt-extract).
+If you overload VRAM, Ollama will fall back to CPU. The Ollama container has increased resource limits to account for fallback.
+
 #### Manual configuration of Open WebUI
 
 - Set up of admin account
@@ -82,7 +87,7 @@ In order to access Open WebUI, we deploy a Nginx reverse proxy to access it.
   1. Go to the `hashiconf-escape-room-data` repository. Get the email login and password for attendees from the HCP Terraform workspace (`terraform output -raw attendee_password`).
   1. Use the email and password to log into Open WebUI as a `HashiConf Escape Room Attendee`.
   1. Under the model name (`granite3.3:2b`), enable Temporary Chat.
-  1. This ensures that we do not keep the chat history between runs.
+  1. This ensures that we do not keep the chat history between escape room runs.
 
 #### Troubleshooting
 
