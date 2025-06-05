@@ -24,8 +24,8 @@ output "open_webui_admin_password" {
   sensitive   = true
 }
 
-output "open_webui_admin_token" {
-  value       = random_password.open_webui_token.result
-  description = "Token for API orchestration"
-  sensitive   = true
-}
+# output "open_webui_admin_token" {
+#   value       = random_password.open_webui_token.result
+#   description = "Token for API orchestration"
+#   sensitive   = true
+# }
