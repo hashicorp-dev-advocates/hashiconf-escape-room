@@ -1,111 +1,89 @@
-# resource "nomad_dynamic_host_volume" "open_webui" {
-#   name      = "open-webui"
-#   namespace = "default"
+resource "nomad_dynamic_host_volume" "open_webui" {
+  name      = "open-webui"
+  namespace = "default"
 
-#   plugin_id = "mkdir"
+  plugin_id = "mkdir"
 
-#   capacity_max = "12.0 GiB"
-#   capacity_min = "8.0 GiB"
+  capacity_max = "12.0 GiB"
+  capacity_min = "8.0 GiB"
 
-#   capability {
-#     access_mode     = "single-node-writer"
-#     attachment_mode = "file-system"
-#   }
+  capability {
+    access_mode     = "single-node-writer"
+    attachment_mode = "file-system"
+  }
 
-#   node_pool = "rag"
-# }
+  node_pool = "rag"
+}
 
-# resource "random_password" "open_webui_token" {
-#   length           = 16
-#   special          = true
-#   override_special = "!*-"
-#   min_lower        = 1
-#   min_upper        = 1
-#   min_numeric      = 1
-#   min_special      = 1
-# }
+resource "nomad_job" "open_webui" {
+  purge_on_destroy = true
+  jobspec          = <<EOT
+job "openwebui" {
+  datacenters = ["dc1"]
+  type        = "service"
+  node_pool   = "rag"
 
-# resource "nomad_variable" "open_webui_token" {
-#   path = "nomad/jobs/openwebui/openwebui/openwebui"
-#   items = {
-#     WEBUI_SECRET_KEY = random_password.open_webui_token.result
-#   }
-# }
+  group "openwebui" {
 
-# resource "nomad_job" "open_webui" {
-#   jobspec = <<EOT
-# job "openwebui" {
-#   datacenters = ["dc1"]
-#   type        = "service"
-#   node_pool   = "rag"
+    volume "openwebui" {
+      type            = "host"
+      source          = "${nomad_dynamic_host_volume.open_webui.name}"
+      access_mode     = "single-node-writer"
+      attachment_mode = "file-system"
+    }
 
-#   group "openwebui" {
+    network {
+      port "http" {
+        to = 8080
+      }
+    }
 
-#     volume "openwebui" {
-#       type            = "host"
-#       source          = "${nomad_dynamic_host_volume.open_webui.name}"
-#       access_mode     = "single-node-writer"
-#       attachment_mode = "file-system"
-#     }
+    service {
+      name     = "openwebui"
+      port     = "http"
+      tags     = ["http"]
+      provider = "nomad"
+    }
 
-#     network {
-#       port "http" {
-#         to = 8080
-#       }
-#     }
+    task "openwebui" {
+      driver = "docker"
 
-#     service {
-#       name     = "openwebui"
-#       port     = "http"
-#       tags     = ["http"]
-#       provider = "nomad"
-#     }
+      config {
+        image              = "ghcr.io/open-webui/open-webui:main"
+        ports              = ["http"]
+        extra_hosts        = ["host.docker.internal:host-gateway"]
+      }
 
-#     task "openwebui" {
-#       driver = "docker"
+      resources {
+        cores  = 2
+        memory = 12000
+      }
 
-#       config {
-#         image              = "ghcr.io/open-webui/open-webui:main"
-#         image_pull_timeout = "10m"
-#         ports              = ["http"]
-#         extra_hosts        = ["host.docker.internal:host-gateway"]
-#       }
+      volume_mount {
+        volume      = "openwebui"
+        destination = "/app/backend/data"
+      }
 
-#       resources {
-#         cores  = 2
-#         memory = 12000
-#       }
+      env {
+        ENABLE_USER_WEBHOOKS     = "False"
+        SHOW_ADMIN_DETAILS       = "False"
+        ENABLE_CODE_EXECUTION    = "False"
+        ENABLE_CODE_INTERPRETER  = "False"
+        ENABLE_MESSAGE_RATING    = "False"
+        ENABLE_COMMUNITY_SHARING = "False"
+        SAFE_MODE                = "True"
+      }
 
-#       volume_mount {
-#         volume      = "openwebui"
-#         destination = "/app/backend/data"
-#       }
-
-#       env {
-#         ENABLE_USER_WEBHOOKS     = "False"
-#         SHOW_ADMIN_DETAILS       = "False"
-#         ENABLE_CODE_EXECUTION    = "False"
-#         ENABLE_CODE_INTERPRETER  = "False"
-#         ENABLE_MESSAGE_RATING    = "False"
-#         ENABLE_COMMUNITY_SHARING = "False"
-#         SAFE_MODE                = "True"
-#       }
-
-#       template {
-#         data = <<EOF
-# {{- range nomadService "ollama" }}OLLAMA_BASE_URL="http://{{ .Address }}:{{ .Port }}"{{ end -}}
-# {{- with nomadVar "nomad/jobs/openwebui/openwebui/openwebui" -}}
-# {{- range $k, $v := . }}
-# {{ $k }}={{ $v }}
-# {{- end }}
-# {{- end }}
-# EOF
-#         destination   = "/app/env.txt"
-#         env           = true
-#         change_mode   = "restart"
-#       }
-#     }
-#   }
-# }
-# EOT
-# }
+      template {
+        data = <<EOF
+{{- range nomadService "ollama" }}OLLAMA_BASE_URL="http://{{ .Address }}:{{ .Port }}"{{ end -}}
+EOF
+        destination   = "/app/env.txt"
+        env           = true
+        change_mode   = "restart"
+      }
+    }
+  }
+}
+EOT
+}
