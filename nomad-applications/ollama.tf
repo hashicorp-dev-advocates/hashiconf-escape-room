@@ -80,6 +80,14 @@ job "ollama" {
           "${var.model}"
         ]
       }
+
+      action "pull-embeddings" {
+        command = "ollama"
+        args = [
+          "pull",
+          "${var.embeddings}"
+        ]
+      }
     }
   }
 }

@@ -14,3 +14,9 @@ variable "name" {
   description = "Name for resources"
   default     = "hashiconf-escape-room"
 }
+
+variable "embeddings" {
+  type        = string
+  description = "Embedding models to pull in ollama, exposed as Nomad action."
+  default     = "granite-embedding:30m"
+}
