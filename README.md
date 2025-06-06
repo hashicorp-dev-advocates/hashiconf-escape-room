@@ -82,6 +82,13 @@ If you overload VRAM, Ollama will fall back to CPU. The Ollama container has inc
 
 > Note: This does not use JWT tokens because they expire each time Open WebUI restarts.
 
+- Fix IBM Granite context length.
+  1. Go to Admin Panel -> Settings -> Models.
+  1. Select the pencil (edit) next to `granite3.3:2b`.
+  1. Show Advanced Params.
+  1. Change `num_ctx` to `131072`
+  1. Change `num_gpu` to `4`
+
 - Fix Document settings.
   1. Go to Admin Panel -> Settings -> Documents.
   1. Under General, change the following:
