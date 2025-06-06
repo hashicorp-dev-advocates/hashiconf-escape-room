@@ -55,6 +55,7 @@ resource "aws_iam_policy" "hcp_terraform" {
         "iam:*Profile*",
         "rds:*",
         "ecr:*",
+        "scheduler:*",
         "secretsmanager:*",
         "s3:*"
       ]
