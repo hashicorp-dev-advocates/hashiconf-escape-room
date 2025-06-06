@@ -23,3 +23,7 @@ output "open_webui_admin_password" {
   description = "Password for administrative login"
   sensitive   = true
 }
+
+output "ollama_model_id" {
+  value = var.model
+}
