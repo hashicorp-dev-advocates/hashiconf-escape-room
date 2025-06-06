@@ -72,6 +72,7 @@ job "openwebui" {
         ENABLE_MESSAGE_RATING    = "False"
         ENABLE_COMMUNITY_SHARING = "False"
         SAFE_MODE                = "True"
+        ENABLE_OPENAI_API        = "False"
       }
 
       template {
