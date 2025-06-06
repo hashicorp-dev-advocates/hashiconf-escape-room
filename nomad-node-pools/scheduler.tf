@@ -58,7 +58,7 @@ resource "aws_scheduler_schedule" "instance_shutdown" {
     mode = "OFF"
   }
 
-  schedule_expression = "at(${local.shutdown_date_for_gpus})"
+  schedule_expression = "at(${replace(local.shutdown_date_for_gpus, "Z", "")})"
 
   target {
     arn      = "arn:aws:scheduler:::aws-sdk:ec2:stopInstances"
