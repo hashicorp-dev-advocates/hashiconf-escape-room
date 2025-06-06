@@ -56,17 +56,6 @@ resource "aws_iam_instance_profile" "nomad" {
   role = aws_iam_role.nomad.name
 }
 
-## Reserve GPUs for Ollama. This reservation expires after HashiConf.
-resource "aws_ec2_capacity_reservation" "nomad_client_llm" {
-  instance_type     = aws_instance.nomad_client_llm.instance_type
-  instance_platform = "Linux/UNIX"
-  availability_zone = aws_instance.nomad_client_llm.availability_zone
-  instance_count    = 1
-  ebs_optimized     = true
-  end_date          = "2025-10-01T00:00:00Z"
-  end_date_type     = "limited"
-}
-
 resource "aws_instance" "nomad_client_llm" {
   ami                         = data.hcp_packer_artifact.packer.external_identifier
   instance_type               = "g6.12xlarge"
