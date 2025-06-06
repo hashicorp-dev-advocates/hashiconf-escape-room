@@ -27,3 +27,7 @@ output "open_webui_admin_password" {
 output "ollama_model_id" {
   value = var.model
 }
+
+output "ollama_embedding_id" {
+  value = var.embeddings
+}
