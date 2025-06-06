@@ -46,6 +46,11 @@ For the AI workflow, there is a separate repository at [hashiconf-escape-room-da
 that includes the data. It uses terracurl to create an `attendee` user and set up the knowledge base, although there are some problems with the workflow.
 Due to limitations of providers, you must manually delete the knowledge base and remove everything from state.
 
+Next, you need to import the models into Ollama.
+
+1. Go to Nomad and click on the `ollama` job.
+1. Under Actions, be sure to `pull-model` and `pull-embeddings`.
+
 #### Technical gotchas
 
 The AI portions are divided into two parts:
@@ -69,15 +74,27 @@ If you overload VRAM, Ollama will fall back to CPU. The Ollama container has inc
      - Password: `cd nomad-applications && terraform output open_webui_admin_password`
   1. Click "Create Admin Account".
 
-- Export the JWT for the Open WebUI API.
+- Export the API key for the Open WebUI API.
   1. Go to the user profile -> Settings.
   1. Go to Account.
   1. Show API keys.
-  1. Copy JWT Token and paste it into the `open_webui_token` variable in HCP Terraform `open-webui-config` workspace
+  1. Generate an API key and paste it into the `open_webui_token` variable in HCP Terraform `open-webui-config` workspace
 
-- Make Granite model available to all users.
-  1. Go to Admin Panel -> Settings -> Models.
-  1. Change Visibility of Granite to Public.
+> Note: This does not use JWT tokens because they expire each time Open WebUI restarts.
+
+- Fix Document settings.
+  1. Go to Admin Panel -> Settings -> Documents.
+  1. Under General, change the following:
+     1. Chunk size: 2048
+     1. Chunk overlap: 1024
+  1. Under Retrieval, change the following:
+     1. Top K: 15
+
+- Attach knowledge base to HashiConf Escape Room Model
+  1. Log in as admin user.
+  1. Go to Workspaces -> Models
+  1. Click on the pencil to edit the model.
+  1. Make sure `credit-card-forms` is added to the Knowledge section and save changes.
 
 - Turn off Arena Models (feature that compares models).
   1. Go to Admin Panel -> Settings -> Evaluations.
@@ -103,3 +120,10 @@ If you overload VRAM, Ollama will fall back to CPU. The Ollama container has inc
 
 The HCP Terraform workspaces require the following order:
 1. `payments-infrastructure`
+
+## Expiration dates
+
+| Description | Date |
+| -------- | ------- |
+| Shutdown AI workflow related instances  | October 1, 2025 |
+| GitHub fine-grained tokens for HCP Terraform | December 6, 2025 |
