@@ -73,6 +73,9 @@ job "openwebui" {
         ENABLE_COMMUNITY_SHARING = "False"
         SAFE_MODE                = "True"
         ENABLE_OPENAI_API        = "False"
+        CHUNK_SIZE               = "2048"
+        CHUNK_OVERLAP            = "1024"
+        RAG_TOP_K                = "15"
       }
 
       template {
