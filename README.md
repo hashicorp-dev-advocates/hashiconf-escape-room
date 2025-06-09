@@ -97,6 +97,12 @@ If you overload VRAM, Ollama will fall back to CPU. The Ollama container has inc
   1. Under Retrieval, change the following:
      1. Top K: 15
 
+- Remove default prompts.
+  1. Go to Admin Panel -> Settings -> Interface.
+  1. Under UI, change the following:
+     1. Remove all Default Prompt Suggestions.
+     1. Click Save.
+
 - Attach knowledge base to HashiConf Escape Room Model
   1. Log in as admin user.
   1. Go to Workspaces -> Models
