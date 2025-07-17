@@ -21,7 +21,7 @@ namespace "${nomad_namespace.ml_pipeline.name}" {
     "host-volume-read",
     "host-volume-create",
     "host-volume-write",
-    "host-volume-register",x
+    "host-volume-register"
   ]
 }
 EOT
