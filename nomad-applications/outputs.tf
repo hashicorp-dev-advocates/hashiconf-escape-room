@@ -33,5 +33,6 @@ output "ollama_embedding_id" {
 }
 
 output "contestants_acl_token" {
-  value = nomad_acl_token.contestants.secret_id
+  value     = nomad_acl_token.contestants.secret_id
+  sensitive = true
 }
