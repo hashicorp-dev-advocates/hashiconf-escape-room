@@ -10,7 +10,7 @@ resource "nomad_namespace" "ml_pipeline" {
 # Contestants ACL Policy
 resource "nomad_acl_policy" "contestants" {
   name        = "contestants"
-  description = "Submit jobs to the dev environment."
+  description = "Submite ML pipeline jobs"
 
   rules_hcl = <<EOT
 namespace "${nomad_namespace.ml_pipeline.name}" {
@@ -22,7 +22,7 @@ namespace "${nomad_namespace.ml_pipeline.name}" {
     "host-volume-create",
     "host-volume-write",
     "host-volume-register",
-    "host-volume-delete"
+    "host-volume-delete",
   ]
 }
 EOT
