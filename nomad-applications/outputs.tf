@@ -31,3 +31,7 @@ output "ollama_model_id" {
 output "ollama_embedding_id" {
   value = var.embeddings
 }
+
+output "contestants_acl_token" {
+  value = nomad_acl_token.contestants.secret_id
+}
