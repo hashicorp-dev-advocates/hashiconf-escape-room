@@ -32,5 +32,4 @@ resource "nomad_acl_token" "contestants" {
   name     = nomad_acl_policy.contestants.name
   type     = "client"
   policies = [nomad_acl_policy.contestants.name]
-  expiration_ttl = "720h"  # 30 days
 }
