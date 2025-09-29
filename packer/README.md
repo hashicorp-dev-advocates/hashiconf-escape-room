@@ -14,3 +14,7 @@ that pushes the images to AWS.
 
 Note that the workflow uses dynamic credentials that federate GitHub
 Actions workload identity with AWS.
+
+
+For HashiConf 2025, we chose to mark on the image versions as `revoked` within the HCP Packer dashboard, with a specific CVE as the reason why it was revoked.
+Attendees needed to find the specific CVE as a part of the challenge.
