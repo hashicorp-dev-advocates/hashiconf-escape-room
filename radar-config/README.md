@@ -18,3 +18,10 @@ Ensure the following scopes are selected:
 - Enter the GitHub PAT from the section above.
 - Click `Select repositories to monitor`, and select `vault-radar-demo` from the list of discovered repositories.
 - Click `Finish` in the top right
+
+### Challenge
+- For HashiConf 2025, we chose a specific secret as the target/clue
+- Attendees will need to:
+  - Find the user/email of the person who committed the secret
+  - Find the plaintext value of the secret comitted
+- We marked the specific secret as `Triaged` within the HCP Vault Radar dashboard
