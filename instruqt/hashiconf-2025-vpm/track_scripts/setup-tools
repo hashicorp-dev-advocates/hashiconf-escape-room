@@ -1,0 +1,146 @@
+#!/bin/bash
+sudo apt-get update && sudo apt-get install wget gpg coreutils jq pass -y
+
+wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+sudo apt-get update && sudo apt-get install terraform boundary -y
+
+# hcl2json for 'HCP Packer' check scripts
+sudo wget -O /usr/local/bin/hcl2json https://github.com/tmccombs/hcl2json/releases/download/v0.6.7/hcl2json_linux_amd64
+sudo chmod +x /usr/local/bin/hcl2json
+
+# creds for printing credentials
+cat > /usr/local/bin/creds <<EOF
+echo "*** To log into HashiCorp Cloud Platform, use the following credentials. ***"
+echo "Username: \${HCP_USER}"
+echo "Password: \${HCP_PASSWORD}"
+echo
+echo "*** To log into Boundary, use the following credentials. ***"
+echo "Username: \${BOUNDARY_USER}"
+echo "Password: \${BOUNDARY_PASSWORD}"
+echo
+EOF
+
+chmod +x /usr/local/bin/creds
+
+# GPG setup for `HCP Boundary` task
+cat > /tmp/gpg.txt <<EOF
+Key-Type: RSA
+Key-Length: 4096
+Subkey-Type: RSA
+Subkey-Length: 4096
+Name-Real: HashiConf
+Name-Email: hashiconf@example.com
+Expire-Date: 1y
+%no-protection
+%commit
+EOF
+
+gpg --batch --gen-key /tmp/gpg.txt
+
+rm -f /tmp/gpg.txt
+
+pass init “pass keyring storage”
+
+export DEBIAN_FRONTEND=noninteractive
+
+# Desktop + VNC stack (TigerVNC) + utilities we actually use
+sudo apt-get update
+sudo apt-get install -y \
+  xfce4 xfce4-goodies \
+  novnc websockify \
+  xvfb dbus-x11 unzip x11-utils \
+  tigervnc-standalone-server tigervnc-tools
+
+# Remove x11vnc if present (we're using TigerVNC's x0vncserver)
+sudo apt-get purge -y x11vnc || true
+
+# Install Boundary Desktop (.deb)
+wget -q https://releases.hashicorp.com/boundary-desktop/2.3.3/boundary-desktop_2.3.3_amd64.deb
+sudo dpkg -i boundary-desktop_2.3.3_amd64.deb || sudo apt-get -f install -y
+sudo chmod +x /usr/bin/boundary-desktop
+
+# Desktop launcher (Electron needs --no-sandbox when run as root)
+sudo mkdir -p /root/Desktop
+sudo tee /root/Desktop/boundary.desktop >/dev/null <<'EOF'
+[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Name=Boundary Desktop
+Comment=HashiCorp Boundary Desktop Client
+Exec=/usr/bin/boundary-desktop --no-sandbox
+Icon=utilities-terminal
+Terminal=false
+EOF
+sudo chmod +x /root/Desktop/boundary.desktop
+
+# Start script: Xvfb + XFCE + TigerVNC (x0vncserver) + noVNC
+sudo tee /usr/local/bin/start-desktop.sh >/dev/null <<'EOF'
+#!/bin/bash
+set -euo pipefail
+
+export DISPLAY=:0
+export HOME=/root
+export XDG_RUNTIME_DIR=/run/user/0
+mkdir -p "$XDG_RUNTIME_DIR"; chmod 700 "$XDG_RUNTIME_DIR"
+
+# 0) Clean up any old servers
+pkill -f Xvfb || true
+pkill -f Xvnc || true
+pkill -f x11vnc || true
+
+# 1) Start TigerVNC's X server (Xvnc) on :0 and listen on 5900
+#    -SecurityTypes None = no VNC password (OK for ephemeral labs)
+#    -geometry/-depth set the desktop size and color depth
+#    Clipboard sync is integrated.
+Xvnc :0 -geometry 1280x800 -depth 24 -rfbport 5900 -SecurityTypes None \
+  >/var/log/xvnc.log 2>&1 &
+
+# Wait for the X server to be ready
+for i in {1..30}; do xdpyinfo -display :0 >/dev/null 2>&1 && break || sleep 0.3; done
+xdpyinfo -display :0 >/dev/null 2>&1 || { echo "Xvnc did not come up"; tail -n 60 /var/log/xvnc.log; exit 1; }
+
+# 2) Start XFCE (dbus-launch is more reliable headless)
+dbus-launch startxfce4 >/var/log/startxfce4.log 2>&1 &
+
+# 3) Ensure VNC port is listening
+sleep 0.7
+ss -lntp | grep -q ':5900' || { echo "No VNC server on :5900"; tail -n 60 /var/log/xvnc.log; exit 1; }
+
+# 4) Start noVNC (websockify) on 6080 → proxy to 5900
+pkill -f websockify || true
+WEBROOT="/usr/share/novnc"; [ -d "/usr/lib/novnc" ] && WEBROOT="/usr/lib/novnc"
+websockify --web="${WEBROOT}" 0.0.0.0:6080 localhost:5900 >/var/log/novnc.log 2>&1
+EOF
+
+sudo chmod +x /usr/local/bin/start-desktop.sh
+sudo systemctl restart desktop
+
+# Systemd unit to auto-start at boot
+sudo tee /etc/systemd/system/desktop.service >/dev/null <<'EOF'
+[Unit]
+Description=XFCE desktop + TigerVNC (x0vncserver) + noVNC
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+Environment=DISPLAY=:0
+Environment=HOME=/root
+ExecStart=/usr/local/bin/start-desktop.sh
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl enable --now desktop.service
+
+sudo tee /root/Desktop/boundary-creds.txt > /dev/null <<'EOF'
+Cluster Address: \${BOUNDARY_ADDR}
+Scope: \${BOUNDARY_SCOPE_ID}
+Username: \${BOUNDARY_USER}
+Password: \${BOUNDARY_PASSWORD}
+EOF

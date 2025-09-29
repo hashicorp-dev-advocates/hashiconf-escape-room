@@ -1,0 +1,13 @@
+#!/bin/bash
+
+mkdir /solutions
+echo '{"codename": "..."}' | jq > /solutions/data.json
+
+# update desktop icon
+cd /root/Pictures
+wget "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/refs/heads/main/png/hashicorp-boundary.png"
+sed -i "s|Icon=.*|Icon=/root/Pictures/hashicorp-boundary.png|" /root/Desktop/boundary.desktop
+
+# mark executable (XFCE)
+cd /root/Desktop
+gio set boundary.desktop metadata::xfce-exe-checksum "$(sha256sum boundary.desktop | awk '{print $1}')"

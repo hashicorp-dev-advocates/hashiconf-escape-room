@@ -1,0 +1,18 @@
+version: "3"
+virtualmachines:
+- name: tools
+  image: ubuntu-os-cloud/ubuntu-2404-noble-amd64-v20241004
+  shell: /bin/bash
+  environment:
+    HCP_PASSWORD: SECRET
+    HCP_USER: SECRET
+    LLM_PASSWORD: SECRET
+    LLM_USER: SECRET
+    NOMAD_ADDR: SECRET
+    NOMAD_NAMESPACE: SECRET
+    NOMAD_TOKEN: SECRET
+    VAULT_ADDR: SECRET
+    VAULT_NAMESPACE: SECRET
+    VAULT_PASSWORD: SECRET
+    VAULT_USER: SECRET
+  machine_type: e2-standard-2

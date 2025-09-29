@@ -1,0 +1,5 @@
+#!/bin/bash
+
+mkdir /solutions
+
+echo '{"payments_vm_ip_address": "..."}' | jq > /solutions/data.json

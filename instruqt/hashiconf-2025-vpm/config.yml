@@ -1,0 +1,13 @@
+version: "3"
+virtualmachines:
+- name: tools
+  image: ubuntu-os-cloud/ubuntu-2404-noble-amd64-v20241004
+  shell: /bin/bash
+  environment:
+    BOUNDARY_ADDR: SECRET
+    BOUNDARY_PASSWORD: SECRET
+    BOUNDARY_SCOPE_ID: SECRET
+    BOUNDARY_USER: SECRET
+    HCP_PASSWORD: SECRET
+    HCP_USER: SECRET
+  machine_type: e2-standard-2

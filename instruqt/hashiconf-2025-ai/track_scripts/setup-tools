@@ -1,0 +1,41 @@
+#!/bin/bash
+sudo apt-get update && sudo apt-get install wget gpg coreutils jq -y
+
+wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+sudo apt-get update && sudo apt-get install nomad terraform consul vault -y
+
+
+mkdir nomad_config
+echo '
+namespace = "default"
+name      = "example"
+type      = "host"
+
+# mkdir is the default built-in plugin
+plugin_id = "mkdir"
+
+# allows mounting by only one allocation at a time
+capability {
+  access_mode     = "single-node-single-writer"
+  attachment_mode = "file-system"
+}' >> nomad_config/volume.hcl
+
+
+cat > /usr/local/bin/creds <<EOF
+echo "*** To log into OpenWeb UI, use the following credentials. ***"
+echo "Username: \${LLM_USER}"
+echo "Password: \${LLM_PASSWORD}"
+echo
+echo "*** To log into HCP Vault, use the following userpass credentials. ***"
+echo "Username: \${VAULT_USER}"
+echo "Password: \${VAULT_PASSWORD}"
+echo
+echo "*** To log into HashiCorp Cloud Platform, use the following credentials. ***"
+echo "Username: \${HCP_USER}"
+echo "Password: \${HCP_PASSWORD}"
+echo
+EOF
+
+chmod +x /usr/local/bin/creds
+

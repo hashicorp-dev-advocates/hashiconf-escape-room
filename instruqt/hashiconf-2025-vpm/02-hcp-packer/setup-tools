@@ -1,0 +1,14 @@
+#!/bin/bash
+
+mkdir /solutions
+
+echo '{"cve": "CVE-YYYY-#####"}' | jq > /solutions/data.json
+
+cat <<EOF > /solutions/data.tf
+data "hcp_packer_artifact" "..." {
+  bucket_name   = "..."
+  channel_name  = "..."
+  platform      = "..."
+  region        = "..."
+}
+EOF

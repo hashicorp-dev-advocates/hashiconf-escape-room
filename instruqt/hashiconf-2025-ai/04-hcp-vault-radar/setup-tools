@@ -1,0 +1,5 @@
+#!/bin/bash
+
+mkdir /solutions
+
+echo '{"author": "...", "secret": "..."}' | jq > /solutions/data.json

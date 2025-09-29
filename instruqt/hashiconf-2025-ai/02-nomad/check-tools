@@ -1,0 +1,12 @@
+NAMESPACE="ml-pipeline"
+VOLUME_NAME="models"
+
+# Check if the volume exists
+if nomad volume status -namespace="$NAMESPACE" -json -type=host | jq -e \
+  --arg name "$VOLUME_NAME" '.[] | select(.Name == $name)' > /dev/null; then
+  echo "Volume '$VOLUME_NAME' exists in namespace '$NAMESPACE'."
+  exit 0
+else
+  echo "Volume '$VOLUME_NAME' does not exist in namespace '$NAMESPACE'."
+  exit 1
+fi

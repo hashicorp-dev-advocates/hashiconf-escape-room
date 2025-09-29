@@ -1,0 +1,8 @@
+#!/bin/bash
+set -euxo pipefail
+
+# from the repo
+# https://github.com/hashicorp-dev-advocates/vault-radar-demo
+jq < /solutions/data.json
+jq -e '.author == "adiroff@hashicorp.com"' < /solutions/data.json
+jq -e '.secret == "g4fEPvwN2+2kT8omL4ieFqgVj4xLWx40PxNmOJ3S"' < /solutions/data.json

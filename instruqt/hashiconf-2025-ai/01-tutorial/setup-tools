@@ -1,0 +1,15 @@
+#!/bin/bash
+
+mkdir -p /hashiconf/escape-room
+
+cat <<EOF > /hashiconf/escape-room/about.txt
+HashiConf 2025
+Escape Room
+Artificial Intelligence (AI)
+EOF
+
+cat <<EOF > /hashiconf/escape-room/authors.txt
+Rosemary Wang
+Rob Barnes
+Michael Kosir
+EOF

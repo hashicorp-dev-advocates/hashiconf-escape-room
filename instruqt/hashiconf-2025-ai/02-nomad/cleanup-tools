@@ -1,0 +1,11 @@
+NAMESPACE="ml-pipeline"
+
+
+# Get all Dynamic Host Volumes in the given namespace
+DYNAMIC_VOLUMES=$(nomad volume status -namespace="$NAMESPACE" -json -type=host | jq -r '.[] | .ID')
+
+# Delete each volume
+for VOL_ID in $DYNAMIC_VOLUMES; do
+  echo "Deleting volume: $VOL_ID"
+  nomad volume delete -namespace="$NAMESPACE" -type=host "$VOL_ID"
+done

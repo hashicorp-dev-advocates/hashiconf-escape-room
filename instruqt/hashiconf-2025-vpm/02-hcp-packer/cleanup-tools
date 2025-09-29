@@ -1,0 +1,4 @@
+#!/bin/bash
+
+rm -rf /solutions
+rm -f /tmp/data.tf.json

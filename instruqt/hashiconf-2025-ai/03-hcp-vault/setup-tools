@@ -1,0 +1,7 @@
+#!/bin/bash
+
+mkdir /solutions
+
+echo '{"address": "..."}' | jq > /solutions/data.json
+
+vault login -method=userpass username=$VAULT_USER password=$VAULT_PASSWORD

@@ -1,0 +1,5 @@
+#!/bin/bash
+set -euxo pipefail
+
+jq < /solutions/data.json
+jq -e '."address" | test("407 Kelley Summit"; "i")' < /solutions/data.json
