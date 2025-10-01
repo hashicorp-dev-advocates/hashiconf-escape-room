@@ -6,7 +6,7 @@ resource "terracurl_request" "nomad_status" {
   max_retry      = 4
   retry_interval = 10
 
-  skip_destroy = true
+  destroy_skip = true
 
   depends_on = [
     aws_instance.nomad_servers,
@@ -27,7 +27,7 @@ resource "terracurl_request" "bootstrap_acl" {
     ignore_changes = all
   }
 
-  skip_destroy = true
+  destroy_skip = true
 
   depends_on = [
     terracurl_request.nomad_status,
