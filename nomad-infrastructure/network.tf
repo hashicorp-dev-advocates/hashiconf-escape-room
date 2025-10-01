@@ -105,10 +105,10 @@ resource "aws_vpc_peering_connection_accepter" "peer" {
   auto_accept               = true
 }
 
-# resource "aws_route" "hvn_route" {
-#   for_each = toset(module.vpc.private_route_table_ids)
+resource "aws_route" "hvn_route" {
+  for_each = toset(module.vpc.private_route_table_ids)
 
-#   route_table_id            = each.key
-#   destination_cidr_block    = data.hcp_hvn.main.cidr_block
-#   vpc_peering_connection_id = aws_vpc_peering_connection_accepter.peer.vpc_peering_connection_id
-# }
+  route_table_id            = each.key
+  destination_cidr_block    = data.hcp_hvn.main.cidr_block
+  vpc_peering_connection_id = aws_vpc_peering_connection_accepter.peer.vpc_peering_connection_id
+}
