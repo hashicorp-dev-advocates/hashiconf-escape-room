@@ -29,6 +29,8 @@ module "vpc" {
 }
 
 resource "aws_lb" "nomad" {
+  depends_on = [module.vpc]
+
   name               = "nomad-lb"
   internal           = false
   load_balancer_type = "application"
